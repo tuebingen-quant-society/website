@@ -1,7 +1,6 @@
 # Tübingen Quant Society — Website
 
 Öffentliche Single-Page der studentischen Initiative, statisch gehostet.
-Umsetzung von [`Spec_Website_Tuebingen_Quant_Society.md`](./Spec_Website_Tuebingen_Quant_Society.md) (Baseline v1).
 
 Astro, statischer Output, kein UI-Framework. Ausgeliefert werden ~141 KB
 (Startseite, inkl. Schriften) und 2,3 KB Inline-JS.

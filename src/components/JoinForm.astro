@@ -6,7 +6,7 @@
  * As long as config.formEndpoint is empty, the form runs in mock mode:
  * every state can be triggered, but nothing is actually sent (§16.4).
  */
-import { join, kontakt, formEndpoint } from "../config";
+import { basePath, join, kontakt, formEndpoint } from "../config";
 
 const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mail);
 ---
@@ -36,7 +36,7 @@ const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mai
 
     <p class="join__hinweis">
       {join.datenschutzHinweis}{" "}
-      <a class="link" href="/datenschutz">{join.datenschutzLinkText}</a>.
+      <a class="link" href={`${basePath}datenschutz`}>{join.datenschutzLinkText}</a>.
     </p>
   </form>
 

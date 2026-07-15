@@ -15,8 +15,24 @@ export type Aktivitaet = {
   geplant: boolean;
 };
 
+/**
+ * Normalized `base` from astro.config.mjs, always with a trailing slash.
+ * import.meta.env.BASE_URL omits it when `base` has none configured
+ * (e.g. "/website" instead of "/website/") — use this instead of the raw
+ * env var wherever a path is built by concatenation.
+ */
+const rawBase = import.meta.env.BASE_URL;
+export const basePath = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+
 /** TODO §16.2 — final domain. Used for canonical, OG URL, and sitemap.xml. */
-export const site = "https://tuequant.de";
+// export const site = "https://tuequant.de";
+
+/**
+ * Temporary: GitHub Pages default origin until tuequant.de DNS is live.
+ * Swap back to the line above (and restore public/CNAME + remove `base` in
+ * astro.config.mjs) once the domain is ready.
+ */
+export const site = "https://tuebingen-quant-society.github.io";
 
 export const wortmarke = {
   lang: "Tübingen Quant Society",

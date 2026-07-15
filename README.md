@@ -123,5 +123,22 @@ aus §10. Begründung und Zeichensatz stehen in `scripts/subset-fonts.mjs`.
 ## Deployment
 
 Statischer Output in `dist/`, deploybar auf GitHub Pages oder Vercel (§14).
-Vor dem ersten Deploy `site` in `src/config.ts` auf die echte Domain setzen —
-Canonical, OG-URL und Sitemap hängen daran.
+`.github/workflows/deploy.yml` baut und deployt bei jedem Push auf `main`
+automatisch nach GitHub Pages (Repo-Settings → Pages → Source: **GitHub
+Actions**, einmalig nötig).
+
+**Aktuell (Übergang, bis `tuequant.de` per DNS auf GitHub Pages zeigt):**
+Die Seite läuft unter der Standard-`github.io`-URL des Repos, dafür ist
+`astro.config.mjs` `base: "/website"` gesetzt und `site` in `src/config.ts`
+zeigt auf `https://tuebingen-quant-society.github.io`.
+
+**Sobald die Domain steht:**
+1. `base: "/website"` aus `astro.config.mjs` entfernen.
+2. In `src/config.ts` die auskommentierte `site`-Zeile (`https://tuequant.de`)
+   wieder aktivieren, die `github.io`-Zeile entfernen.
+3. `public/CNAME.example` in `public/CNAME` umbenennen (Inhalt: `tuequant.de`).
+4. DNS bei `tuequant.de` auf GitHub Pages zeigen lassen (siehe
+   [GitHub-Doku](https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site)).
+
+Canonical, OG-URL, Sitemap und `robots.txt` hängen an `site` (+ `base`) und
+aktualisieren sich automatisch.

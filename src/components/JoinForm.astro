@@ -1,0 +1,203 @@
+---
+/**
+ * Mailing list form — Spec §6.6.
+ *
+ * Five states: idle, pending, success, error-invalid, error-network.
+ * As long as config.formEndpoint is empty, the form runs in mock mode:
+ * every state can be triggered, but nothing is actually sent (§16.4).
+ */
+import { join, kontakt, formEndpoint } from "../config";
+
+const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mail);
+---
+
+<div class="join" data-endpoint={formEndpoint}>
+  <form class="join__form" id="join-form" novalidate>
+    <div class="join__row">
+      <div class="join__field">
+        <label class="visually-hidden" for="join-email">{join.label}</label>
+        <input
+          class="join__input"
+          id="join-email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder={join.placeholder}
+          aria-describedby="join-error"
+        />
+      </div>
+      <button class="btn btn--primary join__submit" type="submit">
+        {join.buttonIdle}
+      </button>
+    </div>
+
+    <p class="join__error" id="join-error" role="alert"></p>
+
+    <p class="join__hinweis">
+      {join.datenschutzHinweis}{" "}
+      <a class="link" href="/datenschutz">{join.datenschutzLinkText}</a>.
+    </p>
+  </form>
+
+  {/* tabindex so focus lands here after the form is replaced. */}
+  <p class="join__erfolg" id="join-success" tabindex="-1" hidden>{join.erfolg}</p>
+</div>
+
+<script
+  is:inline
+  define:vars={{
+    endpoint: formEndpoint,
+    labelIdle: join.buttonIdle,
+    labelPending: join.buttonPending,
+    fehlerUngueltig: join.fehlerUngueltig,
+    fehlerNetzwerk: netzwerkFehler,
+  }}
+>
+  (() => {
+    const form = document.getElementById("join-form");
+    const input = document.getElementById("join-email");
+    const button = form.querySelector(".join__submit");
+    const error = document.getElementById("join-error");
+    const success = document.getElementById("join-success");
+
+    const zeigeFehler = (text) => {
+      error.textContent = text;
+      input.setAttribute("aria-invalid", "true");
+    };
+
+    const loescheFehler = () => {
+      error.textContent = "";
+      input.removeAttribute("aria-invalid");
+    };
+
+    const setPending = (an) => {
+      button.disabled = an;
+      button.textContent = an ? labelPending : labelIdle;
+      form.setAttribute("aria-busy", String(an));
+    };
+
+    input.addEventListener("input", loescheFehler);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      loescheFehler();
+
+      const email = input.value.trim();
+      // checkValidity() covers type="email" + required in one call.
+      if (!input.checkValidity() || !email) {
+        zeigeFehler(fehlerUngueltig);
+        input.focus();
+        return;
+      }
+
+      setPending(true);
+      try {
+        if (endpoint) {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+        } else {
+          // Mock mode: no endpoint set (§16.4).
+          await new Promise((r) => setTimeout(r, 600));
+        }
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+      } catch {
+        zeigeFehler(fehlerNetzwerk);
+        setPending(false);
+      }
+    });
+  })();
+</script>
+
+<style>
+  .join {
+    margin-top: var(--space-6);
+  }
+
+  .join__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .join__field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .join__input {
+    width: 100%;
+    /* §6.6 centers the section; the input field itself stays left-aligned. */
+    text-align: left;
+    min-height: 44px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: var(--border);
+    border-radius: var(--radius);
+    font-size: var(--fs-body);
+    color: var(--ink);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .join__input::placeholder {
+    color: var(--ink-muted);
+  }
+
+  .join__input:hover {
+    border-color: var(--ink-muted);
+  }
+
+  .join__input[aria-invalid="true"] {
+    border-color: var(--carmine);
+  }
+
+  .join__submit {
+    flex: none;
+  }
+
+  .join__error {
+    font-size: var(--fs-small);
+    color: var(--carmine);
+    margin-top: var(--space-2);
+  }
+
+  .join__error:empty {
+    display: none;
+  }
+
+  /*
+   * The privacy policy link here is the only link on the page under 44px (§8).
+   * It sits mid-sentence: a 44px height would break up the line and overlap
+   * the tap targets of neighboring lines. This is the inline exception from
+   * WCAG 2.5.8 — every standalone control still meets the 44px minimum.
+   */
+  .join__hinweis {
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+    margin-top: var(--space-3);
+  }
+
+  .join__erfolg {
+    font-size: var(--fs-body);
+    max-width: var(--prose-max);
+    margin-top: var(--space-6);
+  }
+
+  .join__erfolg:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  @media (min-width: 600px) {
+    .join__row {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+</style>

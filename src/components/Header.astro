@@ -1,0 +1,124 @@
+---
+/**
+ * Header — Spec §6.1.
+ *
+ * §3 defines three nav items: "About us", "Activities", and "Join",
+ * where "Join" is the CTA button. Below 768px the two text links are
+ * dropped; no hamburger menu.
+ */
+import { wortmarke, nav, hero } from "../config";
+
+/** On subpages the anchors point back to the home page. */
+const { basis = "" } = Astro.props;
+---
+
+<header class="header" id="site-header">
+  <div class="header__inner">
+    <a class="header__mark" href={basis === "" ? "#top" : "/"}>
+      <span class="header__mark-lang">{wortmarke.lang}</span>
+      <span class="header__mark-kurz">{wortmarke.kurz}</span>
+    </a>
+
+    <nav class="header__nav" aria-label="Hauptnavigation">
+      {
+        nav.map((item) => (
+          <a class="header__link" href={`${basis}${item.href}`}>
+            {item.label}
+          </a>
+        ))
+      }
+      <a class="btn btn--primary" href={`${basis}${hero.ctaPrimaer.href}`}>
+        {hero.ctaPrimaer.label}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // §6.1: border-bottom only once scrollY > 8px.
+  const header = document.getElementById("site-header");
+  if (header) {
+    const sync = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+  }
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--header-h);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .header.is-scrolled {
+    border-bottom-color: var(--rule);
+  }
+
+  .header__inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .header__mark {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+    font-size: var(--fs-small);
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.005em;
+  }
+
+  .header__mark-lang {
+    display: none;
+  }
+
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .header__link {
+    display: none;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-small);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .header__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* §6.1/§8: below 768px, only the wordmark + CTA. */
+  @media (min-width: 768px) {
+    .header__mark-lang {
+      display: inline;
+    }
+
+    .header__mark-kurz {
+      display: none;
+    }
+
+    .header__link {
+      display: inline-flex;
+    }
+  }
+</style>

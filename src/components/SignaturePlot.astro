@@ -1,0 +1,488 @@
+---
+/**
+ * Signature element "TQS·SIM" — live simulated price chart in the terminal panel.
+ *
+ * A geometric Brownian motion (GBM) random path is drawn as a candlestick
+ * chart: a fast initial build-up, then the simulation keeps ticking — the
+ * latest candle visibly forms, and every few ticks a new one begins.
+ * Plus an EMA line as the carmine signature and a last-price line.
+ *
+ * Honesty over effect: the panel declares itself as a simulation
+ * (config.plot.hinweis). No real market data, no axis claims about
+ * actual prices.
+ *
+ * Behavior:
+ *  - prefers-reduced-motion: finished chart immediately, no ticking, LIVE badge off.
+ *  - Tab hidden / panel outside the viewport: simulation pauses.
+ */
+import { plot } from "../config";
+---
+
+<figure class="plot" role="img" aria-label={plot.ariaLabel}>
+  <div class="plot__bar" aria-hidden="true">
+    <span class="plot__dots">
+      <i class="plot__dot plot__dot--r"></i>
+      <i class="plot__dot plot__dot--y"></i>
+      <i class="plot__dot plot__dot--g"></i>
+    </span>
+    <span class="plot__title">{plot.titel}</span>
+    <span class="plot__live" id="sig-live">
+      <i class="plot__pulse"></i>
+      {plot.live}
+    </span>
+  </div>
+
+  <canvas class="plot__canvas" id="sig-canvas"></canvas>
+
+  <figcaption class="plot__meta" aria-hidden="true">
+    <span class="plot__params">{plot.params}</span>
+    <span class="plot__last" id="sig-last">—</span>
+    <span class="plot__note">{plot.hinweis}</span>
+  </figcaption>
+</figure>
+
+<script>
+  const canvas = document.getElementById("sig-canvas") as HTMLCanvasElement | null;
+  const lastEl = document.getElementById("sig-last");
+  const liveEl = document.getElementById("sig-live");
+
+  if (canvas && lastEl) {
+    const ctx = canvas.getContext("2d")!;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const css = getComputedStyle(document.documentElement);
+    const color = (name: string, fallback: string) =>
+      css.getPropertyValue(name).trim() || fallback;
+
+    const C = {
+      up: color("--up", "#2fbf8f"),
+      down: color("--down", "#f4506a"),
+      grid: color("--rule", "#1f2733"),
+      text: color("--ink-muted", "#9aa5b2"),
+      accent: color("--accent", "#ff5c72"),
+    };
+
+    // GBM parameters — must match config.plot.params.
+    const MU = 0.08;
+    const SIGMA = 0.2;
+    const DT = 1 / 252;
+    const DRIFT = (MU - (SIGMA * SIGMA) / 2) * DT;
+    const SHOCK = SIGMA * Math.sqrt(DT);
+
+    const MAX = 64; // visible candles
+    const SUBTICKS = 6; // ticks until a candle completes
+    const TICK_MS = 140;
+    const EMA_K = 2 / (14 + 1);
+    const REVEAL_MS = 1400;
+
+    type Candle = { o: number; h: number; l: number; c: number };
+
+    let price = 100;
+    const candles: Candle[] = [];
+    const emas: number[] = [];
+    let emaPrev = price;
+    let subtick = 0;
+    let sessionOpen = price;
+
+    const randn = () => {
+      let u = 0;
+      let v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    };
+
+    const step = () => {
+      price *= Math.exp(DRIFT + SHOCK * randn());
+    };
+
+    const openCandle = () => {
+      emaPrev = emas.length ? emas[emas.length - 1] : price;
+      candles.push({ o: price, h: price, l: price, c: price });
+      emas.push(emaPrev);
+      if (candles.length > MAX) {
+        candles.shift();
+        emas.shift();
+      }
+      subtick = 0;
+    };
+
+    const tick = () => {
+      step();
+      const k = candles[candles.length - 1];
+      k.c = price;
+      k.h = Math.max(k.h, price);
+      k.l = Math.min(k.l, price);
+      emas[emas.length - 1] = emaPrev + EMA_K * (k.c - emaPrev);
+      subtick++;
+      if (subtick >= SUBTICKS) openCandle();
+    };
+
+    // Pre-simulate history so the chart starts full.
+    openCandle();
+    for (let i = 0; i < MAX * SUBTICKS; i++) tick();
+    sessionOpen = candles[0].o;
+
+    // ---------------------------------------------------------- Drawing
+
+    let w = 0;
+    let h = 0;
+    const PAD_TOP = 14;
+    const PAD_BOTTOM = 12;
+    const AXIS_W = 58;
+
+    // The scale eases toward its target so it doesn't jump.
+    let viewMin = 0;
+    let viewMax = 0;
+
+    const fit = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const targetScale = (visible: Candle[]) => {
+      let lo = Infinity;
+      let hi = -Infinity;
+      for (const k of visible) {
+        if (k.l < lo) lo = k.l;
+        if (k.h > hi) hi = k.h;
+      }
+      const pad = (hi - lo) * 0.12 || 1;
+      return [lo - pad, hi + pad] as const;
+    };
+
+    const yOf = (p: number) =>
+      PAD_TOP + (1 - (p - viewMin) / (viewMax - viewMin)) * (h - PAD_TOP - PAD_BOTTOM);
+
+    const niceStep = (raw: number) => {
+      const mag = 10 ** Math.floor(Math.log10(raw));
+      for (const m of [1, 2, 2.5, 5, 10]) {
+        if (mag * m >= raw) return mag * m;
+      }
+      return mag * 10;
+    };
+
+    const draw = (revealCount: number) => {
+      const visible = candles.slice(0, revealCount);
+      if (!visible.length) return;
+
+      const [tMin, tMax] = targetScale(visible);
+      if (!viewMax) {
+        viewMin = tMin;
+        viewMax = tMax;
+      } else {
+        viewMin += (tMin - viewMin) * 0.18;
+        viewMax += (tMax - viewMax) * 0.18;
+      }
+
+      ctx.clearRect(0, 0, w, h);
+
+      const plotW = w - AXIS_W;
+      const cw = plotW / MAX;
+      const bodyW = Math.max(2, cw * 0.58);
+
+      // Price grid + axis labels on the right.
+      const stepPx = niceStep((viewMax - viewMin) / 4);
+      ctx.font = "10px 'IBM Plex Mono', monospace";
+      ctx.textBaseline = "middle";
+      for (
+        let p = Math.ceil(viewMin / stepPx) * stepPx;
+        p < viewMax;
+        p += stepPx
+      ) {
+        const y = yOf(p);
+        ctx.strokeStyle = C.grid;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(plotW, y);
+        ctx.stroke();
+        ctx.fillStyle = C.text;
+        ctx.textAlign = "left";
+        ctx.fillText(p.toFixed(1), plotW + 8, y);
+      }
+
+      // Candles.
+      for (let i = 0; i < visible.length; i++) {
+        const k = visible[i];
+        const x = i * cw + cw / 2;
+        const col = k.c >= k.o ? C.up : C.down;
+
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x, yOf(k.h));
+        ctx.lineTo(x, yOf(k.l));
+        ctx.stroke();
+
+        const yO = yOf(k.o);
+        const yC = yOf(k.c);
+        ctx.fillStyle = col;
+        ctx.fillRect(
+          x - bodyW / 2,
+          Math.min(yO, yC),
+          bodyW,
+          Math.max(1, Math.abs(yC - yO))
+        );
+      }
+
+      // EMA signature line in carmine, with a soft underlay.
+      for (const [alpha, width] of [
+        [0.22, 4],
+        [0.95, 1.6],
+      ] as const) {
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = C.accent;
+        ctx.lineWidth = width;
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        for (let i = 0; i < visible.length; i++) {
+          const x = i * cw + cw / 2;
+          const y = yOf(emas[i]);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // Last-price line + label in the axis column.
+      const lastCandle = visible[visible.length - 1];
+      const dirUp = lastCandle.c >= lastCandle.o;
+      const yLast = yOf(lastCandle.c);
+      ctx.strokeStyle = dirUp ? C.up : C.down;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, yLast);
+      ctx.lineTo(plotW, yLast);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = dirUp ? C.up : C.down;
+      const label = lastCandle.c.toFixed(2);
+      ctx.fillRect(plotW + 2, yLast - 9, AXIS_W - 4, 18);
+      ctx.fillStyle = "#0a0d12";
+      ctx.textAlign = "center";
+      ctx.fillText(label, plotW + AXIS_W / 2, yLast + 0.5);
+    };
+
+    const updateReadout = () => {
+      const last = candles[candles.length - 1].c;
+      const delta = ((last - sessionOpen) / sessionOpen) * 100;
+      const up = delta >= 0;
+      lastEl.textContent = `${last.toFixed(2)} ${up ? "▲" : "▼"} ${up ? "+" : ""}${delta.toFixed(2)}%`;
+      lastEl.classList.toggle("is-up", up);
+      lastEl.classList.toggle("is-down", !up);
+    };
+
+    // ---------------------------------------------------------- Loop
+
+    fit();
+
+    if (reduced) {
+      // Static: finished chart, no LIVE badge.
+      liveEl?.remove();
+      draw(candles.length);
+      updateReadout();
+    } else {
+      let running = false;
+      let rafId = 0;
+      let lastT = 0;
+      let acc = 0;
+      let revealStart = -1;
+
+      const frame = (t: number) => {
+        if (!running) return;
+        if (revealStart < 0) revealStart = t;
+
+        const reveal = Math.min(1, (t - revealStart) / REVEAL_MS);
+        const eased = 1 - (1 - reveal) ** 3;
+
+        if (reveal >= 1) {
+          acc += Math.min(t - lastT, 200);
+          while (acc >= TICK_MS) {
+            acc -= TICK_MS;
+            tick();
+          }
+          updateReadout();
+        }
+        lastT = t;
+
+        draw(Math.max(2, Math.round(eased * candles.length)));
+        rafId = requestAnimationFrame(frame);
+      };
+
+      const start = () => {
+        if (running) return;
+        running = true;
+        lastT = performance.now();
+        rafId = requestAnimationFrame(frame);
+      };
+
+      const stop = () => {
+        running = false;
+        cancelAnimationFrame(rafId);
+      };
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) e.isIntersecting ? start() : stop();
+        },
+        { threshold: 0.1 }
+      );
+      io.observe(canvas);
+
+      document.addEventListener("visibilitychange", () => {
+        document.hidden ? stop() : start();
+      });
+
+      let resizeTimer = 0;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          fit();
+          draw(candles.length);
+        }, 150);
+      });
+    }
+  }
+</script>
+
+<style>
+  .plot {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  }
+
+  .plot__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 10px 14px;
+    border-bottom: var(--border);
+  }
+
+  .plot__dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .plot__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .plot__dot--r {
+    background: var(--down);
+  }
+
+  .plot__dot--y {
+    background: #d9a13b;
+  }
+
+  .plot__dot--g {
+    background: var(--up);
+  }
+
+  .plot__title {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .plot__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--up);
+  }
+
+  .plot__pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--up);
+    animation: plot-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes plot-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(47, 191, 143, 0.5);
+    }
+    50% {
+      opacity: 0.6;
+      box-shadow: 0 0 0 5px rgba(47, 191, 143, 0);
+    }
+  }
+
+  .plot__canvas {
+    display: block;
+    width: 100%;
+    height: clamp(220px, 30vw, 330px);
+  }
+
+  .plot__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    padding: 8px 14px 10px;
+    border-top: var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+
+  .plot__last {
+    color: var(--ink);
+  }
+
+  .plot__last.is-up {
+    color: var(--up);
+  }
+
+  .plot__last.is-down {
+    color: var(--down);
+  }
+
+  .plot__note {
+    margin-left: auto;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 767px) {
+    .plot__canvas {
+      height: 210px;
+    }
+
+    .plot__note {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+  }
+</style>

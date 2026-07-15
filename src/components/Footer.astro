@@ -1,0 +1,114 @@
+---
+/**
+ * Footer — Spec §6.7.
+ *
+ * The links deliberately don't use carmine: §6.7 colors the footer
+ * --ink-muted, and the accent budget from §4.1 reserves carmine for the
+ * signature curve and the CTA. Five carmine footer links would blow that budget.
+ */
+import { wortmarke, kontakt, footer } from "../config";
+
+const jahr = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__cols">
+      <div class="footer__col">
+        <p class="footer__mark">{wortmarke.lang}</p>
+        <p class="footer__einzeiler">{footer.einzeiler}</p>
+      </div>
+
+      <div class="footer__col">
+        <a class="footer__link" href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>
+      </div>
+
+      <div class="footer__col footer__col--socials">
+        <a class="footer__link" href={kontakt.instagram} rel="me noopener">Instagram</a>
+        <a class="footer__link" href={kontakt.linkedin} rel="me noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="footer__unterzeile">
+      <span>© {jahr} {wortmarke.lang}</span>
+      <span aria-hidden="true">·</span>
+      <a class="footer__link" href="/impressum">Impressum</a>
+      <span aria-hidden="true">·</span>
+      <a class="footer__link" href="/datenschutz">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: var(--border);
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  .footer__inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    padding-block: var(--space-7);
+  }
+
+  .footer__cols {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+  }
+
+  .footer__mark {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .footer__einzeiler {
+    max-width: 34ch;
+  }
+
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-muted);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .footer__link:hover {
+    color: var(--ink);
+  }
+
+  .footer__unterzeile {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: var(--border);
+  }
+
+  /* §6.7: stacked below 768px. */
+  @media (min-width: 768px) {
+    .footer__cols {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: var(--space-6);
+    }
+
+    .footer__col--socials {
+      align-items: flex-end;
+    }
+  }
+</style>

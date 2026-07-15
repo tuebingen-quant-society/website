@@ -1,0 +1,89 @@
+---
+/**
+ * Legal notice — Spec §11 (mandatory per §5 DDG).
+ *
+ * Content comes from config.impressum. As long as TODO placeholders remain
+ * there, the notice is incomplete and the site must not go live publicly
+ * (§16.3).
+ */
+import Base from "../layouts/Base.astro";
+import { impressum, kontakt, wortmarke } from "../config";
+
+const titel = `Impressum — ${wortmarke.lang}`;
+---
+
+<Base titel={titel} beschreibung="Impressum der Tübingen Quant Society." basis="/">
+  <section class="section" aria-labelledby="impressum-headline">
+    <div class="section__inner">
+      <div class="prose">
+        <p class="eyebrow">RECHTLICHES</p>
+        <h1 class="section-headline" id="impressum-headline">Impressum</h1>
+
+        <div class="body">
+          <h2 class="h3">Angaben gemäß § 5 DDG</h2>
+          <p>
+            {wortmarke.lang}<br />
+            Studentische Initiative an der Universität Tübingen<br />
+            {impressum.strasse}<br />
+            {impressum.ort}<br />
+            {impressum.land}
+          </p>
+
+          <h2 class="h3">Vertreten durch</h2>
+          <p>{impressum.verantwortlich}</p>
+
+          <h2 class="h3">Kontakt</h2>
+          <p>
+            <a class="link" href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>
+          </p>
+
+          <h2 class="h3">Verantwortlich für den Inhalt</h2>
+          <p>
+            {impressum.verantwortlich}, Anschrift wie oben.
+          </p>
+
+          <h2 class="h3">Haftung für Inhalte</h2>
+          <p>
+            Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach den
+            allgemeinen Gesetzen verantwortlich. Wir sind nicht verpflichtet, übermittelte
+            oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu
+            forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+          </p>
+
+          <h2 class="h3">Haftung für Links</h2>
+          <p>
+            Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir
+            keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der
+            jeweilige Anbieter oder Betreiber verantwortlich.
+          </p>
+
+          <h2 class="h3">Hinweis zur Universität Tübingen</h2>
+          <p>
+            Die {wortmarke.lang} ist eine studentische Initiative an der Universität Tübingen.
+            Sie ist kein Organ der Universität, und die Universität ist für ihre Inhalte nicht
+            verantwortlich.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .body {
+    margin-top: var(--space-6);
+    color: var(--ink-muted);
+  }
+
+  .h3 {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+  }
+
+  .body > .h3:first-child {
+    margin-top: 0;
+  }
+</style>

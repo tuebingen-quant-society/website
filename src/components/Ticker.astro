@@ -1,0 +1,98 @@
+---
+/**
+ * Ticker tape below the hero — decorative terminal element (aria-hidden).
+ * Content comes from config.ticker and is intentionally tongue-in-cheek:
+ * no real prices, no financial claims.
+ *
+ * The content is rendered twice; the animation shifts the track by -50%,
+ * which makes the loop seamless. With prefers-reduced-motion the tape stays
+ * still (the second copy is then simply cut off).
+ */
+import { ticker } from "../config";
+
+const arrow = (dir: string) => (dir === "up" ? "▲" : dir === "down" ? "▼" : "◆");
+---
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    {
+      [0, 1].map(() => (
+        <div class="ticker__group">
+          {ticker.map((t) => (
+            <span class="ticker__item">
+              <span class="ticker__sym">{t.sym}</span>
+              <span class:list={["ticker__val", `ticker__val--${t.dir}`]}>
+                {arrow(t.dir)} {t.val}
+              </span>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ticker {
+    overflow: hidden;
+    border-block: var(--border);
+    background: var(--surface);
+    user-select: none;
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 55s linear infinite;
+  }
+
+  .ticker:hover .ticker__track {
+    animation-play-state: paused;
+  }
+
+  .ticker__group {
+    display: flex;
+    flex: none;
+  }
+
+  .ticker__item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: 10px var(--space-5);
+    border-right: var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .ticker__sym {
+    color: var(--ink-muted);
+  }
+
+  .ticker__val--up {
+    color: var(--up);
+  }
+
+  .ticker__val--down {
+    color: var(--down);
+  }
+
+  .ticker__val--flat {
+    color: var(--ink);
+  }
+
+  @keyframes ticker-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      animation: none;
+    }
+  }
+</style>

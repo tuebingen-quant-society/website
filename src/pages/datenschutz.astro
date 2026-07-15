@@ -1,0 +1,147 @@
+---
+/**
+ * Privacy policy — Spec §11.
+ *
+ * Covers the three required points: hosting logs, mailing list provider,
+ * analytics. The mailing list section depends on the backend from §16.4 and
+ * is only complete once config.datenschutz.mailinglistenAnbieter is set.
+ *
+ * Draft, not legal advice: have it reviewed by a lawyer before going live.
+ */
+import Base from "../layouts/Base.astro";
+import { datenschutz, impressum, kontakt, wortmarke, formEndpoint } from "../config";
+
+const titel = `Datenschutz — ${wortmarke.lang}`;
+---
+
+<Base titel={titel} beschreibung="Datenschutzerklärung der Tübingen Quant Society." basis="/">
+  <section class="section" aria-labelledby="ds-headline">
+    <div class="section__inner">
+      <div class="prose">
+        <p class="eyebrow">RECHTLICHES</p>
+        <h1 class="section-headline" id="ds-headline">Datenschutzerklärung</h1>
+
+        <div class="body">
+          <h2 class="h3">Verantwortlicher</h2>
+          <p>
+            {impressum.verantwortlich}<br />
+            {impressum.strasse}<br />
+            {impressum.ort}<br />
+            <a class="link" href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>
+          </p>
+
+          <h2 class="h3">Hosting und Server-Logs</h2>
+          <p>
+            Diese Website wird bei {datenschutz.hoster} gehostet. Beim Abruf der Seite
+            verarbeitet der Hoster technisch notwendige Verbindungsdaten, darunter IP-Adresse,
+            Zeitpunkt des Zugriffs, aufgerufene Adresse, übertragene Datenmenge sowie
+            Browser- und Betriebssystemangaben. Diese Verarbeitung ist für die Auslieferung
+            der Seite erforderlich und erfolgt auf Grundlage unseres berechtigten Interesses
+            an einem sicheren und stabilen Betrieb (Art. 6 Abs. 1 lit. f DSGVO). Wir selbst
+            werten diese Logs nicht aus und führen sie nicht mit anderen Daten zusammen.
+          </p>
+
+          <h2 class="h3">Keine Drittanbieter-Inhalte</h2>
+          <p>
+            Die Seite lädt keine Inhalte von Drittanbietern nach. Schriften werden von unserem
+            eigenen Server ausgeliefert, es sind keine Google Fonts, keine Karten, keine
+            eingebetteten Social-Media-Feeds und keine externen Skripte eingebunden. Beim
+            bloßen Besuch der Seite geht daher keine Anfrage an Dritte.
+          </p>
+
+          <h2 class="h3">Cookies</h2>
+          <p>
+            Wir setzen keine Cookies und speichern nichts in deinem Browser. Ein
+            Cookie-Banner ist deshalb nicht nötig.
+          </p>
+
+          <h2 class="h3">Mailingliste</h2>
+          <p>
+            Wenn du dich in die Mailingliste einträgst, verarbeiten wir deine E-Mail-Adresse,
+            um dich über anstehende Treffen zu informieren. Rechtsgrundlage ist deine
+            Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).
+          </p>
+          <p>
+            Die Anmeldung läuft im Double-Opt-In-Verfahren: Nach dem Absenden bekommst du eine
+            E-Mail mit einem Bestätigungslink. Erst wenn du ihn anklickst, nehmen wir dich auf.
+            Bis dahin speichern wir deine Adresse ausschließlich zu diesem Zweck.
+          </p>
+          <p>
+            Du kannst deine Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen —
+            über den Abmeldelink in jeder Mail oder formlos an{" "}
+            <a class="link" href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>. Nach dem
+            Widerruf löschen wir deine Adresse. Wir geben sie nicht an Dritte weiter und
+            nutzen sie für nichts anderes.
+          </p>
+          {
+            datenschutz.mailinglistenAnbieter?.startsWith("TODO") || !formEndpoint ? (
+              <p class="hinweis">
+                Hinweis für die Redaktion: Sobald das Form-Backend feststeht (§16.4), gehört
+                hier der Anbieter mit Sitz, Auftragsverarbeitungsvertrag und Speicherdauer
+                hinein. Ohne diese Angabe ist die Erklärung unvollständig.
+              </p>
+            ) : (
+              <p>
+                Für den Versand nutzen wir {datenschutz.mailinglistenAnbieter}. Der Anbieter
+                verarbeitet deine Adresse ausschließlich weisungsgebunden für uns; dazu besteht
+                ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.
+              </p>
+            )
+          }
+
+          <h2 class="h3">Reichweitenmessung</h2>
+          {
+            datenschutz.analytics ? (
+              <p>
+                Zur Reichweitenmessung nutzen wir {datenschutz.analytics}. Die Messung erfolgt
+                cookie-frei und ohne Personenbezug; es werden keine Profile gebildet und keine
+                Daten an Dritte verkauft. Grundlage ist unser berechtigtes Interesse an einer
+                groben Einschätzung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO).
+              </p>
+            ) : (
+              <p>
+                Wir setzen derzeit keine Analyse- oder Tracking-Werkzeuge ein. Insbesondere
+                nutzen wir kein Google Analytics.
+              </p>
+            )
+          }
+
+          <h2 class="h3">Deine Rechte</h2>
+          <p>
+            Du hast das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung
+            (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20)
+            und Widerspruch (Art. 21). Wende dich dafür an die oben genannte Adresse.
+            Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren; für
+            Baden-Württemberg ist das der Landesbeauftragte für den Datenschutz und die
+            Informationsfreiheit.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .body {
+    margin-top: var(--space-6);
+    color: var(--ink-muted);
+  }
+
+  .h3 {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+  }
+
+  .body > .h3:first-child {
+    margin-top: 0;
+  }
+
+  .hinweis {
+    border-left: 2px solid var(--rule);
+    padding-left: var(--space-4);
+    font-size: var(--fs-small);
+  }
+</style>

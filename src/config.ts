@@ -24,15 +24,8 @@ export type Aktivitaet = {
 const rawBase = import.meta.env.BASE_URL;
 export const basePath = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
 
-/** TODO §16.2 — final domain. Used for canonical, OG URL, and sitemap.xml. */
-// export const site = "https://tuequant.de";
-
-/**
- * Temporary: GitHub Pages default origin until tuequant.de DNS is live.
- * Swap back to the line above (and restore public/CNAME + remove `base` in
- * astro.config.mjs) once the domain is ready.
- */
-export const site = "https://tuebingen-quant-society.github.io";
+/** Used for canonical, OG URL, and sitemap.xml. */
+export const site = "https://tuequant.de";
 
 export const wortmarke = {
   lang: "Tübingen Quant Society",
@@ -50,7 +43,7 @@ export const meta = {
 export const kontakt = {
     mail: "kontakt@tuequant.de",
     instagram: "https://instagram.com/tuebingen.quant",
-  linkedin: "https://www.linkedin.com/company/tuebingen-quant-society",
+  linkedin: "https://www.linkedin.com/company/t%C3%BCbingen-quant-society",
 };
 
 /**
@@ -196,7 +189,7 @@ export const impressum = {
 
 /** TODO §16.4 — feeds the privacy policy; depends on the chosen form backend. */
 export const datenschutz = {
-  hoster: "GitHub Pages (GitHub, Inc.)",
+  hoster: "Vercel Inc.",
   mailinglistenAnbieter: "TODO: Anbieter der Mailingliste eintragen",
   analytics: null as string | null,
 };

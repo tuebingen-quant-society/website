@@ -121,23 +121,12 @@ aus §10. Begründung und Zeichensatz stehen in `scripts/subset-fonts.mjs`.
 
 ## Deployment
 
-Statischer Output in `dist/`, deploybar auf GitHub Pages oder Vercel (§14).
-`.github/workflows/deploy.yml` baut und deployt bei jedem Push auf `main`
-automatisch nach GitHub Pages (Repo-Settings → Pages → Source: **GitHub
-Actions**, einmalig nötig).
+Statischer Output in `dist/`, deploybar auf Vercel. Repo in Vercel importieren
+(Framework-Preset **Astro** wird automatisch erkannt, Build-Command `npm run
+build`, Output-Verzeichnis `dist`); jeder Push auf `main` deployt automatisch.
+`tuequant.de` als Custom Domain im Vercel-Projekt hinterlegen und DNS gemäß
+Vercel-Anleitung setzen.
 
-**Aktuell (Übergang, bis `tuequant.de` per DNS auf GitHub Pages zeigt):**
-Die Seite läuft unter der Standard-`github.io`-URL des Repos, dafür ist
-`astro.config.mjs` `base: "/website"` gesetzt und `site` in `src/config.ts`
-zeigt auf `https://tuebingen-quant-society.github.io`.
-
-**Sobald die Domain steht:**
-1. `base: "/website"` aus `astro.config.mjs` entfernen.
-2. In `src/config.ts` die auskommentierte `site`-Zeile (`https://tuequant.de`)
-   wieder aktivieren, die `github.io`-Zeile entfernen.
-3. `public/CNAME.example` in `public/CNAME` umbenennen (Inhalt: `tuequant.de`).
-4. DNS bei `tuequant.de` auf GitHub Pages zeigen lassen (siehe
-   [GitHub-Doku](https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site)).
-
-Canonical, OG-URL, Sitemap und `robots.txt` hängen an `site` (+ `base`) und
-aktualisieren sich automatisch.
+Canonical, OG-URL, Sitemap und `robots.txt` hängen an `site` in
+`src/config.ts` (aktuell `https://tuequant.de`) und aktualisieren sich
+automatisch.

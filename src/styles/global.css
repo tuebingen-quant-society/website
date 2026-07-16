@@ -180,6 +180,12 @@ input {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* When the phrase wraps (e.g. the longer English accent), clip the gradient
+     per line fragment. Without this, WebKit/Blink clips to the single bounding
+     box and every line after the first renders transparent — the dark hero
+     shows through and the text looks unreadable. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 /* ---------------------------------------------------------------- Components */

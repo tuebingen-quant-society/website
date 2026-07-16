@@ -8,8 +8,9 @@
  * which makes the loop seamless. With prefers-reduced-motion the tape stays
  * still (the second copy is then simply cut off).
  */
-import { ticker } from "../config";
+import { content, getLocale } from "../i18n";
 
+const ticker = content[getLocale(Astro)].ticker;
 const arrow = (dir: string) => (dir === "up" ? "▲" : dir === "down" ? "▼" : "◆");
 ---
 
@@ -34,10 +35,33 @@ const arrow = (dir: string) => (dir === "up" ? "▲" : dir === "down" ? "▼" : 
 
 <style>
   .ticker {
+    position: relative;
     overflow: hidden;
     border-block: var(--border);
     background: var(--surface);
     user-select: none;
+  }
+
+  /* Soft fade at both ends so items slide in instead of popping in. */
+  .ticker::before,
+  .ticker::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(32px, 8vw, 96px);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ticker::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--surface), transparent);
+  }
+
+  .ticker::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--surface), transparent);
   }
 
   .ticker__track {

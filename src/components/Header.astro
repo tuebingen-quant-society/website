@@ -4,32 +4,90 @@
  *
  * §3 defines three nav items: "About us", "Activities", and "Join",
  * where "Join" is the CTA button. Below 768px the two text links are
- * dropped; no hamburger menu.
+ * dropped; no hamburger menu. A compact DE/EN language toggle sits next
+ * to the CTA and stays visible at every width.
  */
-import { wortmarke, nav, hero } from "../config";
+import { wortmarke } from "../config";
+import {
+  content,
+  getLocale,
+  localePath,
+  logicalPath,
+  locales,
+} from "../i18n";
 
-/** On subpages the anchors point back to the home page. */
-const { basis = "" } = Astro.props;
+const locale = getLocale(Astro);
+const t = content[locale];
+
+// On subpages the anchors point back to the (localized) home page.
+const logical = logicalPath(Astro.url.pathname);
+const onHome = logical === "";
+const localeHome = localePath(locale, "");
+const anchorBase = onHome ? "" : localeHome;
+const markHref = onHome ? "#top" : localeHome;
+
+// Language toggle: keep the current page, switch language.
+const languages = locales.map((l) => ({
+  code: l,
+  href: localePath(l, logical),
+  current: l === locale,
+  label: l.toUpperCase(),
+  aria: t.langToggle.to[l],
+}));
 ---
 
 <header class="header" id="site-header">
   <div class="header__inner">
-    <a class="header__mark" href={basis === "" ? "#top" : "/"}>
+    <a class="header__mark" href={markHref}>
+      {/* Miniature of the logo's chart line — inline so it inherits the accent. */}
+      <svg
+        class="header__glyph"
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        aria-hidden="true"
+      >
+        <polyline
+          points="2,17 7,11 10.5,14 16,6.5 21,9.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"></polyline>
+        <circle cx="21" cy="9.5" r="2.6" fill="currentColor" stroke="none"></circle>
+      </svg>
       <span class="header__mark-lang">{wortmarke.lang}</span>
       <span class="header__mark-kurz">{wortmarke.kurz}</span>
     </a>
 
-    <nav class="header__nav" aria-label="Hauptnavigation">
+    <nav class="header__nav" aria-label={locale === "de" ? "Hauptnavigation" : "Main navigation"}>
       {
-        nav.map((item) => (
-          <a class="header__link" href={`${basis}${item.href}`}>
+        t.nav.map((item) => (
+          <a class="header__link" href={`${anchorBase}${item.href}`}>
             {item.label}
           </a>
         ))
       }
-      <a class="btn btn--primary" href={`${basis}${hero.ctaPrimaer.href}`}>
-        {hero.ctaPrimaer.label}
+      <a class="btn btn--primary" href={`${anchorBase}${t.hero.ctaPrimaer.href}`}>
+        {t.hero.ctaPrimaer.label}
       </a>
+
+      <div class="header__lang" role="group" aria-label={t.langToggle.aria}>
+        {
+          languages.map((lang) => (
+            <a
+              class:list={["header__lang-link", { "is-active": lang.current }]}
+              href={lang.href}
+              hreflang={lang.code}
+              lang={lang.code}
+              aria-label={lang.aria}
+              aria-current={lang.current ? "true" : undefined}
+            >
+              {lang.label}
+            </a>
+          ))
+        }
+      </div>
     </nav>
   </div>
 </header>
@@ -50,15 +108,18 @@ const { basis = "" } = Astro.props;
     top: 0;
     z-index: 50;
     height: var(--header-h);
-    background: color-mix(in srgb, var(--paper) 88%, transparent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
     border-bottom: 1px solid transparent;
-    transition: border-color var(--dur) var(--ease);
+    transition:
+      border-color var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
   }
 
   .header.is-scrolled {
     border-bottom-color: var(--rule);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
   }
 
   .header__inner {
@@ -75,12 +136,18 @@ const { basis = "" } = Astro.props;
   .header__mark {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-2);
     min-height: 44px;
     font-weight: 600;
     font-size: var(--fs-small);
     color: var(--ink);
     text-decoration: none;
     letter-spacing: -0.005em;
+  }
+
+  .header__glyph {
+    flex: none;
+    color: var(--accent);
   }
 
   .header__mark-lang {
@@ -107,7 +174,43 @@ const { basis = "" } = Astro.props;
     text-underline-offset: 3px;
   }
 
-  /* §6.1/§8: below 768px, only the wordmark + CTA. */
+  /* DE/EN toggle — quiet monospace pair, accent marks the active language. */
+  .header__lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .header__lang-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    min-height: 44px;
+    padding-inline: 4px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .header__lang-link + .header__lang-link {
+    border-left: 1px solid var(--rule-strong);
+  }
+
+  .header__lang-link:hover {
+    color: var(--ink);
+  }
+
+  .header__lang-link.is-active {
+    color: var(--accent);
+    cursor: default;
+  }
+
+  /* §6.1/§8: below 768px, only the wordmark + CTA (+ language toggle). */
   @media (min-width: 768px) {
     .header__mark-lang {
       display: inline;

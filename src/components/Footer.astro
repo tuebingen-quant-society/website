@@ -2,12 +2,15 @@
 /**
  * Footer — Spec §6.7.
  *
- * The links deliberately don't use carmine: §6.7 colors the footer
- * --ink-muted, and the accent budget from §4.1 reserves carmine for the
- * signature curve and the CTA. Five carmine footer links would blow that budget.
+ * The links stay --ink-muted at rest (§6.7); the accent budget from §4.1
+ * reserves carmine for the signature curve and the CTA. The accent only
+ * appears here transiently, as hover feedback.
  */
-import { basePath, wortmarke, kontakt, footer } from "../config";
+import { wortmarke, kontakt } from "../config";
+import { content, getLocale, localePath } from "../i18n";
 
+const locale = getLocale(Astro);
+const t = content[locale];
 const jahr = new Date().getFullYear();
 ---
 
@@ -16,7 +19,7 @@ const jahr = new Date().getFullYear();
     <div class="footer__cols">
       <div class="footer__col">
         <p class="footer__mark">{wortmarke.lang}</p>
-        <p class="footer__einzeiler">{footer.einzeiler}</p>
+        <p class="footer__einzeiler">{t.footer.einzeiler}</p>
       </div>
 
       <div class="footer__col">
@@ -32,9 +35,9 @@ const jahr = new Date().getFullYear();
     <div class="footer__unterzeile">
       <span>© {jahr} {wortmarke.lang}</span>
       <span aria-hidden="true">·</span>
-      <a class="footer__link" href={`${basePath}impressum`}>Impressum</a>
+      <a class="footer__link" href={localePath(locale, "impressum")}>{t.footer.impressumLabel}</a>
       <span aria-hidden="true">·</span>
-      <a class="footer__link" href={`${basePath}datenschutz`}>Datenschutz</a>
+      <a class="footer__link" href={localePath(locale, "datenschutz")}>{t.footer.datenschutzLabel}</a>
     </div>
   </div>
 </footer>
@@ -86,7 +89,7 @@ const jahr = new Date().getFullYear();
   }
 
   .footer__link:hover {
-    color: var(--ink);
+    color: var(--accent);
   }
 
   .footer__unterzeile {

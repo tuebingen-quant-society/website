@@ -15,7 +15,10 @@
  *  - prefers-reduced-motion: finished chart immediately, no ticking, LIVE badge off.
  *  - Tab hidden / panel outside the viewport: simulation pauses.
  */
-import { plot } from "../config";
+import { plotParams } from "../config";
+import { content, getLocale } from "../i18n";
+
+const plot = { ...plotParams, ...content[getLocale(Astro)].plot };
 ---
 
 <figure class="plot" role="img" aria-label={plot.ariaLabel}>
@@ -355,11 +358,32 @@ import { plot } from "../config";
 
 <style>
   .plot {
+    position: relative;
     background: linear-gradient(180deg, var(--surface-2), var(--surface));
-    border: var(--border);
+    border: 1px solid var(--rule-strong);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+    box-shadow:
+      0 32px 80px rgba(0, 0, 0, 0.55),
+      0 0 48px rgba(224, 46, 80, 0.1);
+  }
+
+  /* Gradient keyline along the panel's top edge — same motif as the join panel. */
+  .plot::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 5%,
+      var(--accent) 35%,
+      var(--accent-2) 65%,
+      transparent 95%
+    );
+    z-index: 1;
   }
 
   .plot__bar {

@@ -80,8 +80,8 @@ nicht aufgehen. Jede ist im Code an Ort und Stelle kommentiert:
   WCAG 2.5.8. Alle freistehenden Bedienelemente halten die 44px ein.
 
 Zusätzlich zur Spec: **§6.4 legt für die Aktivitäten-Sektion nur die Karten
-fest.** Eyebrow und Headline übernehmen wörtlich Nav-Item und Sektions-Label aus
-der IA (§3), statt neue Copy zu erfinden.
+fest.** Die Headline übernimmt wörtlich Nav-Item und Sektions-Label aus der IA
+(§3), statt neue Copy zu erfinden.
 
 ## Aufbau
 

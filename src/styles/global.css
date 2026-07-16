@@ -184,32 +184,6 @@ input {
 
 /* ---------------------------------------------------------------- Components */
 
-/* Section labels as terminal chips — mono, pill, hairline border.
-   inline-block, not inline-flex: the longest label must be able to
-   wrap inside the chip on narrow viewports. */
-.eyebrow {
-  display: inline-block;
-  max-width: 100%;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius-pill);
-  padding: 6px 14px;
-  background: color-mix(in srgb, var(--surface) 65%, transparent);
-  margin-bottom: var(--space-5);
-}
-
-/* Terminal prompt before every section label. */
-.eyebrow::before {
-  content: "// ";
-  white-space: pre;
-  color: var(--accent);
-}
-
 .btn {
   display: inline-flex;
   align-items: center;

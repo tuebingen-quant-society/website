@@ -60,7 +60,6 @@ export const nav = [
 ];
 
 export const hero = {
-  eyebrow: "STUDENTISCHE INITIATIVE · UNIVERSITÄT TÜBINGEN",
   /** headlineAccent is rendered as the gradient phrase after headline. */
   headline: "Quantitative Finance,",
   headlineAccent: "offen diskutiert.",
@@ -71,7 +70,6 @@ export const hero = {
 };
 
 export const about = {
-  eyebrow: "WARUM ES UNS GIBT",
   headline: "Zwischen Vorlesung und Praxis fehlt ein Raum.",
   absaetze: [
     "Quantitative Methoden prägen moderne Kapitalmärkte, sind für Außenstehende aber intransparent und faktisch großen Instituten vorbehalten. Wer sie verstehen will, findet im Studium selten einen Ort dafür.",
@@ -80,10 +78,9 @@ export const about = {
 };
 
 export const activities = {
-  // §6.4 only specifies the cards. Eyebrow and headline therefore reuse
-  // the nav item and section label from the IA (§3) verbatim, instead of
-  // inventing new copy.
-  eyebrow: "AKTIVITÄTEN",
+  // §6.4 only specifies the cards. The headline therefore reuses the nav
+  // item / section label from the IA (§3) verbatim, instead of inventing
+  // new copy.
   headline: "Was wir machen.",
   /** New card = one object. Do not touch the markup. */
   karten: [
@@ -119,14 +116,12 @@ export const activities = {
 };
 
 export const open = {
-  eyebrow: "FÜR WEN",
   headline: "Vorkenntnisse in Finance brauchst du nicht.",
   absatz:
     "Offen für alle Fachrichtungen und alle Semester. Ob du aus Mathe, Informatik, ML, Physik oder den Wirtschaftswissenschaften kommst — oder aus etwas ganz anderem: Wenn dich quantitative Methoden interessieren, bist du richtig. Fachliteratur und Materialien sind überwiegend englisch, die Treffen sind es auf Wunsch auch.",
 };
 
 export const join = {
-  eyebrow: "MITMACHEN",
   headline: "Komm zum nächsten Treffen.",
   absatz:
     "Trag dich in die Mailingliste ein — wir schreiben, wenn das nächste Treffen ansteht. Kein Spam, keine Verpflichtung.",

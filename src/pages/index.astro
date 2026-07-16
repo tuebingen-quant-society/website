@@ -21,7 +21,6 @@ import { hero, about, activities, open, join, kontakt } from "../config";
 
     <div class="hero__inner">
       <div class="hero__text">
-        <p class="eyebrow">{hero.eyebrow}</p>
         <h1 class="hero-headline" id="hero-headline">
           {hero.headline}{" "}
           <span class="text-grad">{hero.headlineAccent}</span>
@@ -48,7 +47,6 @@ import { hero, about, activities, open, join, kontakt } from "../config";
   <section class="section" id="about" aria-labelledby="about-headline">
     <div class="section__inner">
       <div class="prose">
-        <p class="eyebrow">{about.eyebrow}</p>
         <h2 class="section-headline" id="about-headline">{about.headline}</h2>
         <div class="about__body">
           {about.absaetze.map((absatz) => <p>{absatz}</p>)}
@@ -60,7 +58,6 @@ import { hero, about, activities, open, join, kontakt } from "../config";
   {/* ------------------------------------------------ Activities */}
   <section class="section" id="activities" aria-labelledby="activities-headline">
     <div class="section__inner">
-      <p class="eyebrow">{activities.eyebrow}</p>
       <h2 class="section-headline" id="activities-headline">{activities.headline}</h2>
 
       <ul class="cards" role="list">
@@ -84,7 +81,6 @@ import { hero, about, activities, open, join, kontakt } from "../config";
   <section class="section section--surface" id="open" aria-labelledby="open-headline">
     <div class="section__inner">
       <div class="open__body prose">
-        <p class="eyebrow">{open.eyebrow}</p>
         <h2 class="section-headline" id="open-headline">{open.headline}</h2>
         <p class="open__absatz">{open.absatz}</p>
       </div>
@@ -96,7 +92,6 @@ import { hero, about, activities, open, join, kontakt } from "../config";
     <div class="section__inner">
       <div class="join-panel">
         <div class="join__body prose">
-          <p class="eyebrow">{join.eyebrow}</p>
           <h2 class="section-headline" id="join-headline">{join.headline}</h2>
           <p class="join__absatz">{join.absatz}</p>
 

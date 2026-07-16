@@ -1,0 +1,150 @@
+---
+/**
+ * Privacy policy (English) — served at "/en/datenschutz".
+ *
+ * Convenience translation of src/pages/datenschutz.astro. The German version
+ * is the legally authoritative one; a note at the top links to it. Content
+ * still depends on the form backend from §16.4 (config.datenschutz).
+ *
+ * Draft, not legal advice: have it reviewed by a lawyer before going live.
+ */
+import Base from "../../layouts/Base.astro";
+import { datenschutz, kontakt, wortmarke, formEndpoint } from "../../config";
+import { localePath } from "../../i18n";
+
+const titel = `Privacy — ${wortmarke.lang}`;
+const germanHref = localePath("de", "datenschutz");
+---
+
+<Base titel={titel} beschreibung="Privacy policy of the Tübingen Quant Society.">
+  <section class="section" aria-labelledby="ds-headline">
+    <div class="section__inner">
+      <div class="prose">
+        <h1 class="section-headline" id="ds-headline">Privacy policy</h1>
+
+        <div class="body">
+          <p class="hinweis">
+            This is a convenience translation. The legally binding version is the{" "}
+            <a class="link" href={germanHref}>German privacy policy</a>.
+          </p>
+
+          <h2 class="h3">Controller</h2>
+          <p>
+            <a class="link" href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>
+          </p>
+
+          <h2 class="h3">Hosting and server logs</h2>
+          <p>
+            This website is hosted by {datenschutz.hoster}. When the site is accessed, the
+            host processes technically necessary connection data, including the IP address,
+            the time of access, the address requested, the amount of data transferred, and
+            browser and operating-system details. This processing is required to deliver the
+            page and is based on our legitimate interest in a secure and stable operation
+            (Art. 6(1)(f) GDPR). We do not evaluate these logs ourselves and do not combine
+            them with other data.
+          </p>
+
+          <h2 class="h3">No third-party content</h2>
+          <p>
+            The site does not load any third-party content. Fonts are served from our own
+            server; there are no Google Fonts, no maps, no embedded social-media feeds, and
+            no external scripts. Simply visiting the site therefore sends no request to any
+            third party.
+          </p>
+
+          <h2 class="h3">Cookies</h2>
+          <p>
+            We do not set any cookies and store nothing in your browser. A cookie banner is
+            therefore not needed.
+          </p>
+
+          <h2 class="h3">Mailing list</h2>
+          <p>
+            If you sign up for the mailing list, we process your email address in order to
+            inform you about upcoming meetings. The legal basis is your consent
+            (Art. 6(1)(a) GDPR).
+          </p>
+          <p>
+            Sign-up uses a double opt-in procedure: after you submit, you receive an email
+            with a confirmation link. Only once you click it do we add you. Until then we
+            store your address exclusively for this purpose.
+          </p>
+          <p>
+            You can withdraw your consent at any time with effect for the future — via the
+            unsubscribe link in every email or informally at{" "}
+            <a class="link" href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>. After
+            withdrawal we delete your address. We do not pass it on to third parties and do
+            not use it for anything else.
+          </p>
+          {
+            datenschutz.mailinglistenAnbieter?.startsWith("TODO") || !formEndpoint ? (
+              <p class="hinweis">
+                Editorial note: once the form backend is decided (§16.4), the provider —
+                with its registered office, data-processing agreement, and retention period
+                — belongs here. Without this the policy is incomplete.
+              </p>
+            ) : (
+              <p>
+                For sending we use {datenschutz.mailinglistenAnbieter}. The provider
+                processes your address solely on our instructions; a data-processing
+                agreement under Art. 28 GDPR is in place for this.
+              </p>
+            )
+          }
+
+          <h2 class="h3">Reach measurement</h2>
+          {
+            datenschutz.analytics ? (
+              <p>
+                For reach measurement we use {datenschutz.analytics}. Measurement is
+                cookie-free and without personal reference; no profiles are created and no
+                data is sold to third parties. The basis is our legitimate interest in a
+                rough estimate of usage (Art. 6(1)(f) GDPR).
+              </p>
+            ) : (
+              <p>
+                We currently do not use any analytics or tracking tools. In particular, we
+                do not use Google Analytics.
+              </p>
+            )
+          }
+
+          <h2 class="h3">Your rights</h2>
+          <p>
+            You have the right to access (Art. 15 GDPR), rectification (Art. 16), erasure
+            (Art. 17), restriction of processing (Art. 18), data portability (Art. 20), and
+            objection (Art. 21). To exercise them, contact the address given above. You may
+            also lodge a complaint with a data protection supervisory authority; for
+            Baden-Württemberg this is the State Commissioner for Data Protection and Freedom
+            of Information.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .body {
+    margin-top: var(--space-6);
+    color: var(--ink-muted);
+  }
+
+  .h3 {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+  }
+
+  .body > .h3:first-child {
+    margin-top: 0;
+  }
+
+  .hinweis {
+    border-left: 2px solid var(--rule);
+    padding-left: var(--space-4);
+    font-size: var(--fs-small);
+  }
+</style>

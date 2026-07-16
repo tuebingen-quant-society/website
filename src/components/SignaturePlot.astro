@@ -15,7 +15,10 @@
  *  - prefers-reduced-motion: finished chart immediately, no ticking, LIVE badge off.
  *  - Tab hidden / panel outside the viewport: simulation pauses.
  */
-import { plot } from "../config";
+import { plotParams } from "../config";
+import { content, getLocale } from "../i18n";
+
+const plot = { ...plotParams, ...content[getLocale(Astro)].plot };
 ---
 
 <figure class="plot" role="img" aria-label={plot.ariaLabel}>

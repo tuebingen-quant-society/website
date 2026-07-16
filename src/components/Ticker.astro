@@ -8,8 +8,9 @@
  * which makes the loop seamless. With prefers-reduced-motion the tape stays
  * still (the second copy is then simply cut off).
  */
-import { ticker } from "../config";
+import { content, getLocale } from "../i18n";
 
+const ticker = content[getLocale(Astro)].ticker;
 const arrow = (dir: string) => (dir === "up" ? "▲" : dir === "down" ? "▼" : "◆");
 ---
 

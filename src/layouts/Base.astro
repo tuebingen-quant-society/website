@@ -4,6 +4,10 @@
  *
  * Fonts come via @fontsource from node_modules and are bundled at build
  * time — no Google Fonts CDN, no third-party requests (§11).
+ *
+ * Language: copy (title, description, skip link, og:locale, <html lang>) is
+ * pulled from the current locale. hreflang alternates point every page at its
+ * counterpart in the other language.
  */
 import "../styles/fonts.css"; // Newsreader (custom subset, see scripts/subset-fonts.mjs)
 import "@fontsource/ibm-plex-sans/latin-400.css";
@@ -13,39 +17,59 @@ import "../styles/global.css";
 
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { basePath, meta, site, wortmarke } from "../config";
+import { basePath, site, wortmarke } from "../config";
+import {
+  content,
+  getLocale,
+  localePath,
+  logicalPath,
+  locales,
+  defaultLocale,
+} from "../i18n";
 
 type Props = {
   titel?: string;
   beschreibung?: string;
-  basis?: string;
 };
 
-const {
-  titel = meta.titel,
-  beschreibung = meta.beschreibung,
-  basis = "",
-} = Astro.props;
+const locale = getLocale(Astro);
+const t = content[locale];
+
+const { titel = t.meta.titel, beschreibung = t.meta.beschreibung } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, site).href;
 const ogBild = new URL(`${basePath}og.png`, site).href;
+
+// hreflang alternates: the same logical page in every language, plus x-default.
+const logical = logicalPath(Astro.url.pathname);
+const alternates = locales.map((l) => ({
+  hreflang: l,
+  href: new URL(localePath(l, logical), site).href,
+}));
+const xDefault = new URL(localePath(defaultLocale, logical), site).href;
 ---
 
 <!doctype html>
-<html lang={meta.sprache}>
+<html lang={t.meta.sprache}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titel}</title>
     <meta name="description" content={beschreibung} />
     <link rel="canonical" href={canonical} />
+    {
+      alternates.map((a) => (
+        <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={xDefault} />
 
     <link rel="icon" href={`${basePath}favicon.svg`} type="image/svg+xml" />
     <meta name="theme-color" content="#0a0d12" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={wortmarke.lang} />
-    <meta property="og:locale" content="de_DE" />
+    <meta property="og:locale" content={t.meta.ogLocale} />
     <meta property="og:title" content={titel} />
     <meta property="og:description" content={beschreibung} />
     <meta property="og:url" content={canonical} />
@@ -61,8 +85,8 @@ const ogBild = new URL(`${basePath}og.png`, site).href;
   </head>
 
   <body>
-    <a class="skip-link" href="#main">Zum Inhalt springen</a>
-    <Header basis={basis} />
+    <a class="skip-link" href="#main">{t.skipLink}</a>
+    <Header />
     <main id="main">
       <slot />
     </main>

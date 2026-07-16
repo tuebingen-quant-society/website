@@ -1,0 +1,400 @@
+---
+/**
+ * Home page body — "Quant Terminal v2" redesign.
+ *
+ * Locale-aware: all copy comes from the current locale's content
+ * (src/i18n/content.ts). Rendered by both src/pages/index.astro (de, at "/")
+ * and src/pages/en/index.astro (en, at "/en/"), so the markup lives once here.
+ */
+import MarketBackground from "./MarketBackground.astro";
+import SignaturePlot from "./SignaturePlot.astro";
+import Ticker from "./Ticker.astro";
+import JoinForm from "./JoinForm.astro";
+import { kontakt } from "../config";
+import { content, getLocale } from "../i18n";
+
+const { hero, about, activities, open, join } = content[getLocale(Astro)];
+---
+
+{/* ------------------------------------------------ Hero */}
+<section class="hero" id="top" aria-labelledby="hero-headline">
+  <MarketBackground />
+  <div class="hero__glow hero__glow--a" aria-hidden="true"></div>
+  <div class="hero__glow hero__glow--b" aria-hidden="true"></div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__inner">
+    <div class="hero__text">
+      <h1 class="hero-headline" id="hero-headline">
+        {hero.headline}{" "}
+        <span class="text-grad">{hero.headlineAccent}</span>
+      </h1>
+      <p class="hero__subline">{hero.subline}</p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary" href={hero.ctaPrimaer.href}>{hero.ctaPrimaer.label}</a>
+        <a class="link link--arrow" href={hero.ctaSekundaer.href}>
+          {hero.ctaSekundaer.label}
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__plot">
+      <SignaturePlot />
+    </div>
+  </div>
+</section>
+
+<Ticker />
+
+{/* ------------------------------------------------ About us */}
+<section class="section" id="about" aria-labelledby="about-headline">
+  <div class="section__inner">
+    <div class="prose">
+      <h2 class="section-headline" id="about-headline">{about.headline}</h2>
+      <div class="about__body">
+        {about.absaetze.map((absatz) => <p>{absatz}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ------------------------------------------------ Activities */}
+<section class="section" id="activities" aria-labelledby="activities-headline">
+  <div class="section__inner">
+    <h2 class="section-headline" id="activities-headline">{activities.headline}</h2>
+
+    <ul class="cards" role="list">
+      {
+        activities.karten.map((karte, i) => (
+          <li class:list={["card", "cards__item", { "card--geplant": karte.geplant }]}>
+            <span class="card__num" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 class="card__titel">{karte.titel}</h3>
+            <p class="card__text">{karte.beschreibung}</p>
+            {karte.geplant && <span class="badge">{activities.badge}</span>}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+{/* ------------------------------------------------ Who it's for */}
+<section class="section section--surface" id="open" aria-labelledby="open-headline">
+  <div class="section__inner">
+    <div class="open__body prose">
+      <h2 class="section-headline" id="open-headline">{open.headline}</h2>
+      <p class="open__absatz">{open.absatz}</p>
+    </div>
+  </div>
+</section>
+
+{/* ------------------------------------------------ Join */}
+<section class="section" id="join" aria-labelledby="join-headline">
+  <div class="section__inner">
+    <div class="join-panel">
+      <div class="join__body prose">
+        <h2 class="section-headline" id="join-headline">{join.headline}</h2>
+        <p class="join__absatz">{join.absatz}</p>
+
+        <JoinForm />
+
+        <p class="join__social">
+          <a class="link link--arrow" href={kontakt.instagram} rel="me noopener">
+            {join.instagramLink}
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Scroll reveal: only enabled via JS — without JS everything stays visible,
+    and with prefers-reduced-motion the class is never assigned in the first place. */}
+<script>
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const targets = document.querySelectorAll(".section .section__inner");
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    for (const t of targets) {
+      t.classList.add("reveal");
+      io.observe(t);
+    }
+  }
+</script>
+
+<style>
+  /* ------------------------------------------------ Hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: min(calc(100svh - var(--header-h)), 900px);
+    display: flex;
+    align-items: center;
+    padding-block: var(--space-8);
+    border-bottom: var(--border);
+  }
+
+  /* Fine terminal grid behind everything. */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 52px 52px;
+    opacity: 0.35;
+    pointer-events: none;
+    /* The grid fades out toward the edges instead of ending abruptly. */
+    -webkit-mask-image: radial-gradient(120% 90% at 60% 40%, #000 40%, transparent 100%);
+    mask-image: radial-gradient(120% 90% at 60% 40%, #000 40%, transparent 100%);
+  }
+
+  /* Aurora blobs: soft coral + cold blue glow drifting behind the content. */
+  .hero__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+  }
+
+  .hero__glow--a {
+    width: 560px;
+    height: 560px;
+    top: -18%;
+    right: 4%;
+    background: radial-gradient(circle, rgba(224, 46, 80, 0.28), transparent 65%);
+    animation: hero-drift 16s ease-in-out infinite alternate;
+  }
+
+  .hero__glow--b {
+    width: 480px;
+    height: 480px;
+    bottom: -24%;
+    left: -8%;
+    background: radial-gradient(circle, rgba(64, 106, 255, 0.16), transparent 65%);
+    animation: hero-drift 20s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes hero-drift {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(-48px, 36px, 0) scale(1.12);
+    }
+  }
+
+  /* Vignette + readability gradient over the canvas, under the content. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        var(--paper) 0%,
+        rgba(5, 8, 13, 0.82) 34%,
+        rgba(5, 8, 13, 0.25) 70%,
+        rgba(5, 8, 13, 0.55) 100%
+      ),
+      linear-gradient(180deg, rgba(5, 8, 13, 0.5), transparent 30%, transparent 70%, var(--paper));
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+
+  .hero__subline {
+    max-width: 50ch;
+    margin-top: var(--space-5);
+    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+    color: var(--ink-muted);
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+
+  /* The chart panel gets a coral halo so it reads as the hero's second focus. */
+  .hero__plot {
+    position: relative;
+  }
+
+  .hero__plot::before {
+    content: "";
+    position: absolute;
+    inset: -8% -6%;
+    background: radial-gradient(60% 60% at 50% 50%, rgba(224, 46, 80, 0.14), transparent 70%);
+    filter: blur(24px);
+    pointer-events: none;
+  }
+
+  /* ≥900px two-column: text 5/12, chart panel 7/12, vertically centered. */
+  @media (min-width: 900px) {
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+  }
+
+  /* ------------------------------------------------ About us */
+  .about__body {
+    margin-top: var(--space-5);
+    color: var(--ink-muted);
+  }
+
+  /* ------------------------------------------------ Activities */
+  .cards {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-7);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  /* Cards of equal height per row; badge sits at the bottom. */
+  .cards__item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cards__item .card__text {
+    flex: 1;
+  }
+
+  /* Ghost index in the card's top-right corner — quiet by default,
+     lights up in the gradient on hover. */
+  .card__num {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--rule-strong);
+    transition: color var(--dur) var(--ease);
+    pointer-events: none;
+  }
+
+  .card:hover .card__num {
+    color: var(--accent);
+  }
+
+  .cards__item .card__titel {
+    padding-right: var(--space-8);
+  }
+
+  @media (min-width: 600px) {
+    .cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ------------------------------------------------ Who it's for */
+  .open__body {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .open__absatz {
+    margin-top: var(--space-5);
+    color: var(--ink-muted);
+  }
+
+  /* ------------------------------------------------ Join */
+  /* Glowing terminal panel around the sign-up — the page's closing focus. */
+  .join-panel {
+    position: relative;
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    padding: clamp(32px, 3.4vw + 20px, 72px) var(--gutter);
+    overflow: hidden;
+  }
+
+  /* Gradient keyline along the panel's top edge. */
+  .join-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 5%,
+      var(--accent) 35%,
+      var(--accent-2) 65%,
+      transparent 95%
+    );
+  }
+
+  /* Soft coral wash falling in from the keyline. */
+  .join-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      55% 70% at 50% -10%,
+      rgba(224, 46, 80, 0.12),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .join-panel > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .join__body {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .join__absatz {
+    margin-top: var(--space-5);
+    color: var(--ink-muted);
+  }
+
+  .join__social {
+    margin-top: var(--space-5);
+  }
+</style>

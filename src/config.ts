@@ -61,7 +61,9 @@ export const nav = [
 
 export const hero = {
   eyebrow: "STUDENTISCHE INITIATIVE · UNIVERSITÄT TÜBINGEN",
-  headline: "Quantitative Finance, offen diskutiert.",
+  /** headlineAccent is rendered as the gradient phrase after headline. */
+  headline: "Quantitative Finance,",
+  headlineAccent: "offen diskutiert.",
   subline:
     "Ein Ort an der Universität Tübingen, um Paper zu lesen, Projekte zu diskutieren und zu verstehen, wie datengetriebene Entscheidungen auf Finanzmärkten zustande kommen.",
   ctaPrimaer: { label: "Mitmachen", href: "#join" },

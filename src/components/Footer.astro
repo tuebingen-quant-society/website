@@ -2,9 +2,9 @@
 /**
  * Footer — Spec §6.7.
  *
- * The links deliberately don't use carmine: §6.7 colors the footer
- * --ink-muted, and the accent budget from §4.1 reserves carmine for the
- * signature curve and the CTA. Five carmine footer links would blow that budget.
+ * The links stay --ink-muted at rest (§6.7); the accent budget from §4.1
+ * reserves carmine for the signature curve and the CTA. The accent only
+ * appears here transiently, as hover feedback.
  */
 import { basePath, wortmarke, kontakt, footer } from "../config";
 
@@ -86,7 +86,7 @@ const jahr = new Date().getFullYear();
   }
 
   .footer__link:hover {
-    color: var(--ink);
+    color: var(--accent);
   }
 
   .footer__unterzeile {

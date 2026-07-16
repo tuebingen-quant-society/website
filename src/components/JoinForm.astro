@@ -135,14 +135,16 @@ const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mai
     width: 100%;
     /* §6.6 centers the section; the input field itself stays left-aligned. */
     text-align: left;
-    min-height: 44px;
-    padding: 10px 12px;
-    background: var(--surface);
-    border: var(--border);
-    border-radius: var(--radius);
+    min-height: 46px;
+    padding: 12px 20px;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-pill);
     font-size: var(--fs-body);
     color: var(--ink);
-    transition: border-color var(--dur) var(--ease);
+    transition:
+      border-color var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
   }
 
   .join__input::placeholder {
@@ -151,6 +153,14 @@ const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mai
 
   .join__input:hover {
     border-color: var(--ink-muted);
+  }
+
+  /* The focus ring is drawn on the border itself — an outline rectangle
+     around a pill shape would look broken. */
+  .join__input:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255, 92, 114, 0.25);
   }
 
   .join__input[aria-invalid="true"] {
@@ -198,6 +208,9 @@ const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mai
     .join__row {
       flex-direction: row;
       align-items: flex-start;
+      /* §6.6 keeps the section centered — the form itself too. */
+      max-width: 520px;
+      margin-inline: auto;
     }
   }
 </style>

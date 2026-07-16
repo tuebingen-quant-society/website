@@ -31,7 +31,8 @@ const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mai
           aria-describedby="join-error"
         />
       </div>
-      <button class="btn btn--primary join__submit" type="submit">
+      {/* TODO: temporarily disabled — remove `disabled` to re-enable signups. */}
+      <button class="btn btn--primary join__submit" type="submit" disabled>
         {join.buttonIdle}
       </button>
     </div>
@@ -85,6 +86,8 @@ const netzwerkFehler = join.fehlerNetzwerk.replace("{kontakt-mail}", kontakt.mai
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      // Temporarily disabled — bail out so Enter-to-submit can't bypass it.
+      if (button.disabled) return;
       loescheFehler();
 
       const email = input.value.trim();

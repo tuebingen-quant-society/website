@@ -5,7 +5,7 @@ SAML 2.0 service-provider backend for university login.
 
 ## Local development
 
-Requires Node.js 20.9 or newer.
+Requires Node.js 24.x, matching the Vercel runtime.
 
 ```bash
 npm install

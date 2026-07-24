@@ -1,0 +1,153 @@
+/* Migrated from src/components/SignaturePlot.astro. */
+.plot {
+    position: relative;
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow:
+      0 32px 80px rgba(0, 0, 0, 0.55),
+      0 0 48px rgba(224, 46, 80, 0.1);
+  }
+
+  /* Gradient keyline along the panel's top edge — same motif as the join panel. */
+  .plot::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 5%,
+      var(--accent) 35%,
+      var(--accent-2) 65%,
+      transparent 95%
+    );
+    z-index: 1;
+  }
+
+  .plot__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 10px 14px;
+    border-bottom: var(--border);
+  }
+
+  .plot__dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .plot__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .plot__dot--r {
+    background: var(--down);
+  }
+
+  .plot__dot--y {
+    background: #d9a13b;
+  }
+
+  .plot__dot--g {
+    background: var(--up);
+  }
+
+  .plot__title {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .plot__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--up);
+  }
+
+  .plot__pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--up);
+    animation: plot-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes plot-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(47, 191, 143, 0.5);
+    }
+    50% {
+      opacity: 0.6;
+      box-shadow: 0 0 0 5px rgba(47, 191, 143, 0);
+    }
+  }
+
+  .plot__canvas {
+    display: block;
+    width: 100%;
+    height: clamp(220px, 30vw, 330px);
+  }
+
+  .plot__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    padding: 8px 14px 10px;
+    border-top: var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+
+  .plot__last {
+    color: var(--ink);
+  }
+
+  .plot__last.is-up {
+    color: var(--up);
+  }
+
+  .plot__last.is-down {
+    color: var(--down);
+  }
+
+  .plot__note {
+    margin-left: auto;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 767px) {
+    .plot__canvas {
+      height: 210px;
+    }
+
+    .plot__note {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+  }

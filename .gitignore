@@ -1,11 +1,15 @@
 node_modules/
 dist/
 .astro/
+.next/
+.playwright-cli/
+*.tsbuildinfo
 
 og.debug.svg
 
 .DS_Store
 *.log
 .env
+.env.local
 .env.production
 spec.md

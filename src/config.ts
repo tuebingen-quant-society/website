@@ -12,14 +12,8 @@
  * before going live. Search for "TODO" to find all of them.
  */
 
-/**
- * Normalized `base` from astro.config.mjs, always with a trailing slash.
- * import.meta.env.BASE_URL omits it when `base` has none configured
- * (e.g. "/website" instead of "/website/") — use this instead of the raw
- * env var wherever a path is built by concatenation.
- */
-const rawBase = import.meta.env.BASE_URL;
-export const basePath = rawBase.endsWith("/") ? rawBase : `${rawBase}/`;
+/** Public assets are served from the domain root by Next.js. */
+export const basePath = "/";
 
 /** Used for canonical, OG URL, and sitemap.xml. */
 export const site = "https://tuequant.de";
@@ -37,12 +31,7 @@ export const kontakt = {
   linkedin: "https://www.linkedin.com/company/t%C3%BCbingen-quant-society",
 };
 
-/**
- * TODO §16.4 — form backend endpoint (university mailman list, Formspree,
- * or Buttondown). As long as this is empty, the form runs in mock mode: all
- * five states from §6.6 can be triggered and tested, but nothing is sent.
- * As soon as a URL is set here, the form submits for real — no code change needed.
- */
+/** Mailing-list sign-up stays disabled until its provider is selected. */
 export const formEndpoint = "";
 
 /**

@@ -74,14 +74,15 @@ redeploy.
 ## Authentication flow
 
 1. Redirect the user to
-   `/api/auth/saml/login?returnTo=/chatbot`.
+   `/api/auth/saml/login?returnTo=/members`.
 2. The login route creates a signed AuthnRequest and stores its request ID in a
    short-lived encrypted HttpOnly cookie. This preserves `InResponseTo` validation across
    serverless invocations.
 3. The ACS validates the response signature, assertion signature, issuer, audience,
    timestamps, RelayState, and request ID.
 4. A successful login creates an encrypted, eight-hour HttpOnly session cookie.
-5. The chatbot backend calls `GET /api/auth/saml/session`. It receives either:
+5. The members-only area calls `GET /api/auth/saml/session` before serving
+   protected content. It receives either:
 
 ```json
 {

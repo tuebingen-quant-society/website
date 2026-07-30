@@ -64,7 +64,7 @@ test("profile mapping requires the requested attributes", () => {
 });
 
 test("return paths cannot redirect off site", () => {
-  assert.equal(safeReturnPath("/chatbot"), "/chatbot");
+  assert.equal(safeReturnPath("/members"), "/members");
   assert.equal(safeReturnPath("//evil.example"), "/");
   assert.equal(safeReturnPath("/\\evil.example"), "/");
   assert.equal(safeReturnPath("https://evil.example"), "/");

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Translatable site content, keyed by locale (Spec §13).
  *
  * Add or change copy here — never in the layout/components. To add a language,
@@ -81,6 +81,9 @@ export type SiteContent = {
   };
   footer: {
     einzeiler: string;
+    /** Column headings in the footer. */
+    kontaktLabel: string;
+    folgenLabel: string;
     impressumLabel: string;
     datenschutzLabel: string;
   };
@@ -187,6 +190,8 @@ export const content: Record<Locale, SiteContent> = {
     },
     footer: {
       einzeiler: "Studentische Initiative an der Universität Tübingen.",
+      kontaktLabel: "Kontakt",
+      folgenLabel: "Folgen",
       impressumLabel: "Impressum",
       datenschutzLabel: "Datenschutz",
     },
@@ -299,6 +304,8 @@ export const content: Record<Locale, SiteContent> = {
     },
     footer: {
       einzeiler: "A student initiative at the University of Tübingen.",
+      kontaktLabel: "Contact",
+      folgenLabel: "Follow",
       impressumLabel: "Legal notice",
       datenschutzLabel: "Privacy",
     },

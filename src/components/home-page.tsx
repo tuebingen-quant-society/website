@@ -20,14 +20,14 @@ export function HomePage({ locale }: { locale: Locale }) {
             <h1 className="hero-headline" id="hero-headline">
               {hero.headline} <span className="text-grad">{hero.headlineAccent}</span>
             </h1>
-            <p className="hero__subline">{hero.subline}</p>
+            <p className="hero__subline lead">{hero.subline}</p>
             <div className="hero__ctas">
               <a className="btn btn--primary" href={hero.ctaPrimaer.href}>
                 {hero.ctaPrimaer.label}
               </a>
-              <a className="link link--arrow" href={hero.ctaSekundaer.href}>
+              <a className="btn btn--secondary" href={hero.ctaSekundaer.href}>
                 {hero.ctaSekundaer.label}
-                <span className="arrow" aria-hidden="true">→</span>
+                <span aria-hidden="true">↓</span>
               </a>
             </div>
           </div>
@@ -39,29 +39,31 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       <Ticker locale={locale} />
 
+      {/* Headline and prose sit side by side from 900px — the section's copy is
+          two dense paragraphs, and a single column makes them read as a wall. */}
       <section className="section" id="about" aria-labelledby="about-headline">
-        <div className="section__inner">
-          <div className="prose">
-            <h2 className="section-headline" id="about-headline">{about.headline}</h2>
-            <div className="about__body">
-              {about.absaetze.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            </div>
+        <div className="section__inner about reveal">
+          <h2 className="section-headline about__head" id="about-headline">
+            {about.headline}
+          </h2>
+          <div className="about__body prose">
+            {about.absaetze.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         </div>
       </section>
 
       <section className="section" id="activities" aria-labelledby="activities-headline">
         <div className="section__inner">
-          <h2 className="section-headline" id="activities-headline">
+          <h2 className="section-headline reveal" id="activities-headline">
             {activities.headline}
           </h2>
-          <ul className="cards" role="list">
+          <ul className="cards reveal" role="list">
             {activities.karten.map((card, index) => (
               <li
                 className={`card cards__item${card.geplant ? " card--geplant" : ""}`}
                 key={card.titel}
               >
-                <span className="card__num" aria-hidden="true">
+                <span className="card__num tnum" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="card__titel">{card.titel}</h3>
@@ -75,23 +77,23 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       <section className="section section--surface" id="open" aria-labelledby="open-headline">
         <div className="section__inner">
-          <div className="open__body prose">
+          <div className="open__body reveal">
             <h2 className="section-headline" id="open-headline">{open.headline}</h2>
-            <p className="open__absatz">{open.absatz}</p>
+            <p className="open__absatz lead">{open.absatz}</p>
           </div>
         </div>
       </section>
 
       <section className="section" id="join" aria-labelledby="join-headline">
         <div className="section__inner">
-          <div className="join-panel">
-            <div className="join__body prose">
+          <div className="panel join-panel reveal">
+            <div className="join__body">
               <h2 className="section-headline" id="join-headline">{join.headline}</h2>
-              <p className="join__absatz">{join.absatz}</p>
+              <p className="join__absatz lead">{join.absatz}</p>
               <JoinForm locale={locale} />
               <p className="join__social">
                 <a className="link link--arrow" href={kontakt.instagram} rel="me noopener">
-                  {join.instagramLink}
+                  <span className="link__label">{join.instagramLink}</span>
                   <span className="arrow" aria-hidden="true">→</span>
                 </a>
               </p>

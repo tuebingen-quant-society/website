@@ -1,262 +1,269 @@
-/* Migrated from src/components/Home.astro. */
+/* Home page sections. Tokens and shared components live in global.css. */
+
 /* ------------------------------------------------ Hero */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    min-height: min(calc(100svh - var(--header-h)), 900px);
-    display: flex;
-    align-items: center;
-    padding-block: var(--space-8);
-    border-bottom: var(--border);
-  }
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: min(calc(100svh - var(--header-h)), 880px);
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-8);
+  border-bottom: var(--border);
+}
 
-  /* Fine terminal grid behind everything. */
-  .hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--rule) 1px, transparent 1px),
-      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-    background-size: 52px 52px;
-    opacity: 0.35;
-    pointer-events: none;
-    /* The grid fades out toward the edges instead of ending abruptly. */
-    -webkit-mask-image: radial-gradient(120% 90% at 60% 40%, #000 40%, transparent 100%);
-    mask-image: radial-gradient(120% 90% at 60% 40%, #000 40%, transparent 100%);
-  }
+/* Fine terminal grid behind everything. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.4;
+  pointer-events: none;
+  /* The grid fades out toward the edges instead of ending abruptly. */
+  -webkit-mask-image: radial-gradient(120% 90% at 60% 40%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(120% 90% at 60% 40%, #000 40%, transparent 100%);
+}
 
-  /* Aurora blobs: soft coral + cold blue glow drifting behind the content. */
-  .hero__glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(90px);
-    pointer-events: none;
-  }
+/* Aurora blobs: soft coral + cold blue glow drifting behind the content. */
+.hero__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+}
 
-  .hero__glow--a {
-    width: 560px;
-    height: 560px;
-    top: -18%;
-    right: 4%;
-    background: radial-gradient(circle, rgba(224, 46, 80, 0.28), transparent 65%);
-    animation: hero-drift 16s ease-in-out infinite alternate;
-  }
+.hero__glow--a {
+  width: 560px;
+  height: 560px;
+  top: -20%;
+  right: 2%;
+  background: radial-gradient(circle, rgba(224, 46, 80, 0.26), transparent 65%);
+  animation: hero-drift 18s ease-in-out infinite alternate;
+}
 
-  .hero__glow--b {
-    width: 480px;
-    height: 480px;
-    bottom: -24%;
-    left: -8%;
-    background: radial-gradient(circle, rgba(64, 106, 255, 0.16), transparent 65%);
-    animation: hero-drift 20s ease-in-out infinite alternate-reverse;
-  }
+.hero__glow--b {
+  width: 480px;
+  height: 480px;
+  bottom: -26%;
+  left: -10%;
+  background: radial-gradient(circle, rgba(64, 106, 255, 0.16), transparent 65%);
+  animation: hero-drift 24s ease-in-out infinite alternate-reverse;
+}
 
-  @keyframes hero-drift {
-    from {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    to {
-      transform: translate3d(-48px, 36px, 0) scale(1.12);
-    }
+@keyframes hero-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
   }
-
-  /* Vignette + readability gradient over the canvas, under the content. */
-  .hero__scrim {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(
-        90deg,
-        var(--paper) 0%,
-        rgba(5, 8, 13, 0.82) 34%,
-        rgba(5, 8, 13, 0.25) 70%,
-        rgba(5, 8, 13, 0.55) 100%
-      ),
-      linear-gradient(180deg, rgba(5, 8, 13, 0.5), transparent 30%, transparent 70%, var(--paper));
-    pointer-events: none;
+  to {
+    transform: translate3d(-48px, 36px, 0) scale(1.12);
   }
+}
 
+/* Vignette + readability gradient over the canvas, under the content. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      var(--paper) 0%,
+      rgba(5, 7, 12, 0.86) 36%,
+      rgba(5, 7, 12, 0.28) 72%,
+      rgba(5, 7, 12, 0.6) 100%
+    ),
+    linear-gradient(180deg, rgba(5, 7, 12, 0.55), transparent 30%, transparent 68%, var(--paper));
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.hero__subline {
+  max-width: 46ch;
+  margin-top: var(--space-5);
+  text-wrap: pretty;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+
+/* The chart panel gets a coral halo so it reads as the hero's second focus. */
+.hero__plot {
+  position: relative;
+}
+
+.hero__plot::before {
+  content: "";
+  position: absolute;
+  inset: -8% -6%;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(224, 46, 80, 0.16), transparent 70%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+/* Two columns from 960px. The chart column is the wider one: a landscape
+   panel reads as a trading terminal, a square one just reads as a box. The
+   text column is still wide enough to keep "Quantitative" on one line. */
+@media (min-width: 960px) {
   .hero__inner {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: var(--content-max);
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr);
+    align-items: center;
     gap: var(--space-7);
   }
+}
 
-  .hero__subline {
-    max-width: 50ch;
-    margin-top: var(--space-5);
-    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
-    color: var(--ink-muted);
+@media (min-width: 1200px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: var(--space-8);
+  }
+}
+
+/* ------------------------------------------------ About us */
+.about {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.about__body {
+  color: var(--ink-muted);
+}
+
+@media (min-width: 900px) {
+  .about {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: start;
   }
 
-  .hero__ctas {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-5);
-    margin-top: var(--space-6);
+  /* The headline stays put while the longer prose column scrolls past it. */
+  .about__head {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-7));
   }
+}
 
-  /* The chart panel gets a coral halo so it reads as the hero's second focus. */
-  .hero__plot {
-    position: relative;
-  }
+/* ------------------------------------------------ Activities */
+.cards {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-7);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
 
-  .hero__plot::before {
-    content: "";
-    position: absolute;
-    inset: -8% -6%;
-    background: radial-gradient(60% 60% at 50% 50%, rgba(224, 46, 80, 0.14), transparent 70%);
-    filter: blur(24px);
-    pointer-events: none;
-  }
+/* Cards of equal height per row; badge sits at the bottom. */
+.cards__item {
+  display: flex;
+  flex-direction: column;
+}
 
-  /* ≥900px two-column: text 5/12, chart panel 7/12, vertically centered. */
-  @media (min-width: 900px) {
-    .hero__inner {
-      display: grid;
-      grid-template-columns: 5fr 7fr;
-      align-items: center;
-      gap: var(--space-8);
-    }
-  }
+.cards__item .card__text {
+  flex: 1;
+}
 
-  /* ------------------------------------------------ About us */
-  .about__body {
-    margin-top: var(--space-5);
-    color: var(--ink-muted);
-  }
+/* Ghost index in the card's top-right corner — quiet by default,
+   lights up in the accent on hover. */
+.card__num {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--rule-strong);
+  transition: color var(--dur) var(--ease);
+  pointer-events: none;
+}
 
-  /* ------------------------------------------------ Activities */
+.card:hover .card__num {
+  color: var(--accent);
+}
+
+.cards__item .card__titel {
+  padding-right: var(--space-8);
+}
+
+@media (min-width: 600px) {
   .cards {
-    list-style: none;
-    padding: 0;
-    margin-top: var(--space-7);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  /* Cards of equal height per row; badge sits at the bottom. */
-  .cards__item {
-    display: flex;
-    flex-direction: column;
+@media (min-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
   }
+}
 
-  .cards__item .card__text {
-    flex: 1;
-  }
+/* ------------------------------------------------ Who it's for */
+.open__body {
+  max-width: 68ch;
+  margin-inline: auto;
+  text-align: center;
+}
 
-  /* Ghost index in the card's top-right corner — quiet by default,
-     lights up in the gradient on hover. */
-  .card__num {
-    position: absolute;
-    top: var(--space-4);
-    right: var(--space-5);
-    font-family: var(--font-mono);
-    font-size: 2rem;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.04em;
-    color: var(--rule-strong);
-    transition: color var(--dur) var(--ease);
-    pointer-events: none;
-  }
+.open__absatz {
+  margin-top: var(--space-5);
+  text-wrap: pretty;
+}
 
-  .card:hover .card__num {
-    color: var(--accent);
-  }
+/* ------------------------------------------------ Join */
+/* Glowing terminal panel around the sign-up — the page's closing focus. */
+.join-panel {
+  padding: clamp(36px, 3.4vw + 22px, 76px) var(--gutter);
+}
 
-  .cards__item .card__titel {
-    padding-right: var(--space-8);
-  }
+/* Soft coral wash falling in from the gradient keyline. */
+.join-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    55% 70% at 50% -10%,
+    rgba(224, 46, 80, 0.14),
+    transparent 70%
+  );
+  pointer-events: none;
+}
 
-  @media (min-width: 600px) {
-    .cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
+.join-panel > * {
+  position: relative;
+  z-index: 1;
+}
 
-  @media (min-width: 900px) {
-    .cards {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
+.join__body {
+  max-width: 56ch;
+  margin-inline: auto;
+  text-align: center;
+}
 
-  /* ------------------------------------------------ Who it's for */
-  .open__body {
-    margin-inline: auto;
-    text-align: center;
-  }
+.join__absatz {
+  margin-top: var(--space-5);
+  text-wrap: pretty;
+}
 
-  .open__absatz {
-    margin-top: var(--space-5);
-    color: var(--ink-muted);
-  }
-
-  /* ------------------------------------------------ Join */
-  /* Glowing terminal panel around the sign-up — the page's closing focus. */
-  .join-panel {
-    position: relative;
-    border: var(--border);
-    border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, var(--surface-2), var(--surface));
-    padding: clamp(32px, 3.4vw + 20px, 72px) var(--gutter);
-    overflow: hidden;
-  }
-
-  /* Gradient keyline along the panel's top edge. */
-  .join-panel::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 5%,
-      var(--accent) 35%,
-      var(--accent-2) 65%,
-      transparent 95%
-    );
-  }
-
-  /* Soft coral wash falling in from the keyline. */
-  .join-panel::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      55% 70% at 50% -10%,
-      rgba(224, 46, 80, 0.12),
-      transparent 70%
-    );
-    pointer-events: none;
-  }
-
-  .join-panel > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .join__body {
-    margin-inline: auto;
-    text-align: center;
-  }
-
-  .join__absatz {
-    margin-top: var(--space-5);
-    color: var(--ink-muted);
-  }
-
-  .join__social {
-    margin-top: var(--space-5);
-  }
+.join__social {
+  margin-top: var(--space-5);
+}

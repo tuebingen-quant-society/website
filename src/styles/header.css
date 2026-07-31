@@ -1,122 +1,165 @@
-/* Migrated from src/components/Header.astro. */
+/* Sticky site header. Tokens live in global.css. */
 .header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    height: var(--header-h);
-    background: color-mix(in srgb, var(--paper) 82%, transparent);
-    backdrop-filter: blur(12px) saturate(1.4);
-    -webkit-backdrop-filter: blur(12px) saturate(1.4);
-    border-bottom: 1px solid transparent;
-    transition:
-      border-color var(--dur) var(--ease),
-      box-shadow var(--dur) var(--ease);
-  }
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-h);
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
 
-  .header.is-scrolled {
-    border-bottom-color: var(--rule);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-  }
+.header.is-scrolled {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  border-bottom-color: var(--rule);
+  box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.9);
+}
 
-  .header__inner {
-    max-width: var(--content-max);
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-  }
+.header__inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
 
-  .header__mark {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: 44px;
-    font-weight: 600;
-    font-size: var(--fs-small);
-    color: var(--ink);
-    text-decoration: none;
-    letter-spacing: -0.005em;
-  }
+.header__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  font-weight: 600;
+  font-size: var(--fs-small);
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+  transition: opacity var(--dur) var(--ease);
+}
 
-  .header__glyph {
-    flex: none;
-    color: var(--accent);
-  }
+.header__mark:hover {
+  opacity: 0.8;
+}
 
+.header__glyph {
+  flex: none;
+  color: var(--accent);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.header__mark:hover .header__glyph {
+  transform: translateY(-1px);
+}
+
+.header__mark-lang {
+  display: none;
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.header__link {
+  display: none;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+.header__link:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.header__cta {
+  margin-left: var(--space-2);
+  min-height: 44px;
+  padding-inline: 20px;
+}
+
+/* DE/EN toggle — a segmented control; the active language sits on a raised pill. */
+.header__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: var(--space-2);
+  padding: 3px;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.header__lang-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  color: var(--ink-subtle);
+  text-decoration: none;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+/* The segmented control reads best at 30px, but the tap target must stay
+   44×44 (§8) — so the hit area is grown invisibly instead of the pill. */
+.header__lang-link::after {
+  content: "";
+  position: absolute;
+  inset: -7px -3px;
+}
+
+.header__lang-link:hover {
+  color: var(--ink);
+}
+
+.header__lang-link.is-active {
+  color: var(--ink);
+  background: var(--surface-3);
+  box-shadow: var(--shadow-1);
+  cursor: default;
+}
+
+/* §6.1/§8: below 768px, only the wordmark + CTA (+ language toggle). The two
+   in-page anchors are reachable by scrolling, so no burger menu is needed. */
+@media (min-width: 768px) {
   .header__mark-lang {
-    display: none;
+    display: inline;
   }
 
-  .header__nav {
-    display: flex;
-    align-items: center;
-    gap: var(--space-5);
+  .header__mark-kurz {
+    display: none;
   }
 
   .header__link {
-    display: none;
-    align-items: center;
-    min-height: 44px;
-    font-size: var(--fs-small);
-    color: var(--ink);
-    text-decoration: none;
-  }
-
-  .header__link:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  /* DE/EN toggle — quiet monospace pair, accent marks the active language. */
-  .header__lang {
     display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    font-family: var(--font-mono);
-    font-size: var(--fs-label);
-    font-weight: 500;
-    letter-spacing: 0.04em;
   }
 
-  .header__lang-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 30px;
-    min-height: 44px;
-    padding-inline: 4px;
-    color: var(--ink-muted);
-    text-decoration: none;
-    transition: color var(--dur) var(--ease);
+  .header__nav {
+    gap: var(--space-3);
   }
-
-  .header__lang-link + .header__lang-link {
-    border-left: 1px solid var(--rule-strong);
-  }
-
-  .header__lang-link:hover {
-    color: var(--ink);
-  }
-
-  .header__lang-link.is-active {
-    color: var(--accent);
-    cursor: default;
-  }
-
-  /* §6.1/§8: below 768px, only the wordmark + CTA (+ language toggle). */
-  @media (min-width: 768px) {
-    .header__mark-lang {
-      display: inline;
-    }
-
-    .header__mark-kurz {
-      display: none;
-    }
-
-    .header__link {
-      display: inline-flex;
-    }
-  }
+}

@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .next/
+.claude/
 .playwright-cli/
 *.tsbuildinfo
 

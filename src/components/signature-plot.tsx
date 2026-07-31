@@ -18,9 +18,11 @@ function gaussian() {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
+type Readout = { text: string; dir: "up" | "down" };
+
 export function SignaturePlot({ locale }: { locale: Locale }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [readout, setReadout] = useState("—");
+  const [readout, setReadout] = useState<Readout>({ text: "—", dir: "up" });
   const [reduced, setReduced] = useState(false);
   const translated = content[locale].plot;
 
@@ -145,9 +147,11 @@ export function SignaturePlot({ locale }: { locale: Locale }) {
       context.stroke();
 
       const delta = ((price - sessionOpen) / sessionOpen) * 100;
-      setReadout(
-        `${price.toFixed(2)} ${delta >= 0 ? "▲" : "▼"} ${delta >= 0 ? "+" : ""}${delta.toFixed(2)}%`,
-      );
+      const up = delta >= 0;
+      setReadout({
+        text: `${price.toFixed(2)} ${up ? "▲" : "▼"} ${up ? "+" : ""}${delta.toFixed(2)}%`,
+        dir: up ? "up" : "down",
+      });
     };
 
     const frame = (time: number) => {
@@ -191,7 +195,7 @@ export function SignaturePlot({ locale }: { locale: Locale }) {
   }, []);
 
   return (
-    <figure className="plot" role="img" aria-label={translated.ariaLabel}>
+    <figure className="panel plot" role="img" aria-label={translated.ariaLabel}>
       <div className="plot__bar" aria-hidden="true">
         <span className="plot__dots">
           <i className="plot__dot plot__dot--r" />
@@ -209,7 +213,7 @@ export function SignaturePlot({ locale }: { locale: Locale }) {
       <canvas className="plot__canvas" ref={canvasRef} />
       <figcaption className="plot__meta" aria-hidden="true">
         <span className="plot__params">{plotParams.params}</span>
-        <span className="plot__last">{readout}</span>
+        <span className={`plot__last is-${readout.dir}`}>{readout.text}</span>
         <span className="plot__note">{translated.hinweis}</span>
       </figcaption>
     </figure>

@@ -1,23 +1,49 @@
-/* Migrated from src/pages/datenschutz.astro. */
-.body {
-    margin-top: var(--space-6);
-    color: var(--ink-muted);
-  }
+/* Impressum and Datenschutzerklärung — long-form legal prose. */
+/* Centred: these pages are a single prose column with nothing beside it, so
+   left-aligning it against the 1160px grid just leaves half the page empty. */
+.legal {
+  max-width: var(--prose-max);
+  margin-inline: auto;
+}
 
-  .h3 {
-    font-size: var(--fs-h3);
-    font-weight: 600;
-    color: var(--ink);
-    margin-top: var(--space-6);
-    margin-bottom: var(--space-2);
-  }
+.legal__head {
+  padding-bottom: var(--space-6);
+  border-bottom: var(--border);
+}
 
-  .body > .h3:first-child {
-    margin-top: 0;
-  }
+.legal__body {
+  margin-top: var(--space-7);
+  color: var(--ink-muted);
+}
 
-  .hinweis {
-    border-left: 2px solid var(--rule);
-    padding-left: var(--space-4);
-    font-size: var(--fs-small);
-  }
+.legal__body p {
+  text-wrap: pretty;
+}
+
+/* Subsections use the sans face rather than another serif heading — at this
+   size the serif would compete with the page title. */
+.legal__titel {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-3);
+}
+
+.legal__body > .legal__titel:first-child {
+  margin-top: 0;
+}
+
+/* Callout for the "this is a convenience translation" notice. */
+.legal__hinweis {
+  display: block;
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-6);
+  background: var(--surface);
+  border: var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+}

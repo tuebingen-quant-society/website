@@ -58,7 +58,10 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
               {item.label}
             </a>
           ))}
-          <a className="btn btn--primary" href={`${anchorBase}${t.hero.ctaPrimaer.href}`}>
+          <a
+            className="btn btn--primary header__cta"
+            href={`${anchorBase}${t.hero.ctaPrimaer.href}`}
+          >
             {t.hero.ctaPrimaer.label}
           </a>
 

@@ -109,12 +109,12 @@ test("profile mapping requires the student role and preserves the released profi
     nameID: "opaque",
     nameIDFormat: "persistent",
     [ATTRIBUTE_NAMES.pairwiseId]: "pairwise-user",
-    [ATTRIBUTE_NAMES.mail]: "s.boehler@student.uni-tuebingen.de",
+    [ATTRIBUTE_NAMES.mail]: "user@student.uni-tuebingen.de",
     [ATTRIBUTE_NAMES.affiliation]: ["student@idp-scope.example", "member@idp-scope.example"],
   } satisfies Profile;
   assert.deepEqual(userFromProfile(profile), {
     subject: "pairwise-user",
-    email: "s.boehler@student.uni-tuebingen.de",
+    email: "user@student.uni-tuebingen.de",
     affiliations: ["student@idp-scope.example", "member@idp-scope.example"],
   });
   assert.throws(() => userFromProfile({ ...profile, [ATTRIBUTE_NAMES.mail]: undefined }));

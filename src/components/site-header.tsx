@@ -47,6 +47,7 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
           </svg>
           <span className="header__mark-lang">{wortmarke.lang}</span>
           <span className="header__mark-kurz">{wortmarke.kurz}</span>
+          <span className="header__test-badge" aria-hidden="true">TEST</span>
         </a>
 
         <nav

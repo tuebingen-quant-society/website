@@ -30,6 +30,7 @@
   }
 
   .header__mark {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
@@ -39,6 +40,22 @@
     color: var(--ink);
     text-decoration: none;
     letter-spacing: -0.005em;
+  }
+
+  .header__test-badge {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    transform: translate(60%, 60%) rotate(-12deg);
+    transform-origin: left top;
+    color: #e11d2e;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
   }
 
   .header__glyph {

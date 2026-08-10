@@ -108,7 +108,7 @@ redeploy.
   "authenticated": true,
   "user": {
     "subject": "pairwise identifier",
-    "email": "s.boehler@student.uni-tuebingen.de",
+    "email": "user@student.uni-tuebingen.de",
     "affiliations": ["student@idp-scope.example"]
   }
 }

@@ -49,8 +49,9 @@ Requested attributes:
 - `urn:oid:1.3.6.1.4.1.5923.1.1.1.9` — scoped university affiliation
 
 The email address is not used as a stable identifier. The SAML profile mapper rejects
-responses that omit any requested attribute or do not contain the exact scoped
-affiliation `student@uni-tuebingen.de`.
+responses that omit any requested attribute or whose scoped affiliation does not have
+the role component `student`. The affiliation scope is supplied by the IdP and is not
+derived from or compared with the user's email address.
 
 ## Vercel configuration
 
@@ -107,8 +108,8 @@ redeploy.
   "authenticated": true,
   "user": {
     "subject": "pairwise identifier",
-    "email": "student@uni-tuebingen.de",
-    "affiliations": ["student@uni-tuebingen.de"]
+    "email": "s.boehler@student.uni-tuebingen.de",
+    "affiliations": ["student@idp-scope.example"]
   }
 }
 ```

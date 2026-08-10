@@ -13,3 +13,4 @@ og.debug.svg
 .env.local
 .env.production
 spec.md
+.playwright-mcp

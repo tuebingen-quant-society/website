@@ -1,9 +1,5 @@
 import type { Profile } from "@node-saml/node-saml";
-import {
-  ATTRIBUTE_NAMES,
-  SESSION_TTL_SECONDS,
-  STUDENT_AFFILIATION,
-} from "./constants";
+import { ATTRIBUTE_NAMES, SESSION_TTL_SECONDS } from "./constants";
 
 export type SamlUser = {
   subject: string;
@@ -33,6 +29,15 @@ function list(value: unknown): string[] {
   return [];
 }
 
+function isStudentAffiliation(value: string) {
+  const delimiter = value.indexOf("@");
+  return (
+    delimiter > 0 &&
+    value.slice(0, delimiter).trim().toLowerCase() === "student" &&
+    value.slice(delimiter + 1).trim().length > 0
+  );
+}
+
 export function userFromProfile(profile: Profile): SamlUser {
   const subject = scalar(profile[ATTRIBUTE_NAMES.pairwiseId]);
   const email = scalar(profile[ATTRIBUTE_NAMES.mail]);
@@ -40,8 +45,8 @@ export function userFromProfile(profile: Profile): SamlUser {
   if (!subject || !email || affiliations.length === 0) {
     throw new Error("Required SAML attributes are missing");
   }
-  if (!affiliations.some((value) => value.toLowerCase() === STUDENT_AFFILIATION)) {
-    throw new Error("Current University of Tübingen student affiliation is required");
+  if (!affiliations.some(isStudentAffiliation)) {
+    throw new Error("Student affiliation is required");
   }
   return { subject, email, affiliations };
 }

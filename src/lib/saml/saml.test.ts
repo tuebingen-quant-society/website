@@ -103,24 +103,24 @@ test("SAML config uses the SP key to decrypt encrypted assertions", () => {
   }
 });
 
-test("profile mapping requires the requested attributes", () => {
+test("profile mapping requires the student role and preserves the released profile", () => {
   const profile = {
     issuer: "https://idp.example",
     nameID: "opaque",
     nameIDFormat: "persistent",
     [ATTRIBUTE_NAMES.pairwiseId]: "pairwise-user",
-    [ATTRIBUTE_NAMES.mail]: "student@uni-tuebingen.de",
-    [ATTRIBUTE_NAMES.affiliation]: ["student@uni-tuebingen.de", "member@uni-tuebingen.de"],
+    [ATTRIBUTE_NAMES.mail]: "s.boehler@student.uni-tuebingen.de",
+    [ATTRIBUTE_NAMES.affiliation]: ["student@idp-scope.example", "member@idp-scope.example"],
   } satisfies Profile;
   assert.deepEqual(userFromProfile(profile), {
     subject: "pairwise-user",
-    email: "student@uni-tuebingen.de",
-    affiliations: ["student@uni-tuebingen.de", "member@uni-tuebingen.de"],
+    email: "s.boehler@student.uni-tuebingen.de",
+    affiliations: ["student@idp-scope.example", "member@idp-scope.example"],
   });
   assert.throws(() => userFromProfile({ ...profile, [ATTRIBUTE_NAMES.mail]: undefined }));
   assert.throws(
-    () => userFromProfile({ ...profile, [ATTRIBUTE_NAMES.affiliation]: "member@uni-tuebingen.de" }),
-    /Current University of Tübingen student affiliation is required/,
+    () => userFromProfile({ ...profile, [ATTRIBUTE_NAMES.affiliation]: "member@idp-scope.example" }),
+    /Student affiliation is required/,
   );
 });
 

@@ -1,6 +1,6 @@
 import { SAML } from "@node-saml/node-saml";
 import { kontakt, site, wortmarke } from "@/config";
-import { ATTRIBUTE_NAMES, SP_ACS_URL, SP_ENTITY_ID } from "./constants";
+import { ATTRIBUTE_NAMES, getSpUrls } from "./constants";
 import { getSpCredentials } from "./config";
 import { RequestCookieCache } from "./request-cache";
 
@@ -15,10 +15,12 @@ const requestedAttributes = `
 
 export function generateMetadata() {
   const credentials = getSpCredentials();
+  const urls = getSpUrls();
   const saml = new SAML({
     ...credentials,
-    issuer: SP_ENTITY_ID,
-    callbackUrl: SP_ACS_URL,
+    decryptionPvk: credentials.privateKey,
+    issuer: urls.entityId,
+    callbackUrl: urls.acsUrl,
     idpCert: credentials.publicCert,
     signatureAlgorithm: "sha256",
     digestAlgorithm: "sha256",
@@ -39,7 +41,10 @@ export function generateMetadata() {
       },
     ],
   });
-  const xml = saml.generateServiceProviderMetadata(null, credentials.publicCert);
+  const xml = saml.generateServiceProviderMetadata(
+    credentials.publicCert,
+    credentials.publicCert,
+  );
   const marker = /(<\/(?:md:)?SPSSODescriptor>)/;
   if (!marker.test(xml)) throw new Error("Could not add requested SAML attributes");
   return xml.replace(marker, `${requestedAttributes}\n  $1`);

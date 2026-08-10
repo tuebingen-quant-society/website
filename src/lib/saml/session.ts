@@ -29,12 +29,24 @@ function list(value: unknown): string[] {
   return [];
 }
 
+function isStudentAffiliation(value: string) {
+  const delimiter = value.indexOf("@");
+  return (
+    delimiter > 0 &&
+    value.slice(0, delimiter).trim().toLowerCase() === "student" &&
+    value.slice(delimiter + 1).trim().length > 0
+  );
+}
+
 export function userFromProfile(profile: Profile): SamlUser {
   const subject = scalar(profile[ATTRIBUTE_NAMES.pairwiseId]);
   const email = scalar(profile[ATTRIBUTE_NAMES.mail]);
   const affiliations = list(profile[ATTRIBUTE_NAMES.affiliation]);
   if (!subject || !email || affiliations.length === 0) {
     throw new Error("Required SAML attributes are missing");
+  }
+  if (!affiliations.some(isStudentAffiliation)) {
+    throw new Error("Student affiliation is required");
   }
   return { subject, email, affiliations };
 }

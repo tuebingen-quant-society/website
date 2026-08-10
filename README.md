@@ -12,6 +12,10 @@ npm install
 npm run dev
 ```
 
+Use the deployed `https://test.tuequant.de` service provider for real IdP login tests.
+A localhost callback is not a stable, registered SAML entity and cannot complete the
+same cookie-bound `InResponseTo` flow.
+
 Quality checks:
 
 ```bash
@@ -23,19 +27,20 @@ npm audit --omit=dev
 
 ## SAML service-provider contract
 
-These values are fixed to the production domain so they can be registered once:
+The endpoints are derived from the required `SAML_SP_BASE_URL` environment variable.
+Keep that origin stable after registering each entity:
 
-| Field | Value |
-| --- | --- |
-| Service name | Tübingen Quant Society |
-| Service URL | `https://tuequant.de` |
-| Entity ID / metadata URL | `https://tuequant.de/api/auth/saml/metadata` |
-| Assertion Consumer Service | `https://tuequant.de/api/auth/saml/acs` |
-| ACS binding | SAML 2.0 HTTP-POST |
-| Login endpoint | `https://tuequant.de/api/auth/saml/login` |
-| Session endpoint | `https://tuequant.de/api/auth/saml/session` |
-| NameID format | transient |
-| Signed requests | RSA-SHA256 |
+| Field | Production | Test |
+| --- | --- | --- |
+| Service URL | `https://tuequant.de` | `https://test.tuequant.de` |
+| Entity ID / metadata | `https://tuequant.de/api/auth/saml/metadata` | `https://test.tuequant.de/api/auth/saml/metadata` |
+| Assertion Consumer Service | `https://tuequant.de/api/auth/saml/acs` | `https://test.tuequant.de/api/auth/saml/acs` |
+| Login endpoint | `https://tuequant.de/api/auth/saml/login` | `https://test.tuequant.de/api/auth/saml/login` |
+| Session endpoint | `https://tuequant.de/api/auth/saml/session` | `https://test.tuequant.de/api/auth/saml/session` |
+
+Both entities use the service name Tübingen Quant Society, SAML 2.0 HTTP-POST for
+the ACS, transient NameID, signed RSA-SHA256 AuthnRequests, and signing plus
+encryption metadata.
 
 Requested attributes:
 
@@ -44,7 +49,9 @@ Requested attributes:
 - `urn:oid:1.3.6.1.4.1.5923.1.1.1.9` — scoped university affiliation
 
 The email address is not used as a stable identifier. The SAML profile mapper rejects
-responses that omit any requested attribute.
+responses that omit any requested attribute or whose scoped affiliation does not have
+the role component `student`. The affiliation scope is supplied by the IdP and is not
+derived from or compared with the user's email address.
 
 ## Vercel configuration
 
@@ -57,14 +64,26 @@ openssl req -x509 -newkey rsa:3072 -keyout saml-sp-key.pem \
 openssl rand -base64 48
 ```
 
-Set the values from `.env.example` in Vercel's Production environment:
+Set the values from `.env.example` in each Vercel project/environment:
 
+- `SAML_SP_BASE_URL`: the exact public origin, without a path
 - `SAML_SP_PRIVATE_KEY`: contents of `saml-sp-key.pem`
 - `SAML_SP_CERT`: contents of `saml-sp-cert.pem`
 - `SAML_SESSION_SECRET`: output of `openssl rand -base64 48`
 - `SAML_IDP_SSO_URL`: supplied by the university IdP team
 - `SAML_IDP_ISSUER`: supplied by the university IdP team
 - `SAML_IDP_CERT`: supplied by the university IdP team
+
+The non-secret environment-specific values are:
+
+| Variable | Production | Test |
+| --- | --- | --- |
+| `SAML_SP_BASE_URL` | `https://tuequant.de` | `https://test.tuequant.de` |
+| `SAML_IDP_SSO_URL` | `https://idp.uni-tuebingen.de/idp/profile/SAML2/Redirect/SSO` | `https://idp-test.uni-tuebingen.de/idp/profile/SAML2/Redirect/SSO` |
+| `SAML_IDP_ISSUER` | `https://idp.uni-tuebingen.de/shibboleth` | `https://idp-test.uni-tuebingen.de/idp/shibboleth` |
+
+Use the matching IdP certificate and separate SP key pair and session secret for each
+environment. Do not expose `.env` files or private keys in chat or commits.
 
 Never commit the generated private key or session secret. After the SP key and
 certificate are configured and the production deployment is live, the metadata URL is
@@ -89,8 +108,8 @@ redeploy.
   "authenticated": true,
   "user": {
     "subject": "pairwise identifier",
-    "email": "student@uni-tuebingen.de",
-    "affiliations": ["student@uni-tuebingen.de"]
+    "email": "user@student.uni-tuebingen.de",
+    "affiliations": ["student@idp-scope.example"]
   }
 }
 ```

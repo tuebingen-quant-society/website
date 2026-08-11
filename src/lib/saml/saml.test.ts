@@ -47,6 +47,20 @@ test("metadata publishes the exact SP contract and minimal attributes", () => {
     assert.match(metadata, new RegExp(ATTRIBUTE_NAMES.mail));
     assert.match(metadata, new RegExp(ATTRIBUTE_NAMES.affiliation));
     assert.match(metadata, /AuthnRequestsSigned="true"/);
+    // DFN-AAI requires UI information, contacts and the subject-id signal.
+    assert.match(metadata, /<mdui:DisplayName xml:lang="de">/);
+    assert.match(metadata, /<mdui:Description xml:lang="en">/);
+    assert.match(metadata, /<mdui:PrivacyStatementURL xml:lang="de">https:\/\//);
+    assert.match(metadata, /Name="urn:oasis:names:tc:SAML:profiles:subject-id:req"/);
+    assert.match(metadata, /<saml:AttributeValue>pairwise-id<\/saml:AttributeValue>/);
+    for (const type of ["technical", "support", "administrative"]) {
+      assert.match(metadata, new RegExp(`contactType="${type}"`));
+    }
+    assert.match(metadata, /remd:contactType="http:\/\/refeds\.org\/metadata\/contactType\/security"/);
+    // Both Extensions elements must precede their siblings to stay schema-valid.
+    assert.ok(metadata.indexOf("mdattr:EntityAttributes") < metadata.indexOf("SPSSODescriptor"));
+    assert.ok(metadata.indexOf("mdui:UIInfo") < metadata.indexOf("KeyDescriptor"));
+    assert.ok(metadata.lastIndexOf("ContactPerson") > metadata.indexOf("</SPSSODescriptor>"));
   } finally {
     setOrDelete("SAML_SP_BASE_URL", originalBaseUrl);
     setOrDelete("SAML_SP_PRIVATE_KEY", originalKey);

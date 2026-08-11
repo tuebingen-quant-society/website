@@ -42,6 +42,14 @@ Both entities use the service name Tübingen Quant Society, SAML 2.0 HTTP-POST f
 the ACS, transient NameID, signed RSA-SHA256 AuthnRequests, and signing plus
 encryption metadata.
 
+The metadata also carries the entries DFN-AAI requires for productive
+federations: `mdui:UIInfo` (display name, description, information and privacy
+statement URL per language), technical, support and administrative contacts, a
+REFEDS security contact, and the entity attribute
+`urn:oasis:names:tc:SAML:profiles:subject-id:req` with value `pairwise-id`.
+There is no SAML Single Logout endpoint; logout only clears the local session
+cookie.
+
 Requested attributes:
 
 - `urn:oasis:names:tc:SAML:attribute:pairwise-id` — pseudonymous stable user ID
@@ -89,6 +97,18 @@ Never commit the generated private key or session secret. After the SP key and
 certificate are configured and the production deployment is live, the metadata URL is
 ready for the university. After they return the IdP values, configure them in Vercel and
 redeploy.
+
+## DFN-AAI registration
+
+Each environment is a separate entity and belongs to a different federation:
+the production entity to DFN-AAI, the test entity to DFN-AAI-Test. Fill each
+entity in the DFN metadata portal from that entity's own metadata URL — use the
+portal's XML import if it offers one, otherwise copy the values field by field.
+The portal, not our metadata URL, is what the federation publishes, so repeat
+this after every change to the SP certificate or the requested attributes.
+
+Both SP certificates are self-signed and have a fixed lifetime. Generate the
+replacement, deploy it, and re-import the metadata before the old one expires.
 
 ## Authentication flow
 

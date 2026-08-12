@@ -138,6 +138,35 @@ test("profile mapping requires the student role and preserves the released profi
   );
 });
 
+test("sealed sessions are accepted only while intact and unexpired", async () => {
+  const sessionModule = await import("./session");
+  const readSessionToken = (sessionModule as Record<string, unknown>).readSessionToken;
+  assert.equal(typeof readSessionToken, "function", "session reader is not implemented");
+  if (typeof readSessionToken !== "function") return;
+
+  const payload = {
+    user: {
+      subject: "pairwise-member",
+      email: "member@student.uni-tuebingen.de",
+      affiliations: ["student@uni-tuebingen.de"],
+    },
+    expiresAt: Date.now() + 60_000,
+  };
+  const token = sealCookie(payload, secret);
+  assert.deepEqual(readSessionToken(token, secret), payload);
+  assert.equal(readSessionToken(undefined, secret), null);
+
+  const expired = sealCookie({ ...payload, expiresAt: Date.now() - 1 }, secret);
+  assert.equal(readSessionToken(expired, secret), null);
+
+  const [iv, ciphertext, tag] = token.split(".");
+  const replacement = ciphertext.startsWith("A") ? "B" : "A";
+  assert.equal(
+    readSessionToken(`${iv}.${replacement}${ciphertext.slice(1)}.${tag}`, secret),
+    null,
+  );
+});
+
 test("return paths cannot redirect off site", () => {
   assert.equal(safeReturnPath("/members"), "/members");
   assert.equal(safeReturnPath("//evil.example"), "/");

@@ -87,6 +87,23 @@
     text-underline-offset: 3px;
   }
 
+  .header__member {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .header__member:hover {
+    color: var(--ink);
+  }
+
   /* DE/EN toggle — quiet monospace pair, accent marks the active language. */
   .header__lang {
     display: inline-flex;

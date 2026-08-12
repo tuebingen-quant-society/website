@@ -63,6 +63,10 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
             {t.hero.ctaPrimaer.label}
           </a>
 
+          <a className="header__member" href={localePath(locale, "/members")}>
+            {t.memberLink}
+          </a>
+
           <div className="header__lang" role="group" aria-label={t.langToggle.aria}>
             {(["de", "en"] as const).map((target) => (
               <a

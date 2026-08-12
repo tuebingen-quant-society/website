@@ -1,12 +1,15 @@
 import { kontakt } from "@/config";
-import { content, type Locale } from "@/i18n";
-import { JoinForm } from "./join-form";
+import { content, localePath, type Locale } from "@/i18n";
+import { SignInGlyph } from "./sign-in-glyph";
 import { MarketBackground } from "./market-background";
 import { SignaturePlot } from "./signature-plot";
 import { Ticker } from "./ticker";
 
 export function HomePage({ locale }: { locale: Locale }) {
   const { hero, about, activities, open, join } = content[locale];
+  /* The only login on the page: "Mitmachen" scrolls down to the section that
+     explains what the account is for, and the button below it does the rest. */
+  const membersHref = localePath(locale, "members");
 
   return (
     <>
@@ -90,7 +93,13 @@ export function HomePage({ locale }: { locale: Locale }) {
             <div className="join__body">
               <h2 className="section-headline" id="join-headline">{join.headline}</h2>
               <p className="join__absatz lead">{join.absatz}</p>
-              <JoinForm locale={locale} />
+              <p className="join__cta">
+                <a className="btn btn--primary" href={membersHref}>
+                  <SignInGlyph />
+                  {join.cta}
+                </a>
+              </p>
+              <p className="join__hinweis">{join.hinweis}</p>
               <p className="join__social">
                 <a className="link link--arrow" href={kontakt.instagram} rel="me noopener">
                   <span className="link__label">{join.instagramLink}</span>

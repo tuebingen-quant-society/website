@@ -33,7 +33,12 @@ export type SiteContent = {
     ogLocale: string;
   };
   skipLink: string;
-  memberLink: string;
+  /**
+   * Header only — the direct way in for people who already know they have an
+   * account. The label says "login" outright; visitors who don't know what to
+   * do yet are sent to the closing section instead (`hero.ctaPrimaer`).
+   */
+  loginCta: { label: string };
   nav: { label: string; href: string }[];
   langToggle: {
     /** Accessible label for the whole language switcher. */
@@ -46,6 +51,10 @@ export type SiteContent = {
     /** Rendered as the gradient phrase after `headline`. */
     headlineAccent: string;
     subline: string;
+    /**
+     * Points at the closing section, not at the login: the invitation explains
+     * itself there before anyone is asked for a password.
+     */
     ctaPrimaer: { label: string; href: string };
     ctaSekundaer: { label: string; href: string };
   };
@@ -67,18 +76,11 @@ export type SiteContent = {
   join: {
     headline: string;
     absatz: string;
-    label: string;
-    placeholder: string;
-    buttonIdle: string;
-    buttonPending: string;
-    erfolg: string;
-    fehlerUngueltig: string;
-    /** {kontakt-mail} is replaced at runtime with kontakt.mail. */
-    fehlerNetzwerk: string;
+    /** Spells out the login in full — the page's last, most explicit CTA. */
+    cta: string;
+    /** Who the login is for, directly under the button. */
+    hinweis: string;
     instagramLink: string;
-    /** §11 requires a privacy policy link directly on the form. */
-    datenschutzHinweis: string;
-    datenschutzLinkText: string;
   };
   footer: {
     einzeiler: string;
@@ -111,7 +113,7 @@ export const content: Record<Locale, SiteContent> = {
       ogLocale: "de_DE",
     },
     skipLink: "Zum Inhalt springen",
-    memberLink: "Login",
+    loginCta: { label: "Uni-Login" },
     nav: [
       { label: "Über uns", href: "#about" },
       { label: "Aktivitäten", href: "#activities" },
@@ -177,18 +179,11 @@ export const content: Record<Locale, SiteContent> = {
     join: {
       headline: "Komm zum nächsten Treffen.",
       absatz:
-        "Trag dich in die Mailingliste ein — wir schreiben, wenn das nächste Treffen ansteht. Kein Spam, keine Verpflichtung.",
-      label: "E-Mail-Adresse",
-      placeholder: "deine@uni-tuebingen.de",
-      buttonIdle: "Eintragen",
-      buttonPending: "Wird eingetragen …",
-      erfolg: "Eingetragen. Du hörst von uns, sobald das nächste Treffen steht.",
-      fehlerUngueltig: "Diese E-Mail-Adresse sieht nicht gültig aus.",
-      fehlerNetzwerk:
-        "Das hat nicht geklappt. Versuch es nochmal oder schreib uns direkt: {kontakt-mail}.",
+        "Termine, Räume und Materialien stehen im Mitgliederbereich. Melde dich einmal mit deinem Uni-Account an — mehr braucht es nicht.",
+      cta: "Mit Uni-Account anmelden",
+      hinweis:
+        "Für Studierende der Universität Tübingen. Dein Passwort bleibt bei der Uni.",
       instagramLink: "Oder folge uns auf Instagram",
-      datenschutzHinweis: "Wie wir deine Adresse verarbeiten, steht in der",
-      datenschutzLinkText: "Datenschutzerklärung",
     },
     footer: {
       einzeiler: "Studentische Initiative an der Universität Tübingen.",
@@ -226,7 +221,7 @@ export const content: Record<Locale, SiteContent> = {
       ogLocale: "en_US",
     },
     skipLink: "Skip to content",
-    memberLink: "Sign in",
+    loginCta: { label: "Uni login" },
     nav: [
       { label: "About", href: "#about" },
       { label: "Activities", href: "#activities" },
@@ -292,18 +287,11 @@ export const content: Record<Locale, SiteContent> = {
     join: {
       headline: "Come to the next meeting.",
       absatz:
-        "Sign up for the mailing list — we'll write when the next meeting is coming up. No spam, no commitment.",
-      label: "Email address",
-      placeholder: "you@uni-tuebingen.de",
-      buttonIdle: "Sign up",
-      buttonPending: "Signing up …",
-      erfolg: "You're on the list. You'll hear from us as soon as the next meeting is set.",
-      fehlerUngueltig: "That email address doesn't look valid.",
-      fehlerNetzwerk:
-        "That didn't work. Please try again or write to us directly: {kontakt-mail}.",
+        "Dates, rooms, and materials live in the members area. Sign in once with your university account — that's all it takes.",
+      cta: "Sign in with your university account",
+      hinweis:
+        "For students at the University of Tübingen. Your password stays with the university.",
       instagramLink: "Or follow us on Instagram",
-      datenschutzHinweis: "How we handle your address is set out in our",
-      datenschutzLinkText: "privacy policy",
     },
     footer: {
       einzeiler: "A student initiative at the University of Tübingen.",

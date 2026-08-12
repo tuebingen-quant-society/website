@@ -140,5 +140,7 @@ or HTTP `401` with `{"authenticated":false}`. Logout is
 ## Content
 
 Translated site copy lives in `src/i18n/content.ts`. Shared contact and legal
-configuration lives in `src/config.ts`. The mailing-list form remains disabled until a
-provider and Double Opt-in process are confirmed.
+configuration lives in `src/config.ts`. There is no mailing list: the only way to get
+involved is the university login. The header carries a direct login button into
+`/members` for people who already have an account; the hero's "Mitmachen" scrolls to
+the closing section, which explains the login before asking for it.

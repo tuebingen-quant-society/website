@@ -25,11 +25,11 @@ function GermanPolicy() {
         Für die sichere Anmeldung setzen wir kurzlebige, technisch notwendige
         HttpOnly-Cookies; sie werden weder für Tracking noch für Werbung verwendet.
       </p>
-      <Heading>Mailingliste</Heading>
+      <Heading>Newsletter</Heading>
       <p>
-        Die Anmeldung zur Mailingliste ist derzeit deaktiviert. Sobald sie aktiviert wird,
-        erfolgt sie per Double Opt-in. Die Datenschutzerklärung wird davor um Anbieter,
-        Auftragsverarbeitung und Speicherdauer ergänzt.
+        Wir betreiben keine Mailingliste und keinen Newsletter. Eine Anmeldung mit deiner
+        E-Mail-Adresse ist auf dieser Website nicht möglich; Kontakt läuft über die oben
+        genannte Adresse oder den Mitgliederbereich.
       </p>
       <Heading>Reichweitenmessung</Heading>
       <p>Wir setzen derzeit keine Analyse- oder Tracking-Werkzeuge ein.</p>
@@ -69,11 +69,11 @@ function EnglishPolicy() {
         your email address, and your university affiliation. Short-lived, technically
         necessary HttpOnly cookies secure the login; they are not used for tracking or ads.
       </p>
-      <Heading>Mailing list</Heading>
+      <Heading>Newsletter</Heading>
       <p>
-        Mailing-list registration is currently disabled. Before it is enabled, it will use
-        double opt-in and this policy will name the provider, processing agreement, and
-        retention period.
+        We run no mailing list and no newsletter. You cannot sign up with your email
+        address on this website; contact runs through the address above or the members
+        area.
       </p>
       <Heading>Analytics</Heading>
       <p>We currently use no analytics or tracking tools.</p>

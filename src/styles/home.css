@@ -230,7 +230,7 @@
 }
 
 /* ------------------------------------------------ Join */
-/* Glowing terminal panel around the sign-up — the page's closing focus. */
+/* Glowing terminal panel around the login CTA — the page's closing focus. */
 .join-panel {
   padding: clamp(36px, 3.4vw + 22px, 76px) var(--gutter);
 }
@@ -264,6 +264,32 @@
   text-wrap: pretty;
 }
 
+.join__cta {
+  margin-top: var(--space-6);
+}
+
+/* This is the one button that spells the login out in full ("Sign in with your
+   university account"), so it is also the one that must wrap — nowrap pushes
+   narrow viewports into horizontal scroll. */
+.join__cta .btn {
+  max-width: 100%;
+  white-space: normal;
+  text-wrap: balance;
+  line-height: 1.25;
+}
+
+/* Who the login is for — a footnote under the button, not a second message. */
+.join__hinweis {
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+  color: var(--ink-subtle);
+  text-wrap: pretty;
+}
+
+/* Instagram stays as the one no-login way to follow along; the hairline marks
+   it as the alternative rather than a competing call to action. */
 .join__social {
   margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--rule);
 }

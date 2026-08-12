@@ -294,6 +294,14 @@ input {
   box-shadow: none;
 }
 
+/* Sign-in arrow in front of a button label — sits slightly back from the text
+   so it reads as a status cue, not as decoration. */
+.glyph-signin {
+  flex: none;
+  margin-right: -2px;
+  opacity: 0.85;
+}
+
 .btn--secondary {
   background: var(--surface-2);
   border: 1px solid var(--rule-strong);

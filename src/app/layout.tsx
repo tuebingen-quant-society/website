@@ -9,7 +9,6 @@ import "@/styles/global.css";
 import "@/styles/header.css";
 import "@/styles/footer.css";
 import "@/styles/home.css";
-import "@/styles/join-form.css";
 import "@/styles/market-background.css";
 import "@/styles/signature-plot.css";
 import "@/styles/ticker.css";

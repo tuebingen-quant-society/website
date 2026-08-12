@@ -4,7 +4,7 @@ import type { Profile } from "@node-saml/node-saml";
 import { openCookie, sealCookie } from "./cookie-crypto";
 import { createSamlConfig } from "./config";
 import { ATTRIBUTE_NAMES } from "./constants";
-import { safeReturnPath } from "./http";
+import { classifySamlError, safeReturnPath } from "./http";
 import { generateMetadata } from "./metadata";
 import { RequestCookieCache } from "./request-cache";
 import { userFromProfile } from "./session";
@@ -172,6 +172,26 @@ test("return paths cannot redirect off site", () => {
   assert.equal(safeReturnPath("//evil.example"), "/");
   assert.equal(safeReturnPath("/\\evil.example"), "/");
   assert.equal(safeReturnPath("https://evil.example"), "/");
+});
+
+test("SAML validation failures expose only a stable diagnostic code", () => {
+  assert.equal(
+    classifySamlError(new Error("Invalid document signature")),
+    "SAML_RESPONSE_SIGNATURE_INVALID",
+  );
+  assert.equal(
+    classifySamlError(new Error("error:02000079:rsa routines::oaep decoding error")),
+    "SAML_ASSERTION_DECRYPTION_FAILED",
+  );
+  assert.equal(
+    classifySamlError(new Error("Invalid signature from encrypted assertion")),
+    "SAML_ASSERTION_SIGNATURE_INVALID",
+  );
+  assert.equal(
+    classifySamlError(new Error("Unknown SAML issuer. Expected: private Received: private")),
+    "SAML_ASSERTION_INVALID",
+  );
+  assert.equal(classifySamlError(new Error("sensitive unexpected detail")), "SAML_REQUEST_FAILED");
 });
 
 function setOrDelete(name: string, value: string | undefined) {

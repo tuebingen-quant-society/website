@@ -94,6 +94,26 @@
   padding-inline: 20px;
 }
 
+/* Members area — a quiet monospace label, kept lighter than the nav links. */
+.header__member {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-2);
+  color: var(--ink-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--dur) var(--ease);
+}
+
+.header__member:hover {
+  color: var(--ink);
+}
+
 /* DE/EN toggle — a segmented control; the active language sits on a raised pill. */
 .header__lang {
   display: inline-flex;

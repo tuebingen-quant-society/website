@@ -14,6 +14,7 @@ import "@/styles/market-background.css";
 import "@/styles/signature-plot.css";
 import "@/styles/ticker.css";
 import "@/styles/legal.css";
+import "@/styles/members.css";
 
 export const metadata: Metadata = {
   icons: { icon: "/favicon.svg" },

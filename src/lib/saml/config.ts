@@ -4,11 +4,7 @@ import {
   type SamlConfig,
 } from "@node-saml/node-saml";
 import { kontakt, site, wortmarke } from "@/config";
-import {
-  REQUEST_TTL_SECONDS,
-  SP_ACS_URL,
-  SP_ENTITY_ID,
-} from "./constants";
+import { getSpUrls, REQUEST_TTL_SECONDS } from "./constants";
 
 export class SamlConfigurationError extends Error {}
 
@@ -43,14 +39,16 @@ export function getSpCredentials() {
 
 export function createSamlConfig(cacheProvider: CacheProvider): SamlConfig {
   const credentials = getSpCredentials();
+  const urls = getSpUrls();
   return {
     ...credentials,
-    issuer: SP_ENTITY_ID,
-    callbackUrl: SP_ACS_URL,
+    decryptionPvk: credentials.privateKey,
+    issuer: urls.entityId,
+    callbackUrl: urls.acsUrl,
     entryPoint: required("SAML_IDP_SSO_URL"),
     idpIssuer: required("SAML_IDP_ISSUER"),
     idpCert: requirePem("SAML_IDP_CERT", "CERTIFICATE"),
-    audience: SP_ENTITY_ID,
+    audience: urls.entityId,
     identifierFormat: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
     attributeConsumingServiceIndex: "1",
     signatureAlgorithm: "sha256",
@@ -59,7 +57,7 @@ export function createSamlConfig(cacheProvider: CacheProvider): SamlConfig {
     maxAssertionAgeMs: 5 * 60 * 1_000,
     requestIdExpirationPeriodMs: REQUEST_TTL_SECONDS * 1_000,
     validateInResponseTo: ValidateInResponseTo.always,
-    wantAssertionsSigned: true,
+    wantAssertionsSigned: false,
     wantAuthnResponseSigned: true,
     disableRequestedAuthnContext: true,
     cacheProvider,

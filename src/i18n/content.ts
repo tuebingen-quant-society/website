@@ -33,6 +33,7 @@ export type SiteContent = {
     ogLocale: string;
   };
   skipLink: string;
+  memberLink: string;
   nav: { label: string; href: string }[];
   langToggle: {
     /** Accessible label for the whole language switcher. */
@@ -110,6 +111,7 @@ export const content: Record<Locale, SiteContent> = {
       ogLocale: "de_DE",
     },
     skipLink: "Zum Inhalt springen",
+    memberLink: "Login",
     nav: [
       { label: "Über uns", href: "#about" },
       { label: "Aktivitäten", href: "#activities" },
@@ -224,6 +226,7 @@ export const content: Record<Locale, SiteContent> = {
       ogLocale: "en_US",
     },
     skipLink: "Skip to content",
+    memberLink: "Sign in",
     nav: [
       { label: "About", href: "#about" },
       { label: "Activities", href: "#activities" },

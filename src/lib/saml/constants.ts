@@ -1,9 +1,32 @@
-import { site } from "@/config";
-
 export const SAML_PATH = "/api/auth/saml";
-export const SP_ENTITY_ID = `${site}${SAML_PATH}/metadata`;
-export const SP_ACS_URL = `${site}${SAML_PATH}/acs`;
-export const SP_LOGIN_URL = `${site}${SAML_PATH}/login`;
+
+export function getSpUrls(environment: NodeJS.ProcessEnv = process.env) {
+  const configured = environment.SAML_SP_BASE_URL?.trim();
+  if (!configured) throw new Error("SAML_SP_BASE_URL is required");
+
+  let baseUrl: URL;
+  try {
+    baseUrl = new URL(configured);
+  } catch {
+    throw new Error("SAML_SP_BASE_URL must be an HTTPS origin");
+  }
+  if (
+    baseUrl.protocol !== "https:" ||
+    baseUrl.username ||
+    baseUrl.password ||
+    baseUrl.pathname !== "/" ||
+    baseUrl.search ||
+    baseUrl.hash
+  ) {
+    throw new Error("SAML_SP_BASE_URL must be an HTTPS origin");
+  }
+
+  return {
+    entityId: `${baseUrl.origin}${SAML_PATH}/metadata`,
+    acsUrl: `${baseUrl.origin}${SAML_PATH}/acs`,
+    loginUrl: `${baseUrl.origin}${SAML_PATH}/login`,
+  };
+}
 
 export const REQUEST_COOKIE = "tqs_saml_request";
 export const SESSION_COOKIE = "tqs_session";

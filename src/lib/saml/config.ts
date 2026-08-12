@@ -57,7 +57,7 @@ export function createSamlConfig(cacheProvider: CacheProvider): SamlConfig {
     maxAssertionAgeMs: 5 * 60 * 1_000,
     requestIdExpirationPeriodMs: REQUEST_TTL_SECONDS * 1_000,
     validateInResponseTo: ValidateInResponseTo.always,
-    wantAssertionsSigned: true,
+    wantAssertionsSigned: false,
     wantAuthnResponseSigned: true,
     disableRequestedAuthnContext: true,
     cacheProvider,

@@ -88,7 +88,7 @@ test("SP metadata requires an explicit HTTPS origin", () => {
   }
 });
 
-test("SAML config uses the SP key to decrypt encrypted assertions", () => {
+test("SAML config accepts unsigned encrypted assertions only inside signed responses", () => {
   const names = [
     "SAML_SP_BASE_URL",
     "SAML_SP_PRIVATE_KEY",
@@ -112,6 +112,8 @@ test("SAML config uses the SP key to decrypt encrypted assertions", () => {
     assert.equal(config.issuer, "https://test.tuequant.de/api/auth/saml/metadata");
     assert.equal(config.callbackUrl, "https://test.tuequant.de/api/auth/saml/acs");
     assert.equal(config.decryptionPvk, process.env.SAML_SP_PRIVATE_KEY);
+    assert.equal(config.wantAuthnResponseSigned, true);
+    assert.equal(config.wantAssertionsSigned, false);
   } finally {
     for (const [name, value] of original) setOrDelete(name, value);
   }

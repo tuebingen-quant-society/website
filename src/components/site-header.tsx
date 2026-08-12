@@ -62,7 +62,7 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
             {t.hero.ctaPrimaer.label}
           </a>
 
-          <a className="header__member" href={localePath(locale, "/members")}>
+          <a className="header__member" href={localePath(locale, "members")}>
             {t.memberLink}
           </a>
 

@@ -1,5 +1,6 @@
 import type { Profile } from "@node-saml/node-saml";
 import { ATTRIBUTE_NAMES, SESSION_TTL_SECONDS } from "./constants";
+import { openCookie } from "./cookie-crypto";
 
 export type SamlUser = {
   subject: string;
@@ -68,4 +69,12 @@ export function isValidSession(value: unknown): value is SessionPayload {
     typeof session.user.email === "string" &&
     Array.isArray(session.user.affiliations)
   );
+}
+
+export function readSessionToken(
+  token: string | undefined,
+  secret: string,
+): SessionPayload | null {
+  const session = openCookie<SessionPayload>(token, secret);
+  return isValidSession(session) ? session : null;
 }

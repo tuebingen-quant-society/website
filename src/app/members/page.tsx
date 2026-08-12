@@ -21,7 +21,7 @@ export default async function MembersPage() {
   );
 
   return (
-    <PageFrame locale="de" logicalPath="/members">
+    <PageFrame locale="de" logicalPath="members">
       <MembersContent locale="de" session={session} />
     </PageFrame>
   );

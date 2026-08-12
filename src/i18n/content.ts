@@ -108,7 +108,7 @@ export const content: Record<Locale, SiteContent> = {
       titel:
         "Tübingen Quant Society — Quantitative Finance an der Universität Tübingen",
       beschreibung:
-        "Studentische Initiative für Quantitative Finance und algorithmisches Trading an der Universität Tübingen. Paper-Sessions, Workshops, Projekte. Keine Vorkenntnisse nötig.",
+        "Studentische Initiative im Aufbau: Quantitative Finance, algorithmisches Trading und Machine Learning an der Uni Tübingen. Offen für alle Studiengänge, Vorkenntnisse brauchst du keine.",
       sprache: "de",
       ogLocale: "de_DE",
     },
@@ -124,69 +124,78 @@ export const content: Record<Locale, SiteContent> = {
     },
     hero: {
       headline: "Quantitative Finance,",
-      headlineAccent: "offen diskutiert.",
+      headlineAccent: "von Studis für Studis",
       subline:
-        "Ein Ort an der Universität Tübingen, um Paper zu lesen, Projekte zu diskutieren und zu verstehen, wie datengetriebene Entscheidungen auf Finanzmärkten zustande kommen.",
+        "Wir bauen zurzeit die Tübingen Quant Society auf: eine studentische Gruppe für alle, die wissen wollen, wie an Finanzmärkten mit Daten, Modellen und Code gearbeitet wird. Wer jetzt dazukommt, prägt mit, wohin das Ganze geht.",
       ctaPrimaer: { label: "Mitmachen", href: "#join" },
-      ctaSekundaer: { label: "Was wir machen", href: "#activities" },
+      ctaSekundaer: { label: "Was wir vorhaben", href: "#activities" },
     },
     about: {
-      headline: "Zwischen Vorlesung und Praxis fehlt ein Raum.",
+      headline: "Zwischen Vorlesung und Praxis liegen viele Schritte.",
       absaetze: [
-        "Quantitative Methoden prägen moderne Kapitalmärkte, sind für Außenstehende aber intransparent und faktisch großen Instituten vorbehalten. Wer sie verstehen will, findet im Studium selten einen Ort dafür.",
-        "Tübingen ist ein herausragender Standort für Maschinelles Lernen, Mathematik und Data Science. Was fehlt, ist die Verbindung dieser methodischen Stärke mit angewandter, kritischer Marktkompetenz. Genau diese Lücke wollen wir schließen — als Bildungs- und Austauschformat, nicht als Anlageberatung.",
+        "Inhaltlich dreht sich alles um Quantitative Finance und das, was drumherum passiert: algorithmisches Trading, Machine Learning, Märkte, Market Making, Derivate, Crypto und die Frage, wie man im Quant-Bereich eigentlich landet.",
+        "Tübingen hat starke Leute in Machine Learning, Mathematik und Data Science. Was bisher fehlt, ist eine Gruppe, die dieses Wissen mal auf Märkte loslässt und offen darüber redet, was daran trägt und was nicht. Genau dafür sind wir da. Wir wollen die Sachen verstehen, Anlageberatung machen wir keine.",
+        "Wie technisch das Ganze wird, hängt davon ab, wer sich zusammenfindet. Wenn viele Lust auf Code haben, schreiben wir Code. Wenn lieber über Märkte, Research und Unternehmen geredet werden soll, machen wir das. Beides passt.",
       ],
     },
     activities: {
-      headline: "Was wir machen.",
+      headline: "Was wir vorhaben.",
       karten: [
         {
-          titel: "Paper-Reading-Sessions",
+          titel: "Paper- & Market-Sessions",
           beschreibung:
-            "Wir lesen und diskutieren gemeinsam wissenschaftliche Arbeiten und Marktstudien.",
+            "Wir nehmen uns ein Paper oder eine aktuelle Marktbewegung vor und reden darüber, was da eigentlich passiert.",
           geplant: false,
         },
         {
-          titel: "Projekt- & Ideenaustausch",
+          titel: "Projekte",
           beschreibung:
-            "Eigene Projekte vorstellen und auseinandernehmen — Backtesting, Modellierung, Datenanalyse.",
+            "Backtests, Modelle, Datenkram. Zeig, woran du bastelst, und lass es die Runde diskutieren.",
           geplant: false,
         },
         {
-          titel: "Einführungsworkshops",
+          titel: "Workshops für den Einstieg",
           beschreibung:
-            "Praxisnahe Formate zu Grundlagen: Programmierung, Statistik, Umgang mit Finanzdaten.",
+            "Python, Statistik, Umgang mit Finanzdaten. Gedacht für alle, die bei null anfangen.",
           geplant: false,
         },
         {
-          titel: "Gastvorträge",
-          beschreibung: "Einblicke aus Forschung und Praxis.",
+          titel: "Trading-Challenges",
+          beschreibung:
+            "Kleine Wettbewerbe, bei denen man mehr lernt als beim Zuschauen.",
           geplant: true,
         },
         {
-          titel: "Wettbewerbe",
-          beschreibung: "Eigene Trading- und Data-Science-Challenges.",
+          titel: "Gastvorträge",
+          beschreibung:
+            "Leute einladen, die das beruflich machen, und ihnen Löcher in den Bauch fragen.",
+          geplant: true,
+        },
+        {
+          titel: "Firmen & Partnerschaften",
+          beschreibung:
+            "Langfristig würden wir gern Quant-Firmen und Market Maker nach Tübingen holen, für Vorträge, Workshops oder Recruiting.",
           geplant: true,
         },
       ],
       badge: "geplant",
     },
     open: {
-      headline: "Vorkenntnisse in Finance brauchst du nicht.",
+      headline: "Du musst nichts mitbringen außer Interesse.",
       absatz:
-        "Offen für alle Fachrichtungen und alle Semester. Ob du aus Mathe, Informatik, ML, Physik oder den Wirtschaftswissenschaften kommst — oder aus etwas ganz anderem: Wenn dich quantitative Methoden interessieren, bist du richtig. Fachliteratur und Materialien sind überwiegend englisch, die Treffen sind es auf Wunsch auch.",
+        "Weder Finance- noch Programmierkenntnisse sind Voraussetzung. Egal ob du aus Mathe, Informatik, Physik, ML, BWL oder etwas ganz anderem kommst, und egal in welchem Semester: Wenn dich das Thema interessiert, komm einfach vorbei. Viel Material ist auf Englisch, und die Treffen machen wir auf Englisch, wenn es für die Runde besser passt.",
     },
     join: {
-      headline: "Komm zum nächsten Treffen.",
+      headline: "Lust, dabei zu sein?",
       absatz:
-        "Termine, Räume und Materialien stehen im Mitgliederbereich. Melde dich einmal mit deinem Uni-Account an — mehr braucht es nicht.",
+        "Wir suchen sowohl Leute, die einfach mitmachen wollen, als auch Leute, die beim Aufbau und bei der Vereinsgründung mit anpacken. Eine Rolle gibt es für fast alles: Events, Partnerschaften, Marketing, Finanzen, Community oder die Formate selbst. Termine und Materialien findest du im Mitgliederbereich.",
       cta: "Mit Uni-Account anmelden",
       hinweis:
-        "Für Studierende der Universität Tübingen. Dein Passwort bleibt bei der Uni.",
-      instagramLink: "Oder folge uns auf Instagram",
+        "Für Studierende der Uni Tübingen. Dein Passwort bekommen wir nie zu sehen, das bleibt bei der Uni.",
+      instagramLink: "Oder schreib uns auf Instagram",
     },
     footer: {
-      einzeiler: "Studentische Initiative an der Universität Tübingen.",
+      einzeiler: "Studentische Initiative an der Universität Tübingen. Gerade im Aufbau.",
       kontaktLabel: "Kontakt",
       folgenLabel: "Folgen",
       impressumLabel: "Impressum",
@@ -216,7 +225,7 @@ export const content: Record<Locale, SiteContent> = {
       titel:
         "Tübingen Quant Society — Quantitative Finance at the University of Tübingen",
       beschreibung:
-        "Student initiative for quantitative finance and algorithmic trading at the University of Tübingen. Paper sessions, workshops, projects. No prior knowledge required.",
+        "A student initiative getting off the ground: quantitative finance, algorithmic trading and machine learning at the University of Tübingen. Open to every subject, no prior knowledge needed.",
       sprache: "en",
       ogLocale: "en_US",
     },
@@ -232,69 +241,78 @@ export const content: Record<Locale, SiteContent> = {
     },
     hero: {
       headline: "Quantitative finance,",
-      headlineAccent: "openly discussed.",
+      headlineAccent: "by students, for students",
       subline:
-        "A place at the University of Tübingen to read papers, discuss projects, and understand how data-driven decisions are made in financial markets.",
+        "We're building the Tübingen Quant Society right now: a student group for anyone who wants to know how data, models and code actually get used in financial markets. Join early and you get a real say in where this goes.",
       ctaPrimaer: { label: "Get involved", href: "#join" },
-      ctaSekundaer: { label: "What we do", href: "#activities" },
+      ctaSekundaer: { label: "What we've got planned", href: "#activities" },
     },
     about: {
-      headline: "Between lectures and practice, a space is missing.",
+      headline: "There are a lot of steps between lectures and practice.",
       absaetze: [
-        "Quantitative methods shape modern capital markets, yet they stay opaque to outsiders and are in practice reserved for large institutions. Those who want to understand them rarely find a place for it during their studies.",
-        "Tübingen is an outstanding location for machine learning, mathematics, and data science. What's missing is the link between this methodological strength and applied, critical market expertise. That's exactly the gap we want to close — as a format for learning and exchange, not as investment advice.",
+        "It's quantitative finance and everything around it: algorithmic trading, machine learning, markets, market making, derivatives, crypto, and how people actually end up working in the field.",
+        "Tübingen has brilliant people in machine learning, maths and data science. What's been missing is a group that points all of that at markets and talks openly about what holds up and what doesn't. That's us. We're here to understand how it works, and we don't give investment advice.",
+        "How technical things get depends on who shows up. If people want to write code, we'll write code. If the group would rather dig into markets, research and companies, we'll do that. Both work.",
       ],
     },
     activities: {
-      headline: "What we do.",
+      headline: "What we've got planned.",
       karten: [
         {
-          titel: "Paper-reading sessions",
+          titel: "Paper & market sessions",
           beschreibung:
-            "We read and discuss academic papers and market studies together.",
+            "We take a paper or something that just happened in the markets and talk through what's really going on.",
           geplant: false,
         },
         {
-          titel: "Project & idea exchange",
+          titel: "Projects",
           beschreibung:
-            "Present your own projects and take them apart — backtesting, modelling, data analysis.",
+            "Backtests, models, messy data. Bring whatever you're building and let's talk it through.",
           geplant: false,
         },
         {
-          titel: "Introductory workshops",
+          titel: "Workshops to get started",
           beschreibung:
-            "Hands-on formats on the fundamentals: programming, statistics, working with financial data.",
+            "Python, statistics, working with financial data. Made for people starting from zero.",
           geplant: false,
         },
         {
-          titel: "Guest talks",
-          beschreibung: "Insights from research and practice.",
+          titel: "Trading challenges",
+          beschreibung:
+            "Small competitions, because you learn more doing it than watching.",
           geplant: true,
         },
         {
-          titel: "Competitions",
-          beschreibung: "Our own trading and data-science challenges.",
+          titel: "Guest talks",
+          beschreibung:
+            "Invite people who do this for a living and ask them everything.",
+          geplant: true,
+        },
+        {
+          titel: "Companies & partnerships",
+          beschreibung:
+            "Longer term we'd love to bring quant firms and market makers to Tübingen for talks, workshops or recruiting.",
           geplant: true,
         },
       ],
       badge: "planned",
     },
     open: {
-      headline: "You don't need any prior finance knowledge.",
+      headline: "All you need to bring is interest.",
       absatz:
-        "Open to every discipline and every semester. Whether you come from maths, computer science, ML, physics, or economics — or from something else entirely: if quantitative methods interest you, you're in the right place. The literature and materials are mostly in English, and the meetings are too on request.",
+        "No finance background required, no coding required. Maths, computer science, physics, ML, economics or something completely unrelated, any semester: if the topic sounds interesting, just come along. A lot of the material is in English, and we'll run the meetings in English whenever that suits the group better.",
     },
     join: {
-      headline: "Come to the next meeting.",
+      headline: "Want to be part of it?",
       absatz:
-        "Dates, rooms, and materials live in the members area. Sign in once with your university account — that's all it takes.",
+        "We're looking for people who just want to take part, and for people who want to help build this and get the society officially founded. There's a role for pretty much anything: events, partnerships, marketing, finances, community, or the sessions themselves. Dates and materials live in the members area.",
       cta: "Sign in with your university account",
       hinweis:
-        "For students at the University of Tübingen. Your password stays with the university.",
-      instagramLink: "Or follow us on Instagram",
+        "For students at the University of Tübingen. We never see your password, it stays with the university.",
+      instagramLink: "Or message us on Instagram",
     },
     footer: {
-      einzeiler: "A student initiative at the University of Tübingen.",
+      einzeiler: "A student initiative at the University of Tübingen. Currently getting off the ground.",
       kontaktLabel: "Contact",
       folgenLabel: "Follow",
       impressumLabel: "Legal notice",

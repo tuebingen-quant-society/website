@@ -42,8 +42,8 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       <Ticker locale={locale} />
 
-      {/* Headline and prose sit side by side from 900px — the section's copy is
-          two dense paragraphs, and a single column makes them read as a wall. */}
+      {/* Headline and prose sit side by side from 900px — the section runs to
+          several paragraphs, and a single column makes them read as a wall. */}
       <section className="section" id="about" aria-labelledby="about-headline">
         <div className="section__inner about reveal">
           <h2 className="section-headline about__head" id="about-headline">

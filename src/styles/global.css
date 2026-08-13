@@ -1,39 +1,66 @@
-/* Design tokens and components — "Quant Terminal v2" redesign.
-   Deep black-navy paper, coral→amber gradient as the brand signature
+/* Design tokens and shared components — "Quant Terminal" identity.
+   Deep blue-black paper, coral→amber gradient as the brand signature
    (matches branding/logo.png), --accent readable on dark for links and
-   chart lines, --up/--down are the market colors. */
+   chart lines, --up/--down are the market colors.
+
+   Surfaces step up toward the viewer: paper → surface → surface-2 → surface-3.
+   Elevation is carried by background *and* shadow, never by shadow alone —
+   on a near-black page a shadow on its own is almost invisible. */
 
 /* ---------------------------------------------------------------- Tokens */
 
 :root {
-  /* Color */
-  --paper: #05080d;
-  --surface: #0b111a;
-  --surface-2: #121a28;
-  --ink: #eef2f7;
-  --ink-muted: #97a3b4;
-  --rule: #1a2330;
-  --rule-strong: #2c3a50;
-  --carmine: #e02e50;
+  color-scheme: dark;
+
+  /* Surfaces */
+  --paper: #05070c;
+  --surface: #0a0e16;
+  --surface-2: #10151f;
+  --surface-3: #171e2a;
+
+  /* Ink */
+  --ink: #edf1f7;
+  --ink-muted: #99a5b7;
+  /* Lightened until it clears 4.5:1 on --surface and --surface-3 too — the
+     footer labels and plot chrome that use it are 12px, so AA applies. */
+  --ink-subtle: #7b8799;
+
+  /* Hairlines. Kept as opaque hex: the canvas components read --rule through
+     getComputedStyle and paint it directly. */
+  --rule: #1a2130;
+  --rule-strong: #2a3547;
+
+  /* Brand */
+  --carmine: #e0294c;
   --accent: #ff5c72;
   --accent-2: #ffa06b;
+  --accent-wash: rgba(255, 92, 114, 0.1);
+  --glow: rgba(224, 46, 80, 0.42);
+  --grad-accent: linear-gradient(115deg, var(--accent) 15%, var(--accent-2) 85%);
+
+  /* Market */
   --up: #2fbf8f;
   --down: #f4506a;
-  --band: rgba(255, 92, 114, 0.14);
-  --glow: rgba(224, 46, 80, 0.35);
-  --grad-accent: linear-gradient(115deg, var(--accent) 15%, var(--accent-2) 85%);
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+  --shadow-3: 0 28px 70px -20px rgba(0, 0, 0, 0.85);
 
   /* Typography */
   --font-display: "Newsreader Variable", Georgia, "Times New Roman", serif;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 
-  --fs-hero: clamp(2.75rem, 1.4rem + 6.75vw, 5.25rem);
-  --fs-h2: clamp(1.75rem, 1.32rem + 2.15vw, 2.75rem);
-  --fs-h3: clamp(1.125rem, 1.068rem + 0.28vw, 1.25rem);
-  --fs-body: clamp(1rem, 0.972rem + 0.14vw, 1.0625rem);
+  --fs-hero: clamp(2.5rem, 1.55rem + 4.2vw, 4.25rem);
+  --fs-h2: clamp(1.75rem, 1.3rem + 2.2vw, 2.5rem);
+  --fs-h3: clamp(1.0625rem, 1.02rem + 0.22vw, 1.1875rem);
+  --fs-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --fs-body: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
   --fs-small: 0.875rem;
   --fs-label: 0.75rem;
+
+  --tracking-label: 0.14em;
 
   /* Space, edges, motion */
   --space-1: 4px;
@@ -50,20 +77,22 @@
   --prose-max: 62ch;
   --gutter: 20px;
   --section-pad-y: 72px;
-  --radius: 10px;
-  --radius-lg: 18px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
   --radius-pill: 999px;
   --border: 1px solid var(--rule);
   --ease: cubic-bezier(0.2, 0, 0.1, 1);
-  --dur: 240ms;
-  --dur-reveal: 900ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 220ms;
+  --dur-slow: 420ms;
   --header-h: 64px;
 }
 
 @media (min-width: 768px) {
   :root {
     --gutter: 32px;
-    --section-pad-y: 120px;
+    --section-pad-y: 112px;
   }
 }
 
@@ -78,8 +107,10 @@
 html {
   scroll-behavior: smooth;
   /* Anchor targets must not end up under the sticky header. */
-  scroll-padding-top: var(--header-h);
+  scroll-padding-top: calc(var(--header-h) + var(--space-5));
   -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--rule-strong) transparent;
+  scrollbar-width: thin;
 }
 
 body {
@@ -92,8 +123,9 @@ body {
   font-family: var(--font-body);
   font-size: var(--fs-body);
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -117,6 +149,12 @@ input {
   color: inherit;
 }
 
+/* Figures and readouts line up in columns instead of jittering. */
+.tnum,
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
 ::selection {
   background: var(--carmine);
   color: #fff;
@@ -125,7 +163,8 @@ input {
 /* Visible focus ring on all interactive elements. */
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -151,26 +190,36 @@ input {
   font-family: var(--font-display);
   font-weight: 400;
   font-optical-sizing: auto;
+  text-wrap: balance;
 }
 
 .hero-headline {
   font-size: var(--fs-hero);
-  line-height: 1.04;
-  letter-spacing: -0.025em;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
 }
 
 .section-headline {
   font-size: var(--fs-h2);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  line-height: 1.14;
+  letter-spacing: -0.018em;
 }
 
 .prose {
   max-width: var(--prose-max);
 }
 
+.prose p {
+  text-wrap: pretty;
+}
+
 .prose p + p {
   margin-top: var(--space-4);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  color: var(--ink-muted);
 }
 
 /* Coral→amber gradient text — the brand signature. Use sparingly:
@@ -188,112 +237,196 @@ input {
   box-decoration-break: clone;
 }
 
-/* ---------------------------------------------------------------- Components */
+/* ---------------------------------------------------------------- Buttons */
 
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
   /* Touch targets ≥44×44px. */
   min-height: 46px;
-  padding: 12px 26px;
+  padding: 12px 24px;
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--fs-small);
   line-height: 1;
+  letter-spacing: 0.005em;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     filter var(--dur) var(--ease),
     transform var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
     background-color var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease);
 }
 
+.btn:active {
+  transform: translateY(0) scale(0.985);
+}
+
 .btn--primary {
-  background: linear-gradient(115deg, #ff5468, var(--carmine) 55%, #c01f44);
+  background: linear-gradient(135deg, #ff6a7c, var(--carmine) 78%);
   color: #fff;
-  border: 1px solid rgba(255, 130, 140, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow:
-    0 0 24px var(--glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 24px -12px var(--glow);
 }
 
 .btn--primary:hover {
-  filter: brightness(1.12);
+  filter: brightness(1.07) saturate(1.05);
   transform: translateY(-1px);
   box-shadow:
-    0 6px 36px var(--glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    0 14px 32px -12px var(--glow);
 }
 
 .btn--primary[disabled] {
   cursor: default;
-  filter: none;
+  filter: grayscale(0.25);
   transform: none;
-  opacity: 0.6;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+/* Sign-in arrow in front of a button label — sits slightly back from the text
+   so it reads as a status cue, not as decoration. */
+.glyph-signin {
+  flex: none;
+  margin-right: -2px;
+  opacity: 0.85;
 }
 
 .btn--secondary {
-  background: transparent;
+  background: var(--surface-2);
   border: 1px solid var(--rule-strong);
   color: var(--ink);
+  box-shadow: var(--shadow-1);
 }
 
 .btn--secondary:hover {
-  background: var(--surface-2);
+  background: var(--surface-3);
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--rule-strong));
+  transform: translateY(-1px);
 }
+
+/* ---------------------------------------------------------------- Links */
 
 .link {
   color: var(--accent);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
-  transition: text-decoration-thickness var(--dur) var(--ease);
+  transition:
+    color var(--dur) var(--ease),
+    text-decoration-thickness var(--dur) var(--ease);
 }
 
 .link:hover {
+  color: var(--accent-2);
   text-decoration-thickness: 2px;
 }
 
-/* Text link with arrow. */
+/* Text link with a trailing arrow. */
 .link--arrow {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: 44px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link--arrow .link__label {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentcolor 45%, transparent);
+  transition: text-decoration-color var(--dur) var(--ease);
+}
+
+.link--arrow:hover .link__label {
+  text-decoration-color: currentcolor;
 }
 
 .link--arrow .arrow {
-  transition: transform var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease-out);
 }
 
 .link--arrow:hover .arrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
+}
+
+/* ---------------------------------------------------------------- Panels */
+
+/* Shared panel look: raised surface, hairline, gradient keyline on the top
+   edge. Used by the signature plot and the join block. */
+.panel {
+  position: relative;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-3);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 4%,
+    var(--accent) 34%,
+    var(--accent-2) 66%,
+    transparent 96%
+  );
+  z-index: 1;
 }
 
 .card {
   position: relative;
-  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  isolation: isolate;
+  background: var(--surface);
   border: var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-6) var(--space-5);
+  padding: var(--space-6) var(--space-5) var(--space-5);
   overflow: hidden;
   transition:
     border-color var(--dur) var(--ease),
-    transform var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease-out),
     box-shadow var(--dur) var(--ease);
 }
 
-/* Coral glow that fades in from the card's top corner on hover. */
+/* Gradient keyline that lights up along the card's top edge on hover. */
 .card::before {
   content: "";
   position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: var(--grad-accent);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+/* Coral wash fading in from the card's top-left corner. */
+.card::after {
+  content: "";
+  position: absolute;
   inset: 0;
+  z-index: -1;
   background: radial-gradient(
-    420px 200px at 18% 0%,
-    rgba(255, 92, 114, 0.13),
-    transparent 65%
+    420px 220px at 12% -10%,
+    var(--accent-wash),
+    transparent 70%
   );
   opacity: 0;
   transition: opacity var(--dur) var(--ease);
@@ -301,14 +434,14 @@ input {
 }
 
 .card:hover {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--rule));
-  transform: translateY(-4px);
-  box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 92, 114, 0.06);
+  border-color: var(--rule-strong);
+  background: var(--surface-2);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
 }
 
-.card:hover::before {
+.card:hover::before,
+.card:hover::after {
   opacity: 1;
 }
 
@@ -316,28 +449,41 @@ input {
   font-size: var(--fs-h3);
   font-weight: 600;
   line-height: 1.35;
+  letter-spacing: -0.005em;
 }
 
 .card__text {
   font-size: var(--fs-small);
   color: var(--ink-muted);
   margin-top: var(--space-2);
+  text-wrap: pretty;
 }
 
 .badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
-  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-wash);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
   border-radius: var(--radius-pill);
-  padding: 3px 10px;
+  padding: 4px 12px;
   line-height: 1.5;
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   align-self: flex-start;
+}
+
+.badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentcolor;
 }
 
 /* Planned cards: dashed outline instead of an opacity trick — keeps all
@@ -346,6 +492,12 @@ input {
   background: transparent;
   border-style: dashed;
 }
+
+.card--geplant:hover {
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+}
+
+/* ---------------------------------------------------------------- Sections */
 
 .section {
   padding-block: var(--section-pad-y);
@@ -359,11 +511,14 @@ input {
   padding-inline: var(--gutter);
 }
 
+/* No `overflow: hidden` here: the wash below is inset-0 so nothing escapes,
+   and clipping would turn this into a scroll container — which makes
+   `animation-timeline: view()` resolve against *it* instead of the document,
+   killing the reveal for everything inside. */
 .section--surface {
   position: relative;
   background: var(--surface);
   border-block: var(--border);
-  overflow: hidden;
 }
 
 /* Quiet coral wash behind full-width surface bands. */
@@ -383,20 +538,34 @@ input {
   position: relative;
 }
 
-/* Scroll reveal: class is set via JS (index.astro) — without JS everything
-   stays visible, and with reduced motion it's never assigned in the first place. */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 700ms var(--ease),
-    transform 700ms var(--ease);
+/* ---------------------------------------------------------------- Motion */
+
+/* Scroll reveal, CSS only. Browsers without scroll-driven animations simply
+   render the content in place — no JS, no flash of invisible content. */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.reveal.is-in {
-  opacity: 1;
-  transform: none;
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      /* Ends within the entry range, so anything fully in view is fully
+         opaque — no element can get stranded mid-fade at the page bottom. */
+      animation-range: entry 5% entry 85%;
+    }
+  }
 }
+
+/* ---------------------------------------------------------------- Utilities */
 
 .skip-link {
   position: absolute;
@@ -404,15 +573,16 @@ input {
   top: var(--space-3);
   z-index: 100;
   padding: 10px 16px;
-  background: var(--surface);
-  border: var(--border);
+  background: var(--surface-2);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius);
   color: var(--ink);
   font-size: var(--fs-small);
   font-weight: 600;
   text-decoration: none;
+  box-shadow: var(--shadow-2);
   transform: translateY(calc(-100% - var(--space-6)));
-  transition: transform var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease-out);
 }
 
 .skip-link:focus-visible {

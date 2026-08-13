@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { wortmarke } from "@/config";
 import { content, localePath, type Locale } from "@/i18n";
+import { SignInGlyph } from "./sign-in-glyph";
 
 type SiteHeaderProps = {
   locale: Locale;
@@ -58,12 +59,15 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
               {item.label}
             </a>
           ))}
-          <a className="btn btn--primary" href={`${anchorBase}${t.hero.ctaPrimaer.href}`}>
-            {t.hero.ctaPrimaer.label}
-          </a>
-
-          <a className="header__member" href={localePath(locale, "members")}>
-            {t.memberLink}
+          {/* The shortcut for people who already have an account: it names the
+              login instead of dressing it up as an invitation, and stays a quiet
+              secondary button so the hero keeps the page's only loud CTA. */}
+          <a
+            className="btn btn--secondary header__cta"
+            href={localePath(locale, "members")}
+          >
+            <SignInGlyph />
+            {t.loginCta.label}
           </a>
 
           <div className="header__lang" role="group" aria-label={t.langToggle.aria}>

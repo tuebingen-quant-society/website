@@ -1,86 +1,100 @@
-/* Migrated from src/components/Ticker.astro. */
+/* Decorative ticker tape below the hero (aria-hidden — no real prices). */
 .ticker {
-    position: relative;
-    overflow: hidden;
-    border-block: var(--border);
-    background: var(--surface);
-    user-select: none;
-  }
+  position: relative;
+  overflow: hidden;
+  border-bottom: var(--border);
+  background: var(--surface);
+  user-select: none;
+}
 
-  /* Soft fade at both ends so items slide in instead of popping in. */
-  .ticker::before,
-  .ticker::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: clamp(32px, 8vw, 96px);
-    z-index: 1;
-    pointer-events: none;
-  }
+/* Soft fade at both ends so items slide in instead of popping in. */
+.ticker::before,
+.ticker::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(40px, 10vw, 120px);
+  z-index: 1;
+  pointer-events: none;
+}
 
-  .ticker::before {
-    left: 0;
-    background: linear-gradient(90deg, var(--surface), transparent);
-  }
+.ticker::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--surface), transparent);
+}
 
-  .ticker::after {
-    right: 0;
-    background: linear-gradient(-90deg, var(--surface), transparent);
-  }
+.ticker::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--surface), transparent);
+}
 
+.ticker__track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 60s linear infinite;
+}
+
+.ticker:hover .ticker__track {
+  animation-play-state: paused;
+}
+
+.ticker__group {
+  display: flex;
+  flex: none;
+}
+
+.ticker__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-block: 11px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* Dot separator between entries — quieter than a full-height rule. The
+   symmetric margins (minus the flex gap on the left) are what space the
+   entries; the item itself carries no inline padding. */
+.ticker__item::after {
+  content: "";
+  align-self: center;
+  width: 3px;
+  height: 3px;
+  margin-left: calc(var(--space-6) - var(--space-2));
+  margin-right: var(--space-6);
+  border-radius: 50%;
+  background: var(--rule-strong);
+}
+
+.ticker__sym {
+  color: var(--ink-subtle);
+}
+
+.ticker__val--up {
+  color: var(--up);
+}
+
+.ticker__val--down {
+  color: var(--down);
+}
+
+.ticker__val--flat {
+  color: var(--ink-muted);
+}
+
+@keyframes ticker-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .ticker__track {
-    display: flex;
-    width: max-content;
-    animation: ticker-scroll 55s linear infinite;
+    animation: none;
   }
-
-  .ticker:hover .ticker__track {
-    animation-play-state: paused;
-  }
-
-  .ticker__group {
-    display: flex;
-    flex: none;
-  }
-
-  .ticker__item {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    padding: 10px var(--space-5);
-    border-right: var(--border);
-    font-family: var(--font-mono);
-    font-size: var(--fs-label);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-  }
-
-  .ticker__sym {
-    color: var(--ink-muted);
-  }
-
-  .ticker__val--up {
-    color: var(--up);
-  }
-
-  .ticker__val--down {
-    color: var(--down);
-  }
-
-  .ticker__val--flat {
-    color: var(--ink);
-  }
-
-  @keyframes ticker-scroll {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ticker__track {
-      animation: none;
-    }
-  }
+}

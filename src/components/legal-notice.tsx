@@ -5,7 +5,7 @@ export function LegalNotice({ locale }: { locale: Locale }) {
   if (locale === "en") {
     return (
       <LegalSection title="Legal notice">
-        <p className="hinweis">
+        <p className="legal__hinweis">
           This is a convenience translation. The legally binding version is the{" "}
           <a className="link" href={localePath("de", "impressum")}>
             German legal notice
@@ -76,9 +76,9 @@ function LegalSection({ title, children }: { title: string; children: React.Reac
   return (
     <section className="section" aria-labelledby="legal-headline">
       <div className="section__inner">
-        <div className="prose">
-          <h1 className="section-headline" id="legal-headline">{title}</h1>
-          <div className="body">{children}</div>
+        <div className="legal">
+          <h1 className="section-headline legal__head" id="legal-headline">{title}</h1>
+          <div className="legal__body">{children}</div>
         </div>
       </div>
     </section>
@@ -86,7 +86,7 @@ function LegalSection({ title, children }: { title: string; children: React.Reac
 }
 
 function Heading({ children }: { children: React.ReactNode }) {
-  return <h2 className="h3">{children}</h2>;
+  return <h2 className="legal__titel">{children}</h2>;
 }
 
 function Contact() {

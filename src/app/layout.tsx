@@ -9,7 +9,6 @@ import "@/styles/global.css";
 import "@/styles/header.css";
 import "@/styles/footer.css";
 import "@/styles/home.css";
-import "@/styles/join-form.css";
 import "@/styles/market-background.css";
 import "@/styles/signature-plot.css";
 import "@/styles/ticker.css";
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#0a0d12" };
+export const viewport: Viewport = { themeColor: "#05070c" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

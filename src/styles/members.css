@@ -105,6 +105,54 @@
   font-size: clamp(1.1rem, 2vw, 1.45rem);
 }
 
+.members__whatsapp {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-7);
+  align-items: center;
+  margin-top: var(--space-8);
+  padding: var(--space-7);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  animation: members-enter 650ms 120ms var(--ease) both;
+}
+
+.members__whatsapp-copy h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.members__whatsapp-copy p {
+  max-width: 52ch;
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+}
+
+.members__whatsapp-cta {
+  margin-top: var(--space-6);
+}
+
+.members__qr {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  text-align: center;
+}
+
+/* Fixed light background — an inverted code is not reliably scannable. */
+.members__qr-code {
+  width: clamp(132px, 15vw, 168px);
+  height: auto;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  box-shadow: var(--shadow-2);
+}
+
 .members__events {
   margin-top: var(--space-9);
   animation: members-enter 650ms 160ms var(--ease) both;
@@ -186,8 +234,14 @@
   }
 
   .members__identity,
-  .members__section-heading {
+  .members__section-heading,
+  .members__whatsapp {
     grid-template-columns: 1fr;
+  }
+
+  .members__qr {
+    justify-items: start;
+    text-align: start;
   }
 
   .members__event {

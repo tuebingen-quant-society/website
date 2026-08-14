@@ -82,6 +82,14 @@ Set the values from `.env.example` in each Vercel project/environment:
 - `SAML_IDP_ISSUER`: supplied by the university IdP team
 - `SAML_IDP_CERT`: supplied by the university IdP team
 
+Optional:
+
+- `WHATSAPP_GROUP_URL`: invite link to the members-only WhatsApp group. The members
+  page renders the group link and a QR code generated from it; while the variable is
+  unset, blank, or not an http(s) URL, that section is left out entirely. It is not a
+  `NEXT_PUBLIC_` variable, so the invite stays server-side and reaches only visitors
+  who have completed the university login.
+
 The non-secret environment-specific values are:
 
 | Variable | Production | Test |

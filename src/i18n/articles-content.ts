@@ -63,16 +63,16 @@ export function formatArticleDate(isoDate: string, locale: Locale): string {
 export const articlesContent: Record<Locale, ArticlesCopy> = {
   de: {
     meta: {
-      title: "Veröffentlichungen — Tübingen Quant Society",
+      title: "Veröffentlichungen - Tübingen Quant Society",
       description:
         "Research-Notes, Workshop-Unterlagen und Artikel der Tübingen Quant Society. Frei zugänglich, ohne Login.",
     },
     eyebrow: "Öffentliche Materialien",
-    headline: "Was wir aufschreiben, liegt offen.",
-    lead: "Research-Notes, Workshop-Unterlagen und Artikel. Alles frei zugänglich, ohne Login und ohne Anmeldung. Anlageberatung ist nichts davon.",
+    headline: "Veröffentlichungen",
+    lead: "Research-Notes, Workshop-Unterlagen und Artikel. Alles frei zugänglich, ohne Login.",
     empty: {
-      title: "Hier ist noch nichts.",
-      body: "Wir fangen gerade erst an. Sobald die ersten Research-Notes und Workshop-Unterlagen fertig sind, erscheinen sie an dieser Stelle.",
+      title: "Ganz schön leer hier.",
+      body: "Wir fangen gerade erst an. Sobald die ersten Research-Notes und Workshop-Unterlagen fertig sind, erscheinen sie hier.",
     },
     kinds: {
       "research-note": "Research-Note",
@@ -100,13 +100,13 @@ export const articlesContent: Record<Locale, ArticlesCopy> = {
 
   en: {
     meta: {
-      title: "Publications — Tübingen Quant Society",
+      title: "Publications - Tübingen Quant Society",
       description:
         "Research notes, workshop handouts and articles from the Tübingen Quant Society. Freely available, no login required.",
     },
     eyebrow: "Public materials",
-    headline: "Whatever we write down stays in the open.",
-    lead: "Research notes, workshop handouts and articles. All of it freely available, no login, no sign-up. None of it is investment advice.",
+    headline: "Publications",
+    lead: "Research notes, workshop handouts and articles. All of it freely available, no login required.",
     empty: {
       title: "Nothing here yet.",
       body: "We're only just getting started. The first research notes and workshop handouts will show up right here once they're done.",

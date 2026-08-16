@@ -1,15 +1,22 @@
 import { kontakt } from "@/config";
 import { content, localePath, type Locale } from "@/i18n";
+import { articlesContent } from "@/i18n/articles-content";
+import { articlesPath, listArticles } from "@/lib/articles";
+import { ArticleCard } from "./article-card";
 import { SignInGlyph } from "./sign-in-glyph";
 import { MarketBackground } from "./market-background";
 import { SignaturePlot } from "./signature-plot";
 import { Ticker } from "./ticker";
 
-export function HomePage({ locale }: { locale: Locale }) {
+export async function HomePage({ locale }: { locale: Locale }) {
   const { hero, about, activities, open, join } = content[locale];
   /* The only login on the page: "Mitmachen" scrolls down to the section that
      explains what the account is for, and the button below it does the rest. */
   const membersHref = localePath(locale, "members");
+  /* The three newest public pieces. While nothing is published the whole
+     section stays out of the page rather than showing an empty shelf. */
+  const teaserCopy = articlesContent[locale].teaser;
+  const newest = (await listArticles()).slice(0, 3);
 
   return (
     <>
@@ -86,6 +93,32 @@ export function HomePage({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
+
+      {newest.length > 0 && (
+        <section className="section teaser" aria-labelledby="teaser-headline">
+          <div className="section__inner reveal">
+            <div className="teaser__head">
+              <h2 className="section-headline" id="teaser-headline">
+                {teaserCopy.headline}
+              </h2>
+              <a
+                className="link link--arrow teaser__link"
+                href={localePath(locale, articlesPath())}
+              >
+                <span className="link__label">{teaserCopy.link}</span>
+                <span className="arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </div>
+            <ul className="teaser__grid" role="list">
+              {newest.map((article) => (
+                <ArticleCard article={article} key={article.slug} locale={locale} />
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       <section className="section" id="join" aria-labelledby="join-headline">
         <div className="section__inner">

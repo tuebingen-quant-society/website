@@ -1,0 +1,51 @@
+export const meta = {
+  // Shown as the headline on the card and on the article page.
+  title: "Titel des Beitrags",
+  // One or two sentences. Also used as the <meta description> and share text.
+  description:
+    "Worum es geht, in ein bis zwei Sätzen — das ist der Text auf der Übersichtskarte.",
+  // Publication date, YYYY-MM-DD. Sorts the listing, newest first.
+  date: "2026-01-01",
+  // The language this text is written in: "de" or "en". A piece in the other
+  // language still shows up in both listings, marked with a language tag.
+  lang: "de",
+  // "research-note" | "workshop" | "article" — also picks the preview figure.
+  kind: "research-note",
+  // Optional.
+  authors: ["Vorname Nachname"],
+  topics: ["Volatilität", "Optionen"],
+  // Optional: slides, notebooks, datasets. Files go in public/articles/.
+  resources: [{ label: "Folien (PDF)", href: "/articles/beispiel-folien.pdf" }],
+  // Optional: set when a published piece gets revised.
+  // updated: "2026-02-01",
+  // Remove this line to publish. Drafts stay out of the listing and 404.
+  draft: true,
+};
+
+Der erste Absatz steht direkt unter dem Vorspann — die Überschrift und die
+Beschreibung oben kommen aus `meta`, hier fängt der eigentliche Text an.
+
+## Zwischenüberschrift
+
+Ganz normales Markdown: **fett**, _kursiv_, `Code`, [Links](https://tuequant.de)
+und Listen.
+
+- Ein Punkt
+- Noch einer
+
+> Zitate funktionieren auch.
+
+```python
+import numpy as np
+
+returns = np.diff(np.log(prices))
+print(returns.std() * np.sqrt(252))
+```
+
+| Kennzahl | Wert |
+| -------- | ---- |
+| Sharpe   | 1.24 |
+| Vol      | 0.19 |
+
+Bilder liegen unter `public/articles/` und werden ganz normal eingebunden:
+`![Beschreibung](/articles/beispiel.png)`.

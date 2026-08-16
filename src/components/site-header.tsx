@@ -54,11 +54,32 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
           className="header__nav"
           aria-label={locale === "de" ? "Hauptnavigation" : "Main navigation"}
         >
-          {t.nav.map((item) => (
-            <a className="header__link" href={`${anchorBase}${item.href}`} key={item.href}>
-              {item.label}
-            </a>
-          ))}
+          {t.nav.map((item) => {
+            /* Anchors point back at the home page from anywhere; page entries
+               resolve to the current language's route. */
+            const isAnchor = item.href.startsWith("#");
+            const href = isAnchor
+              ? `${anchorBase}${item.href}`
+              : localePath(locale, item.href);
+            const current =
+              !isAnchor &&
+              [item.href, item.activeFor].some(
+                (route) =>
+                  route !== undefined &&
+                  (logicalPath === route || logicalPath.startsWith(`${route}/`)),
+              );
+
+            return (
+              <a
+                className="header__link"
+                href={href}
+                aria-current={current ? "page" : undefined}
+                key={item.href}
+              >
+                {item.label}
+              </a>
+            );
+          })}
           {/* The shortcut for people who already have an account: it names the
               login instead of dressing it up as an invitation, and stays a quiet
               secondary button so the hero keeps the page's only loud CTA. */}

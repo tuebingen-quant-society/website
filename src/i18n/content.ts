@@ -39,7 +39,13 @@ export type SiteContent = {
    * do yet are sent to the closing section instead (`hero.ctaPrimaer`).
    */
   loginCta: { label: string };
-  nav: { label: string; href: string }[];
+  /**
+   * Header navigation. An `href` starting with "#" is an anchor on the home
+   * page; anything else is a locale-agnostic route resolved through
+   * localePath(). `activeFor` marks the item as current on routes that belong
+   * to it without sharing its path ("article/…" belongs to "articles").
+   */
+  nav: { label: string; href: string; activeFor?: string }[];
   langToggle: {
     /** Accessible label for the whole language switcher. */
     aria: string;
@@ -87,6 +93,9 @@ export type SiteContent = {
     /** Column headings in the footer. */
     kontaktLabel: string;
     folgenLabel: string;
+    /** Column heading + link label for the public materials. */
+    materialLabel: string;
+    materialLink: string;
     impressumLabel: string;
     datenschutzLabel: string;
   };
@@ -117,6 +126,7 @@ export const content: Record<Locale, SiteContent> = {
     nav: [
       { label: "Über uns", href: "#about" },
       { label: "Aktivitäten", href: "#activities" },
+      { label: "Artikel", href: "articles", activeFor: "article" },
     ],
     langToggle: {
       aria: "Sprache wählen",
@@ -198,6 +208,8 @@ export const content: Record<Locale, SiteContent> = {
       einzeiler: "Studentische Initiative an der Universität Tübingen. Gerade im Aufbau.",
       kontaktLabel: "Kontakt",
       folgenLabel: "Folgen",
+      materialLabel: "Lesen",
+      materialLink: "Veröffentlichungen",
       impressumLabel: "Impressum",
       datenschutzLabel: "Datenschutz",
     },
@@ -234,6 +246,7 @@ export const content: Record<Locale, SiteContent> = {
     nav: [
       { label: "About", href: "#about" },
       { label: "Activities", href: "#activities" },
+      { label: "Articles", href: "articles", activeFor: "article" },
     ],
     langToggle: {
       aria: "Choose language",
@@ -315,6 +328,8 @@ export const content: Record<Locale, SiteContent> = {
       einzeiler: "A student initiative at the University of Tübingen. Currently getting off the ground.",
       kontaktLabel: "Contact",
       folgenLabel: "Follow",
+      materialLabel: "Read",
+      materialLink: "Publications",
       impressumLabel: "Legal notice",
       datenschutzLabel: "Privacy",
     },

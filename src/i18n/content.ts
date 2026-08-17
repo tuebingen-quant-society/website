@@ -31,6 +31,19 @@ export type SiteContent = {
     sprache: string;
     /** og:locale value, e.g. "de_DE". */
     ogLocale: string;
+    /**
+     * Copy on the generated share card (src/lib/og). It is read on its own, in
+     * a feed, next to nothing else — so it repeats what the page says rather
+     * than continuing it.
+     */
+    og: {
+      /** Small-caps line above the headline; the first segment gets the accent. */
+      eyebrow: string[];
+      headline: string;
+      byline: string;
+      /** alt text of the card, for clients that render it as a plain image. */
+      alt: string;
+    };
   };
   skipLink: string;
   /**
@@ -120,6 +133,12 @@ export const content: Record<Locale, SiteContent> = {
         "Studentische Initiative im Aufbau: Quantitative Finance, algorithmisches Trading und Machine Learning an der Uni Tübingen. Offen für alle Studiengänge, Vorkenntnisse brauchst du keine.",
       sprache: "de",
       ogLocale: "de_DE",
+      og: {
+        eyebrow: ["Tübingen Quant Society", "Universität Tübingen"],
+        headline: "Quantitative Finance, algorithmisches Trading und Machine Learning.",
+        byline: "Studentische Initiative im Aufbau. Offen für alle Studiengänge, Vorkenntnisse brauchst du keine.",
+        alt: "Tübingen Quant Society — Quantitative Finance an der Universität Tübingen",
+      },
     },
     skipLink: "Zum Inhalt springen",
     loginCta: { label: "Uni-Login" },
@@ -240,6 +259,12 @@ export const content: Record<Locale, SiteContent> = {
         "A student initiative getting off the ground: quantitative finance, algorithmic trading and machine learning at the University of Tübingen. Open to every subject, no prior knowledge needed.",
       sprache: "en",
       ogLocale: "en_US",
+      og: {
+        eyebrow: ["Tübingen Quant Society", "University of Tübingen"],
+        headline: "Quantitative finance, algorithmic trading and machine learning.",
+        byline: "A student initiative getting off the ground. Open to every subject, no prior knowledge needed.",
+        alt: "Tübingen Quant Society — quantitative finance at the University of Tübingen",
+      },
     },
     skipLink: "Skip to content",
     loginCta: { label: "Uni login" },

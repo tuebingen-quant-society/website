@@ -12,7 +12,6 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test src/lib/*.test.ts src/lib/**/*.test.ts",
-    "og": "node scripts/render-og.mjs",
     "fonts": "node scripts/subset-fonts.mjs"
   },
   "dependencies": {

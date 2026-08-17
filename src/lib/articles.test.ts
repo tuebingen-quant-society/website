@@ -78,6 +78,6 @@ test("an empty archive explains itself instead of showing a blank grid", () => {
     }),
   );
 
-  assert.match(html, /Hier ist noch nichts/);
+  assert.match(html, /Ganz schön leer hier./);
   assert.doesNotMatch(html, /articles__pagination/);
 });

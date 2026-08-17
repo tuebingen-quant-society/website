@@ -9,7 +9,12 @@ import type { ArticleKind } from "@/lib/articles";
 import type { Locale } from "./index";
 
 type ArticlesCopy = {
-  meta: { title: string; description: string };
+  meta: {
+    title: string;
+    description: string;
+    /** alt text of an article's generated share card (src/lib/og). */
+    cardAlt: string;
+  };
   eyebrow: string;
   headline: string;
   lead: string;
@@ -63,9 +68,10 @@ export function formatArticleDate(isoDate: string, locale: Locale): string {
 export const articlesContent: Record<Locale, ArticlesCopy> = {
   de: {
     meta: {
-      title: "Veröffentlichungen - Tübingen Quant Society",
+      title: "Veröffentlichungen",
       description:
         "Research-Notes, Workshop-Unterlagen und Artikel der Tübingen Quant Society. Frei zugänglich, ohne Login.",
+      cardAlt: "Vorschaubild einer Veröffentlichung der Tübingen Quant Society",
     },
     eyebrow: "Öffentliche Materialien",
     headline: "Veröffentlichungen",
@@ -100,9 +106,10 @@ export const articlesContent: Record<Locale, ArticlesCopy> = {
 
   en: {
     meta: {
-      title: "Publications - Tübingen Quant Society",
+      title: "Publications",
       description:
         "Research notes, workshop handouts and articles from the Tübingen Quant Society. Freely available, no login required.",
+      cardAlt: "Preview card of a Tübingen Quant Society publication",
     },
     eyebrow: "Public materials",
     headline: "Publications",

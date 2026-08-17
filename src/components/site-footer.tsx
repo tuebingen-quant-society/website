@@ -39,6 +39,15 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             </a>
           </div>
 
+          {/* The header hides its nav links below 768px, so this is the way to
+              the public materials on a phone. */}
+          <div className="footer__col">
+            <h2 className="footer__titel">{t.footer.materialLabel}</h2>
+            <a className="footer__link" href={localePath(locale, "articles")}>
+              {t.footer.materialLink}
+            </a>
+          </div>
+
           <div className="footer__col">
             <h2 className="footer__titel">{t.footer.folgenLabel}</h2>
             <a className="footer__link" href={kontakt.instagram} rel="me noopener">

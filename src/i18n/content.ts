@@ -31,6 +31,19 @@ export type SiteContent = {
     sprache: string;
     /** og:locale value, e.g. "de_DE". */
     ogLocale: string;
+    /**
+     * Copy on the generated share card (src/lib/og). It is read on its own, in
+     * a feed, next to nothing else — so it repeats what the page says rather
+     * than continuing it.
+     */
+    og: {
+      /** Small-caps line above the headline; the first segment gets the accent. */
+      eyebrow: string[];
+      headline: string;
+      byline: string;
+      /** alt text of the card, for clients that render it as a plain image. */
+      alt: string;
+    };
   };
   skipLink: string;
   /**
@@ -39,7 +52,13 @@ export type SiteContent = {
    * do yet are sent to the closing section instead (`hero.ctaPrimaer`).
    */
   loginCta: { label: string };
-  nav: { label: string; href: string }[];
+  /**
+   * Header navigation. An `href` starting with "#" is an anchor on the home
+   * page; anything else is a locale-agnostic route resolved through
+   * localePath(). `activeFor` marks the item as current on routes that belong
+   * to it without sharing its path ("article/…" belongs to "articles").
+   */
+  nav: { label: string; href: string; activeFor?: string }[];
   langToggle: {
     /** Accessible label for the whole language switcher. */
     aria: string;
@@ -87,6 +106,9 @@ export type SiteContent = {
     /** Column headings in the footer. */
     kontaktLabel: string;
     folgenLabel: string;
+    /** Column heading + link label for the public materials. */
+    materialLabel: string;
+    materialLink: string;
     impressumLabel: string;
     datenschutzLabel: string;
   };
@@ -111,12 +133,19 @@ export const content: Record<Locale, SiteContent> = {
         "Studentische Initiative im Aufbau: Quantitative Finance, algorithmisches Trading und Machine Learning an der Uni Tübingen. Offen für alle Studiengänge, Vorkenntnisse brauchst du keine.",
       sprache: "de",
       ogLocale: "de_DE",
+      og: {
+        eyebrow: ["Tübingen Quant Society", "Universität Tübingen"],
+        headline: "Quantitative Finance, algorithmisches Trading und Machine Learning.",
+        byline: "Studentische Initiative im Aufbau. Offen für alle Studiengänge, Vorkenntnisse brauchst du keine.",
+        alt: "Tübingen Quant Society — Quantitative Finance an der Universität Tübingen",
+      },
     },
     skipLink: "Zum Inhalt springen",
     loginCta: { label: "Uni-Login" },
     nav: [
       { label: "Über uns", href: "#about" },
       { label: "Aktivitäten", href: "#activities" },
+      { label: "Artikel", href: "articles", activeFor: "article" },
     ],
     langToggle: {
       aria: "Sprache wählen",
@@ -198,6 +227,8 @@ export const content: Record<Locale, SiteContent> = {
       einzeiler: "Studentische Initiative an der Universität Tübingen. Gerade im Aufbau.",
       kontaktLabel: "Kontakt",
       folgenLabel: "Folgen",
+      materialLabel: "Lesen",
+      materialLink: "Veröffentlichungen",
       impressumLabel: "Impressum",
       datenschutzLabel: "Datenschutz",
     },
@@ -228,12 +259,19 @@ export const content: Record<Locale, SiteContent> = {
         "A student initiative getting off the ground: quantitative finance, algorithmic trading and machine learning at the University of Tübingen. Open to every subject, no prior knowledge needed.",
       sprache: "en",
       ogLocale: "en_US",
+      og: {
+        eyebrow: ["Tübingen Quant Society", "University of Tübingen"],
+        headline: "Quantitative finance, algorithmic trading and machine learning.",
+        byline: "A student initiative getting off the ground. Open to every subject, no prior knowledge needed.",
+        alt: "Tübingen Quant Society — quantitative finance at the University of Tübingen",
+      },
     },
     skipLink: "Skip to content",
     loginCta: { label: "Uni login" },
     nav: [
       { label: "About", href: "#about" },
       { label: "Activities", href: "#activities" },
+      { label: "Articles", href: "articles", activeFor: "article" },
     ],
     langToggle: {
       aria: "Choose language",
@@ -315,6 +353,8 @@ export const content: Record<Locale, SiteContent> = {
       einzeiler: "A student initiative at the University of Tübingen. Currently getting off the ground.",
       kontaktLabel: "Contact",
       folgenLabel: "Follow",
+      materialLabel: "Read",
+      materialLink: "Publications",
       impressumLabel: "Legal notice",
       datenschutzLabel: "Privacy",
     },

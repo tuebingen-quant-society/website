@@ -88,6 +88,13 @@
   background: var(--surface-2);
 }
 
+/* The section you are in — a quiet marker, not a second button. */
+.header__link[aria-current="page"] {
+  color: var(--ink);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
 .header__cta {
   margin-left: var(--space-2);
   min-height: 44px;

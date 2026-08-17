@@ -16,6 +16,14 @@ type MembersCopy = {
     email: string;
     logout: string;
   };
+  whatsapp: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    cta: string;
+    scan: string;
+    qrLabel: string;
+  };
   events: {
     title: string;
     body: string;
@@ -40,6 +48,14 @@ export const membersContent: Record<Locale, MembersCopy> = {
       verified: "Studierendenstatus bestätigt",
       email: "Verifizierte Uni-Mail",
       logout: "Abmelden",
+    },
+    whatsapp: {
+      eyebrow: "Kurzer Draht",
+      title: "WhatsApp-Gruppe",
+      body: "Termine und der Aufbau laufen erstmal über unsere WhatsApp Gruppe. Der Beitritt ist dem Mitgliederbereich vorbehalten.",
+      cta: "Gruppe beitreten",
+      scan: "Oder mit dem Handy scannen",
+      qrLabel: "QR-Code zum Beitritt der WhatsApp-Gruppe",
     },
     events: {
       title: "Nächste Formate",
@@ -76,6 +92,14 @@ export const membersContent: Record<Locale, MembersCopy> = {
       verified: "Student status confirmed",
       email: "Verified university email",
       logout: "Sign out",
+    },
+    whatsapp: {
+      eyebrow: "Direct line",
+      title: "WhatsApp group",
+      body: "Dates and everything around getting started run through our WhatsApp group for now. Joining stays reserved for the members area.",
+      cta: "Join the group",
+      scan: "Or scan it with your phone",
+      qrLabel: "QR code to join the WhatsApp group",
     },
     events: {
       title: "Upcoming formats",

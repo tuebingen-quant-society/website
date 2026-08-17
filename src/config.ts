@@ -35,6 +35,40 @@ export const kontakt = {
 export const formEndpoint = "";
 
 /**
+ * Longest payload the QR encoder takes (byte mode, level M, version 10). Kept
+ * as a literal so this module stays free of the encoder, which must not end up
+ * in the client bundle — see src/lib/qr.ts.
+ */
+const QR_MAX_BYTES = 213;
+
+/**
+ * Invite link to the members-only WhatsApp group, read from the environment so
+ * it can be rotated in Vercel without a code change. Expected shape:
+ * WHATSAPP_GROUP_URL="https://chat.whatsapp.com/XXXXXXXXXXXXXXXXXXXXXX".
+ *
+ * Returns null when the variable is unset, blank, or not a usable http(s) link;
+ * the members page then omits the WhatsApp section entirely rather than showing
+ * a dead link or failing to render its QR code. Deliberately not NEXT_PUBLIC_:
+ * the invite stays server-side and out of the public bundle, so it only reaches
+ * visitors who have passed the university login.
+ */
+export function getWhatsappGruppe(): string | null {
+  const value = process.env.WHATSAPP_GROUP_URL?.trim();
+  if (!value) return null;
+
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+  if (new TextEncoder().encode(value).length > QR_MAX_BYTES) return null;
+
+  return value;
+}
+
+/**
  * GBM parameters of the signature chart (SignaturePlot.astro). Language-neutral
  * — the params string is the same everywhere; only ariaLabel/hinweis are
  * translated (see content.plot).

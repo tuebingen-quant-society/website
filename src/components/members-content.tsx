@@ -1,3 +1,5 @@
+import { QrCode } from "@/components/qr-code";
+import { getWhatsappGruppe } from "@/config";
 import type { Locale } from "@/i18n";
 import { membersContent } from "@/i18n/members-content";
 import type { SessionPayload } from "@/lib/saml/session";
@@ -9,6 +11,7 @@ type MembersContentProps = {
 
 export function MembersContent({ locale, session }: MembersContentProps) {
   const copy = membersContent[locale];
+  const whatsappLink = getWhatsappGruppe();
   const membersPath = locale === "de" ? "/members" : "/en/members";
   const returnTo = encodeURIComponent(membersPath);
 
@@ -61,6 +64,33 @@ export function MembersContent({ locale, session }: MembersContentProps) {
           <p className="members__email">{session.user.email}</p>
         </div>
       </section>
+
+      {whatsappLink ? (
+        <section className="members__whatsapp" aria-labelledby="members-whatsapp-title">
+          <div className="members__whatsapp-copy">
+            <p className="members__eyebrow">{copy.whatsapp.eyebrow}</p>
+            <h2 id="members-whatsapp-title">{copy.whatsapp.title}</h2>
+            <p>{copy.whatsapp.body}</p>
+            <a
+              className="btn btn--primary members__whatsapp-cta"
+              href={whatsappLink}
+              rel="noopener"
+              target="_blank"
+            >
+              {copy.whatsapp.cta}
+            </a>
+          </div>
+
+          <figure className="members__qr">
+            <QrCode
+              className="members__qr-code"
+              label={copy.whatsapp.qrLabel}
+              value={whatsappLink}
+            />
+            <figcaption className="members__label">{copy.whatsapp.scan}</figcaption>
+          </figure>
+        </section>
+      ) : null}
 
       <section className="members__events" aria-labelledby="members-events-title">
         <div className="members__section-heading">

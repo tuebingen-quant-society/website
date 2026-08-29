@@ -1,0 +1,441 @@
+/* Members-only reference page: credit points for engagement in the TQS.
+   A long, procedural read, so it sits in a single column at prose width and
+   leans on the same panel/hairline vocabulary as the rest of the site — no new
+   colours, no new shapes. The one exception is the roles table, which is wider
+   than prose and gets its own scroll container. */
+
+.cp {
+  width: min(100%, var(--content-max));
+  margin-inline: auto;
+  padding: clamp(48px, 7vw, 96px) var(--gutter) var(--space-9);
+}
+
+.cp__back {
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-small);
+}
+
+/* ------------------------------------------------------------------ Head */
+
+.cp__head {
+  max-width: 42rem;
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--rule-strong);
+  animation: cp-enter 650ms var(--ease) both;
+}
+
+.cp__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cp__title {
+  margin-top: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+.cp__lead {
+  margin-top: var(--space-5);
+  font-size: var(--fs-lead);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+/* Mono line of provenance — the page is a summary of an external document, and
+   saying when it was last checked is the honest part of that. */
+.cp__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  color: var(--ink-subtle);
+}
+
+/* ------------------------------------------------------------------ Body + sidebar */
+
+.cp__body {
+  display: grid;
+  gap: var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .cp__body {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: start;
+  }
+
+  /* The link panel stays put while the longer main column scrolls past it. */
+  .cp__sidebar {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-7));
+  }
+}
+
+.cp__sidebar-panel {
+  padding: var(--space-5);
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.cp__sidebar-panel h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+}
+
+.cp__sidebar-panel ul {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.cp__sidebar-panel a {
+  font-size: var(--fs-small);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------------ Sections */
+
+.cp__section {
+  margin-top: var(--space-9);
+}
+
+.cp__section-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.cp__note {
+  max-width: var(--prose-max);
+  margin-top: var(--space-4);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.cp__subtitle {
+  margin-top: var(--space-7);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* ------------------------------------------------------------------ The sum */
+
+.cp__sum {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1px;
+  margin-top: var(--space-6);
+  padding: 0;
+  list-style: none;
+  /* The hairline grid is the gap showing through; each cell paints its own
+     surface on top. */
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.cp__sum-item {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  padding: var(--space-5);
+  background: var(--surface);
+}
+
+.cp__sum-item--total {
+  background: var(--surface-2);
+}
+
+.cp__sum-value {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3rem);
+  line-height: 1;
+}
+
+.cp__sum-item--total .cp__sum-value {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cp__sum-label {
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.cp__sum-note {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-subtle);
+}
+
+/* ------------------------------------------------------------------ Steps */
+
+.cp__steps {
+  max-width: var(--prose-max);
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cp__step {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--rule);
+}
+
+.cp__step-index {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  /* Optically aligned with the first line of the heading beside it. */
+  padding-top: 0.3em;
+}
+
+.cp__step-copy h3 {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.cp__step-copy p {
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------------ Roles table */
+
+.cp__tablewrap {
+  margin-top: var(--space-6);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow-x: auto;
+}
+
+.cp__table {
+  width: 100%;
+  min-width: 40rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.cp__table caption {
+  padding: var(--space-4) var(--space-5) 0;
+  font-size: var(--fs-small);
+  color: var(--ink-subtle);
+  text-align: left;
+  text-wrap: pretty;
+}
+
+.cp__table th,
+.cp__table td {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.cp__table thead th {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+  border-bottom-color: var(--rule-strong);
+}
+
+.cp__table tbody tr:last-child th,
+.cp__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.cp__table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+/* Widths are set on the cells rather than the columns: the role names and the
+   "1–2 pro Projekt/Treffen" value both need room to wrap without the task
+   column collapsing around them. */
+.cp__role {
+  min-width: 11rem;
+  font-weight: 600;
+}
+
+.cp__task {
+  min-width: 22rem;
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+}
+
+.cp__cp {
+  min-width: 6rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--accent);
+}
+
+/* The "Anmerkungen" from the submitted table — same list treatment as the
+   writing rules, but tied to the table above it. */
+.cp__table-notes {
+  margin-top: var(--space-5);
+}
+
+/* ------------------------------------------------------------------ Callout */
+
+.cp__callout {
+  max-width: var(--prose-max);
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  background: var(--accent-wash);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border-left-width: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.cp__callout h3 {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.cp__callout p {
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------------ Facts */
+
+.cp__facts {
+  max-width: var(--prose-max);
+  margin: var(--space-6) 0 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cp__fact {
+  display: grid;
+  grid-template-columns: minmax(9rem, 12rem) 1fr;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+.cp__fact dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+  padding-top: 0.25em;
+}
+
+.cp__fact dd {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+  text-wrap: pretty;
+}
+
+.cp__rules {
+  max-width: var(--prose-max);
+  margin-top: var(--space-4);
+  padding-left: var(--space-5);
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+}
+
+.cp__rules li + li {
+  margin-top: var(--space-2);
+}
+
+.cp__rules::marker,
+.cp__rules li::marker {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ Foot */
+
+.cp__help {
+  max-width: var(--prose-max);
+  margin-top: var(--space-9);
+  padding: var(--space-6);
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.cp__help h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 400;
+}
+
+.cp__help p {
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.cp__help .btn {
+  margin-top: var(--space-5);
+}
+
+.cp__source {
+  max-width: var(--prose-max);
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--rule);
+  color: var(--ink-subtle);
+  font-size: var(--fs-small);
+  text-wrap: pretty;
+}
+
+@keyframes cp-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .cp__step {
+    grid-template-columns: 2rem 1fr;
+    gap: var(--space-3);
+  }
+
+  .cp__fact {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+}

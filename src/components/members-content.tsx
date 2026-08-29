@@ -1,6 +1,7 @@
+import { MembersGate } from "@/components/members-gate";
 import { QrCode } from "@/components/qr-code";
 import { getWhatsappGruppe } from "@/config";
-import type { Locale } from "@/i18n";
+import { localePath, type Locale } from "@/i18n";
 import { membersContent } from "@/i18n/members-content";
 import type { SessionPayload } from "@/lib/saml/session";
 
@@ -15,26 +16,7 @@ export function MembersContent({ locale, session }: MembersContentProps) {
   const membersPath = locale === "de" ? "/members" : "/en/members";
   const returnTo = encodeURIComponent(membersPath);
 
-  if (!session) {
-    return (
-      <section className="members members--gate" aria-labelledby="members-title">
-        <div className="members__gate-inner">
-          <p className="members__eyebrow">{copy.gate.eyebrow}</p>
-          <h1 className="members__title" id="members-title">
-            {copy.gate.title}
-          </h1>
-          <p className="members__lead">{copy.gate.body}</p>
-          <a
-            className="btn btn--primary members__login"
-            href={`/api/auth/saml/login?returnTo=${returnTo}`}
-          >
-            {copy.gate.login}
-          </a>
-          <p className="members__privacy">{copy.gate.note}</p>
-        </div>
-      </section>
-    );
-  }
+  if (!session) return <MembersGate locale={locale} returnTo={membersPath} />;
 
   return (
     <div className="members">
@@ -91,6 +73,25 @@ export function MembersContent({ locale, session }: MembersContentProps) {
           </figure>
         </section>
       ) : null}
+
+      <section className="members__resources" aria-labelledby="members-resources-title">
+        <h2 className="members__resources-title" id="members-resources-title">
+          {copy.resources.title}
+        </h2>
+
+        <ul className="members__resource-list">
+          {copy.resources.items.map((item) => (
+            <li className="members__resource" key={item.path}>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <a className="btn btn--primary" href={localePath(locale, item.path)}>
+                <span>{item.cta}</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="members__events" aria-labelledby="members-events-title">
         <div className="members__section-heading">

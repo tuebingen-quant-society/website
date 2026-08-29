@@ -22,4 +22,5 @@ import "@/styles/signature-plot.css";
 import "@/styles/ticker.css";
 import "@/styles/legal.css";
 import "@/styles/members.css";
+import "@/styles/credit-points.css";
 import "@/styles/articles.css";

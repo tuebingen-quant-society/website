@@ -30,6 +30,11 @@ type MembersCopy = {
     status: string;
     items: { title: string; description: string }[];
   };
+  /** Pages that live behind the login next to this one. */
+  resources: {
+    title: string;
+    items: { title: string; description: string; cta: string; path: string }[];
+  };
 };
 
 export const membersContent: Record<Locale, MembersCopy> = {
@@ -76,6 +81,18 @@ export const membersContent: Record<Locale, MembersCopy> = {
         },
       ],
     },
+    resources: {
+      title: "Gut zu wissen",
+      items: [
+        {
+          title: "Credit Points für dein Engagement",
+          description:
+            "Bis zu 10 CP im Bereich überfachliche Kompetenzen (übK) bzw. Schlüsselkompetenzen. Was musst du dafür tun? Welches Amt zählt wie viel? Welche Fristen gelten?",
+          cta: "Anleitung lesen",
+          path: "members/credit-points",
+        },
+      ],
+    },
   },
   en: {
     gate: {
@@ -117,6 +134,18 @@ export const membersContent: Record<Locale, MembersCopy> = {
         {
           title: "Project evening",
           description: "Take apart backtests, datasets, and open ideas in a small group.",
+        },
+      ],
+    },
+    resources: {
+      title: "Worth knowing",
+      items: [
+        {
+          title: "Credit points for your work here",
+          description:
+            "Up to 10 CP in the interdisciplinary-skills area (übK) or key qualifications. What do you need to do? How much does each role count? Which deadlines apply?",
+          cta: "Read the guide",
+          path: "members/credit-points",
         },
       ],
     },

@@ -84,11 +84,9 @@ export function MembersContent({ locale, session }: MembersContentProps) {
             <li className="members__resource" key={item.path}>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
-              <a className="link link--arrow" href={localePath(locale, item.path)}>
-                <span className="link__label">{item.cta}</span>
-                <span className="arrow" aria-hidden="true">
-                  →
-                </span>
+              <a className="btn btn--primary" href={localePath(locale, item.path)}>
+                <span>{item.cta}</span>
+                <span aria-hidden="true">→</span>
               </a>
             </li>
           ))}

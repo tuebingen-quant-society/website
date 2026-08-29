@@ -87,7 +87,7 @@ export const membersContent: Record<Locale, MembersCopy> = {
         {
           title: "Credit Points für dein Engagement",
           description:
-            "Bis zu 10 CP im überfachlichen Bereich. Was du dafür tun musst, welches Amt wie viel zählt und welche Fristen gelten.",
+            "Bis zu 10 CP im Bereich überfachliche Kompetenzen (übK) bzw. Schlüsselkompetenzen. Was musst du dafür tun? Welches Amt zählt wie viel? Welche Fristen gelten?",
           cta: "Anleitung lesen",
           path: "members/credit-points",
         },
@@ -143,7 +143,7 @@ export const membersContent: Record<Locale, MembersCopy> = {
         {
           title: "Credit points for your work here",
           description:
-            "Up to 10 CP in the interdisciplinary area. What you have to do, what each role is worth, and which deadlines apply.",
+            "Up to 10 CP in the interdisciplinary-skills area (übK) or key qualifications. What do you need to do? How much does each role count? Which deadlines apply?",
           cta: "Read the guide",
           path: "members/credit-points",
         },

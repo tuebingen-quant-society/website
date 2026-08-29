@@ -195,8 +195,8 @@
   font-size: var(--fs-small);
 }
 
-.members__resource .link--arrow {
-  margin-top: var(--space-3);
+.members__resource .btn {
+  margin-top: var(--space-4);
 }
 
 .members__events {

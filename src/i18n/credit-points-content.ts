@@ -26,6 +26,12 @@ type CreditPointsCopy = {
     intro: string;
     items: { title: string; body: string }[];
   };
+  ilias: { title: string; body: string; linkLabel: string };
+  /** Sticky sidebar next to the main content: outside references. */
+  links: {
+    title: string;
+    items: { label: string; href: string }[];
+  };
   roles: {
     title: string;
     intro: string;
@@ -39,8 +45,6 @@ type CreditPointsCopy = {
   formalities: {
     title: string;
     facts: { term: string; detail: string }[];
-    rulesTitle: string;
-    rules: string[];
   };
   help: { title: string; body: string; cta: string };
   source: string;
@@ -51,7 +55,7 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
     eyebrow: "Mitgliederbereich",
     back: "Zurück zum Mitgliederbereich",
     title: "Credit Points für dein Engagement",
-    lead: "Die TQS ist als studentische Initiative bei der Abteilung Überfachliche Bildung und berufliche Orientierung aufgenommen. Heißt: Deine Arbeit hier kannst du dir im überfachlichen Bereich anrechnen lassen — bis zu 10 CP im Laufe des Bachelors. Wie das läuft, steht hier komplett drin, damit niemand raten muss.",
+    lead: "Die TQS ist als offizielle studentische Initiative bei der Abteilung Überfachliche Bildung und berufliche Orientierung aufgenommen. Heißt: Deine Arbeit hier kannst du dir im Bereich \"Überfachliche Kompetenzen\" bzw. \"Schlüsselqualifikationen\" anrechnen lassen - insgesamt bis zu 10 CP im Laufe des Bachelors.",
     meta: [
       "Stand 29.08.2026",
       "Leitfaden vom 01.06.2026",
@@ -63,33 +67,33 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
       items: [
         {
           value: "1–8",
-          label: "CP fürs Engagement",
+          label: "CP für dein Engagement bei uns",
           note: "30 Arbeitsstunden = 1 CP",
         },
         {
           value: "2",
           label: "CP für die Reflexionseinheit",
-          note: "ILIAS-Raum + Workshop",
+          note: "ILIAS-Kurs + Workshop",
         },
         {
           value: "10",
-          label: "CP maximal im überfachlichen Bereich",
+          label: "CP maximal als übK",
           note: "über das gesamte Bachelor-Studium",
         },
       ],
-      note: "Bescheinigt wird pro Person und Semester, immer unbenotet. Anrechnen lässt sich nur Engagement ab dem Semester, in dem die TQS anerkannt wurde — rückwirkend geht nichts, und nur, was du auch wirklich gemacht hast.",
+      note: "Bescheinigt wird pro Person und Semester, immer unbenotet. Anrechnen lässt sich nur Engagement ab dem Semester, in dem die TQS anerkannt wurde (also ab dem Wintersemester 2026/27), und nur, was du auch wirklich gemacht hast.",
     },
     steps: {
-      title: "Der Weg zum Schein",
-      intro: "Sechs Schritte, und die Reihenfolge zählt: Die Reflexionseinheit setzt voraus, dass du schon substanziell mitgearbeitet hast, und unsere Bestätigung kommt zum Schluss.",
+      title: "Der Weg zum Schein und deinen CP",
+      intro: "Sechs Schritte in genau der Reihenfolge: Die Reflexionseinheit setzt voraus, dass du schon substanziell mitgearbeitet hast, unsere Bestätigung dafür kommt zum Schluss.",
       items: [
         {
           title: "Mindestens 30 Stunden mitarbeiten",
-          body: "Sessions, Workshops, Projekte, Orga — ein Amt aus der Tabelle unten oder einfach aktive Mitgliedschaft. Schreib deine Stunden und Tätigkeiten selbst mit. Das ist die Grundlage für alles Weitere, und niemand rekonstruiert das ein Jahr später aus dem Gedächtnis.",
+          body: "Sessions, Workshops, Projekte, Orga, ein Amt aus der Tabelle unten oder einfach aktive Mitgliedschaft. Schreib am besten deine Stunden und Tätigkeiten selbst mit; das bildet dann die Grundlage für alles Weitere.",
         },
         {
-          title: "Den asynchronen ILIAS-Raum durcharbeiten",
-          body: "Erster Teil der Reflexionseinheit, verpflichtend für alle, deren Engagement ab dem Wintersemester 2025/26 angefangen hat. Wann du das machst, ist dir überlassen.",
+          title: "Den asynchronen ILIAS-Kurs durcharbeiten",
+          body: "Erster Teil der Reflexionseinheit (verpflichtend für alle seit dem Wintersemester 2025/26).",
         },
         {
           title: "Reflexionsworkshop besuchen",
@@ -101,28 +105,42 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
         },
         {
           title: "Schein über den Vorstand einreichen",
-          body: "Den Schein füllen wir aus, nicht du. Der Vorstand schickt alle Scheine gesammelt als ein durchgehendes Word-Dokument an die Abteilung. Danach dauert die Bearbeitung rund vier Wochen.",
+          body: "Den Schein füllen wir aus, nicht du. Der Vorstand schickt alle Scheine gesammelt als ein durchgehendes Word-Dokument an die Abteilung. Die Bearbeitung kann mehrere Wochen dauern.",
         },
         {
           title: "Anrechnung beim Prüfungsamt klären",
-          body: "Die Abteilung stellt nur die Bescheinigung aus. Ob die CP bei dir im Bereich Schlüsselqualifikationen tatsächlich zählen, entscheidet dein Prüfungsamt. Frag dort besser vorher nach als hinterher.",
+          body: "Die Abteilung stellt nur die Bescheinigung aus. Wie genau die CP anerkannt (als übK / Schlüsselqualifikation) werden, entscheidet dein Prüfungsamt. Frag dort am besten schonmal vorher nach.",
+        },
+      ],
+    },
+    ilias: {
+      title: "ILIAS-Kurs",
+      body: "Der relevante ILIAS-Kurs ist unter Veranstaltungen (Magazin) / Sonstiges / Semesterunabhängige Angebote / Außerfakultäre Veranstaltungen / Überfachliche Bildung und berufliche Orientierung / Studentisches Engagement in Hochschulgruppen zu finden.",
+      linkLabel: "Zum ILIAS-Kurs",
+    },
+    links: {
+      title: "Weiterführende Links",
+      items: [
+        {
+          label: "Engagement in studentischen Initiativen (Uni Tübingen)",
+          href: "https://uni-tuebingen.de/de/114476",
         },
       ],
     },
     roles: {
       title: "Ämter und Richtwerte",
-      intro: "Das ist die Verteilung, die wir bei der Abteilung eingereicht haben. Die Spannen sind Richtwerte, kein Automatismus: Was am Ende im Schein steht, richtet sich nach den Stunden, die tatsächlich zusammengekommen sind. In jedem Amt stecken außerdem die Aufgaben des aktiven Mitglieds mit drin.",
-      caption: "Pro Person und Semester. Die Obergrenze von 8 CP fürs Engagement bleibt in jedem Fall.",
+      intro: "Das ist die Verteilung, die wir bei der Abteilung eingereicht haben. Die Spannen sind Richtwerte: Was am Ende im Schein steht, richtet sich nach den Stunden, die tatsächlich zusammengekommen sind. In jedem Amt stecken außerdem die Aufgaben des aktiven Mitglieds mit drin.",
+      caption: "Pro Person und Semester. Die Obergrenze von 8 CP fürs Engagement gilt in jedem Fall.",
       head: { role: "Amt / Tätigkeit", task: "Aufgaben und Erwartung", cp: "CP" },
       rows: [
         {
           role: "Aktives Mitglied",
-          task: "Aktiv bei den regelmäßigen Treffen dabei, Vor- und Nachbereitung der Themen (etwa die Publikationen lesen, die wir besprechen), regelmäßig bei Veranstaltungen der TQS",
+          task: "Aktiv bei den regelmäßigen Treffen dabei sein, Vor- und Nachbereitung der Themen (etwa die Publikationen lesen, die wir besprechen), regelmäßig bei Veranstaltungen der TQS teilnehmen",
           cp: "1–2",
         },
         {
           role: "Vorstand",
-          task: "Semesterplanung, Leitung der wöchentlichen Treffen, Organisation der Events, Gesamtverantwortung und Vertretung gegenüber der Universität Tübingen und Partnern",
+          task: "Semesterplanung, Leitung der regelmäßigen Treffen, Organisation der Events, Gesamtverantwortung und Vertretung gegenüber der Universität Tübingen und Partnern",
           cp: "3–4",
         },
         {
@@ -162,8 +180,8 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
         },
       ],
       notes: [
-        "Viele Ämter fließen ineinander über, und das sollen sie auch. Wer mehreres macht, bekommt die CP nicht pro Kategorie aufaddiert, sondern als Abbild des Gesamtaufwands.",
-        "Ein paar Ämter ergeben erst nach den nächsten Meilensteinen richtig Sinn — Vereinseintragung, Sponsoren. Bis dahin sind sie eher eine Absichtserklärung als ein Amt.",
+        "Viele Ämter fließen ineinander über, und das sollen sie auch. Wer mehreres macht, bekommt die CP nicht unbedingt pro Kategorie aufaddiert, sondern als Abbild des Gesamtaufwands.",
+        "Ein paar Ämter ergeben erst nach den nächsten Meilensteinen richtig Sinn; z.B. nach Vereinseintragung, Sponsoren. Bis dahin sind sie eher eine Absichtserklärung als ein Amt.",
       ],
       callout: {
         title: "Eine Bedingung gilt für alles",
@@ -175,38 +193,25 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
       facts: [
         {
           term: "Einreichung",
-          detail: "Innerhalb eines Monats nach Ende der Vorlesungszeit, also bis Mitte März bzw. Ende August, per Mail an civic-engagement@tracs.uni-tuebingen.de",
+          detail: "Innerhalb eines Monats nach Ende der Vorlesungszeit, also bis Mitte März bzw. Ende August. Für weiteres: FAQ im ILIAS-Kurs oder Mail an civic-engagement@tracs.uni-tuebingen.de",
         },
         {
           term: "Zeitpunkt",
           detail: "Spätestens in dem Semester, in dem du dich zuletzt engagiert hast. Rückwirkende Bescheinigungen gibt es nur im Ausnahmefall",
         },
         {
-          term: "Form",
-          detail: "Alle Scheine als ein zusammenhängendes Word-Dokument, je Schein maximal eine Seite, einheitlich formatiert",
-        },
-        {
           term: "Bearbeitungsdauer",
-          detail: "Etwa vier Wochen. Versand digital, Papierschein auf Anfrage in der Keplerstraße 2, Raum 050",
+          detail: "Rechnet mit mehreren Wochen.",
         },
         {
-          term: "Vernetzungstreffen",
-          detail: "Jährlich, in der Regel am 5. Dezember. Für uns verpflichtend: ein bis zwei Leute von der TQS. Wer nicht hinkommt, reicht hinterher einen ausführlichen Tätigkeitsbericht nach",
+          term: "Vernetzungstreffen der SIs",
+          detail: "Jährlich, in der Regel am 5. Dezember. Für uns verpflichtend: ein bis zwei Leute von der TQS.",
         },
-      ],
-      rulesTitle: "Schreibregeln für den Schein",
-      rules: [
-        "Vor- und Nachname im gesamten Text, nie nur der Vorname",
-        "Semester als WiSe 25/26 oder SoSe 26 abkürzen, nicht als WS 25 oder SS 26",
-        "„Universität Tübingen“ immer ausschreiben, nicht „Uni Tübingen“",
-        "Rechtschreibung und Grammatik prüfen — der Schein geht durch eine Prüfung",
-        "Nur unbenotete Scheine, eine Note gibt es nicht",
-        "Englische Scheine sind möglich, wenn wir selbst übersetzen und die Abteilung gegenliest",
       ],
     },
     help: {
       title: "Unklar, was auf dich zutrifft?",
-      body: "Schreib uns lieber einmal zu früh als einmal zu spät — gerade beim Stundenzählen und beim Zeitpunkt der Einreichung lässt sich vorher alles klären und hinterher wenig reparieren.",
+      body: "Schreib uns lieber einmal zu früh als einmal zu spät. Gerade beim Stundenzählen und beim Zeitpunkt der Einreichung lässt sich vorher alles klären (und hinterher wenig reparieren).",
       cta: "Schreib uns",
     },
     source: "Zusammenfassung des Leitfadens der Abteilung Überfachliche Bildung und berufliche Orientierung (Stand 01.06.2026) und der CP-Verteilung, die wir dort für die TQS eingereicht haben (Stand 27.08.2026). Im Zweifel gelten diese beiden Dokumente; Details und FAQ stehen im ILIAS-Kurs „Studentisches Ehrenamt in Hochschulgruppen“.",
@@ -216,7 +221,7 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
     eyebrow: "Members area",
     back: "Back to the members area",
     title: "Credit points for your work here",
-    lead: "The TQS is a registered student initiative with the Abteilung Überfachliche Bildung und berufliche Orientierung. Which means the work you do here counts towards the interdisciplinary area of your degree — up to 10 CP over the course of a bachelor's. The whole procedure is written out below so nobody has to guess.",
+    lead: "The TQS is a registered student initiative with the Abteilung Überfachliche Bildung und berufliche Orientierung. Which means the work you do here counts towards \"interdisciplinary skills\" (Überfachliche Kompetenzen) or \"key qualifications\" (Schlüsselqualifikationen) — up to 10 CP over the course of a bachelor's.",
     meta: [
       "Updated 29 Aug 2026",
       "Guideline of 1 June 2026",
@@ -228,7 +233,7 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
       items: [
         {
           value: "1–8",
-          label: "CP for the engagement",
+          label: "CP for your engagement with us",
           note: "30 hours of work = 1 CP",
         },
         {
@@ -238,23 +243,23 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
         },
         {
           value: "10",
-          label: "CP maximum, interdisciplinary area",
+          label: "CP maximum as übK",
           note: "across the whole bachelor's degree",
         },
       ],
-      note: "Certificates are issued per person and semester, always ungraded. Only engagement from the semester in which the TQS was recognised can be counted — nothing retroactive, and only what you actually did.",
+      note: "Certificates are issued per person and semester, always ungraded. Only engagement from the semester in which the TQS was recognised can be counted (so from the winter semester 2026/27 onward), and only what you actually did.",
     },
     steps: {
-      title: "How you get the certificate",
-      intro: "Six steps, and the order matters: the reflection unit assumes you have already put in real work, and our confirmation comes last.",
+      title: "How you get the certificate and your CP",
+      intro: "Six steps, in exactly this order: the reflection unit assumes you have already put in real work, and our confirmation comes last.",
       items: [
         {
           title: "Put in at least 30 hours",
-          body: "Sessions, workshops, projects, organising — a role from the table below, or simply active membership. Keep your own record of hours and tasks. Everything else builds on it, and nobody reconstructs a year of work from memory.",
+          body: "Sessions, workshops, projects, organising, a role from the table below, or simply active membership. Best to keep your own record of hours and tasks — that becomes the basis for everything else.",
         },
         {
           title: "Work through the asynchronous ILIAS course",
-          body: "First half of the reflection unit, mandatory for everyone whose engagement started in the winter semester 2025/26 or later. When you do it is up to you.",
+          body: "First half of the reflection unit (mandatory for everyone since the winter semester 2025/26).",
         },
         {
           title: "Attend the reflection workshop",
@@ -266,17 +271,31 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
         },
         {
           title: "Let the board submit the certificate",
-          body: "We fill in the certificate, not you. The board sends all of them to the department together, as one continuous Word document. Processing then takes about four weeks.",
+          body: "We fill in the certificate, not you. The board sends all of them to the department together, as one continuous Word document. Processing can take several weeks.",
         },
         {
           title: "Check the recognition with your examination office",
-          body: "The department only issues the certificate. Whether the CP actually count towards your key-qualification requirement is your examination office's call. Ask them before, not after.",
+          body: "The department only issues the certificate. How exactly the CP get recognised (as übK / key qualification) is your examination office's call — best to ask them ahead of time.",
+        },
+      ],
+    },
+    ilias: {
+      title: "ILIAS course",
+      body: "You'll find the relevant ILIAS course under Veranstaltungen (Magazin) / Sonstiges / Semesterunabhängige Angebote / Außerfakultäre Veranstaltungen / Überfachliche Bildung und berufliche Orientierung / Studentisches Engagement in Hochschulgruppen.",
+      linkLabel: "Open the ILIAS course",
+    },
+    links: {
+      title: "More on this",
+      items: [
+        {
+          label: "Civic Engagement in Student Initiatives (University of Tübingen)",
+          href: "https://uni-tuebingen.de/en/114476",
         },
       ],
     },
     roles: {
       title: "Roles and rough values",
-      intro: "This is the distribution we submitted to the department. The ranges are guidance, not an entitlement: what ends up on the certificate follows the hours that actually accumulated. Every role also includes the duties of an active member.",
+      intro: "This is the distribution we submitted to the department. The ranges are guidance: what ends up on the certificate follows the hours that actually accumulated. Every role also includes the duties of an active member.",
       caption: "Per person and semester. The ceiling of 8 CP for engagement applies either way.",
       head: { role: "Role / activity", task: "Duties and expectations", cp: "CP" },
       rows: [
@@ -287,7 +306,7 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
         },
         {
           role: "Board",
-          task: "Semester planning, chairing the weekly meetings, organising events, overall responsibility and representing us to the University of Tübingen and to partners",
+          task: "Semester planning, chairing the regular meetings, organising events, overall responsibility and representing us to the University of Tübingen and to partners",
           cp: "3–4",
         },
         {
@@ -327,7 +346,7 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
         },
       ],
       notes: [
-        "Plenty of these roles bleed into each other, and they're meant to. If you do several, the CP aren't added up per category — they reflect the total effort.",
+        "Plenty of these roles bleed into each other, and they're meant to. If you do several, the CP aren't necessarily added up per category — they reflect the total effort.",
         "A few roles only really make sense after the next milestones: registration as an association, sponsors. Until then they are more of an intention than a role.",
       ],
       callout: {
@@ -340,33 +359,20 @@ export const creditPointsContent: Record<Locale, CreditPointsCopy> = {
       facts: [
         {
           term: "Submission",
-          detail: "Within one month of the end of the lecture period, so by mid-March or the end of August, by mail to civic-engagement@tracs.uni-tuebingen.de",
+          detail: "Within one month of the end of the lecture period, so by mid-March or the end of August. For more: the FAQ in the ILIAS course, or email civic-engagement@tracs.uni-tuebingen.de",
         },
         {
           term: "Timing",
           detail: "At the latest in the semester in which you were last involved. Retroactive certificates are issued only in exceptional cases",
         },
         {
-          term: "Format",
-          detail: "All certificates as one continuous Word document, one page each, consistently formatted",
-        },
-        {
           term: "Processing time",
-          detail: "About four weeks. Sent digitally; a paper certificate can be picked up at Keplerstraße 2, room 050, on request",
+          detail: "Expect it to take several weeks.",
         },
         {
-          term: "Networking meeting",
-          detail: "Annually, usually on 5 December. Mandatory for us: one or two people from the TQS. If nobody makes it, we have to hand in a detailed activity report afterwards",
+          term: "SI networking meeting",
+          detail: "Annually, usually on 5 December. Mandatory for us: one or two people from the TQS.",
         },
-      ],
-      rulesTitle: "Writing rules for the certificate",
-      rules: [
-        "First and last name throughout the text, never just the first name",
-        "Abbreviate semesters as WiSe 25/26 or SoSe 26, not WS 25 or SS 26",
-        "Always write out “Universität Tübingen”, never “Uni Tübingen”",
-        "Check spelling and grammar — the certificate gets reviewed",
-        "Ungraded only, there is no mark",
-        "English certificates are possible if we translate them ourselves and the department checks them",
       ],
     },
     help: {

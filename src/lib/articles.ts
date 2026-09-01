@@ -44,6 +44,8 @@ export type ArticleMeta = {
   topics?: string[];
   /** Slides, notebooks, datasets — anything that belongs to the piece. */
   resources?: { label: string; href: string }[];
+  /** Set to false when the article should use a text-only card and header. */
+  preview?: boolean;
   /** Drafts stay out of the listing, the sitemap and the routes (404). */
   draft?: boolean;
 };
@@ -136,6 +138,11 @@ export const listArticles = cache(async (): Promise<Article[]> => {
   return articles.filter((article) => !article.draft).sort(byDateDesc);
 });
 
+/** Keep an archive and its pagination scoped to the language being viewed. */
+export function articlesForLocale(articles: Article[], locale: Locale): Article[] {
+  return articles.filter((article) => article.lang === locale);
+}
+
 /**
  * One article with its rendered body, or null when the slug is unknown or the
  * piece is still a draft — the route turns that into a 404.
@@ -157,14 +164,14 @@ export type ArticlePage = {
 };
 
 /** Total number of listing pages — always at least one, for the empty state. */
-export async function articlePageCount(): Promise<number> {
-  const articles = await listArticles();
+export async function articlePageCount(locale: Locale): Promise<number> {
+  const articles = articlesForLocale(await listArticles(), locale);
   return Math.max(1, Math.ceil(articles.length / ARTICLES_PER_PAGE));
 }
 
 /** Slice the archive for listing page `page` (1-based), or null if out of range. */
-export async function getArticlePage(page: number): Promise<ArticlePage | null> {
-  const articles = await listArticles();
+export async function getArticlePage(locale: Locale, page: number): Promise<ArticlePage | null> {
+  const articles = articlesForLocale(await listArticles(), locale);
   const pageCount = Math.max(1, Math.ceil(articles.length / ARTICLES_PER_PAGE));
   if (!Number.isInteger(page) || page < 1 || page > pageCount) return null;
   const start = (page - 1) * ARTICLES_PER_PAGE;

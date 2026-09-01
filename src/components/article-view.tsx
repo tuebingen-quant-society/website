@@ -92,9 +92,11 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
           )}
         </header>
 
-        <figure className="article__figure">
-          <ArticlePreview slug={article.slug} kind={article.kind} />
-        </figure>
+        {article.preview !== false && (
+          <figure className="article__figure">
+            <ArticlePreview slug={article.slug} kind={article.kind} />
+          </figure>
+        )}
 
         <div className="article__body" lang={foreign ? article.lang : undefined}>
           <Body />

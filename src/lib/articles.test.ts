@@ -3,8 +3,15 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ArticleCard } from "../components/article-card";
+import { ArticleView } from "../components/article-view";
+import { OgCard } from "./og/card";
 import { ArticlesIndex } from "../components/articles-index";
-import { articlePath, articlesPath, type Article } from "./articles";
+import {
+  articlePath,
+  articlesForLocale,
+  articlesPath,
+  type Article,
+} from "./articles";
 
 const note: Article = {
   slug: "vol-weekend",
@@ -17,6 +24,12 @@ const note: Article = {
 };
 
 const englishNote: Article = { ...note, slug: "order-books", lang: "en" };
+const textOnlyNote = { ...note, slug: "quant-intro", preview: false } as Article;
+
+test("article collections only expose the selected language", () => {
+  assert.deepEqual(articlesForLocale([note, englishNote], "de"), [note]);
+  assert.deepEqual(articlesForLocale([note, englishNote], "en"), [englishNote]);
+});
 
 test("the archive keeps page one at /articles and numbers the rest", () => {
   assert.equal(articlesPath(), "articles");
@@ -35,6 +48,37 @@ test("cards link into the locale the reader is already in", () => {
 
   assert.match(german, /href="\/article\/vol-weekend"/);
   assert.match(english, /href="\/en\/article\/vol-weekend"/);
+});
+
+test("text-only articles omit generated figures from cards and reading views", () => {
+  const card = renderToStaticMarkup(
+    createElement(ArticleCard, { article: textOnlyNote, locale: "de" }),
+  );
+  const view = renderToStaticMarkup(
+    createElement(ArticleView, {
+      article: textOnlyNote,
+      locale: "de",
+      Body: () => createElement("p", null, "Article body"),
+    }),
+  );
+
+  assert.doesNotMatch(card, /article-card__figure/);
+  assert.doesNotMatch(view, /article__figure/);
+});
+
+test("text-only social cards do not render an empty figure band", () => {
+  const html = renderToStaticMarkup(
+    createElement(OgCard, {
+      eyebrow: ["Article"],
+      title: textOnlyNote.title,
+      byline: textOnlyNote.description,
+      figure: undefined,
+      wordmark: "Tübingen Quantitative Finance Society",
+      domain: "tuequant.de",
+    } as Parameters<typeof OgCard>[0]),
+  );
+
+  assert.doesNotMatch(html, /<img/);
 });
 
 test("only articles in the other language carry a language badge", () => {

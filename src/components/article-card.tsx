@@ -16,15 +16,17 @@ export function ArticleCard({ article, locale }: { article: Article; locale: Loc
   return (
     <li className="article-card">
       <a className="card article-card__link" href={localePath(locale, articlePath(article.slug))}>
-        <span className="article-card__figure">
-          <ArticlePreview slug={article.slug} kind={article.kind} />
-          {/* Only flagged when it differs from the page — no badge on the
-              articles that are already in the reader's language. Sits on the
-              figure so the kicker below stays a single line on every card. */}
-          {foreign && (
-            <span className="article-card__lang">{copy.languages[article.lang]}</span>
-          )}
-        </span>
+        {article.preview !== false && (
+          <span className="article-card__figure">
+            <ArticlePreview slug={article.slug} kind={article.kind} />
+            {/* Only flagged when it differs from the page — no badge on the
+                articles that are already in the reader's language. Sits on the
+                figure so the kicker below stays a single line on every card. */}
+            {foreign && (
+              <span className="article-card__lang">{copy.languages[article.lang]}</span>
+            )}
+          </span>
+        )}
 
         <span className="article-card__body">
           <span className="article-card__kicker">
@@ -33,6 +35,9 @@ export function ArticleCard({ article, locale }: { article: Article; locale: Loc
               ·
             </span>
             <span>{fill(copy.readingTime, { n: article.readingMinutes })}</span>
+            {foreign && article.preview === false && (
+              <span className="article-card__lang-inline">{copy.languages[article.lang]}</span>
+            )}
           </span>
 
           <span className="article-card__title" lang={foreign ? article.lang : undefined}>

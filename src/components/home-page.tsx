@@ -1,7 +1,7 @@
 import { kontakt } from "@/config";
 import { content, localePath, type Locale } from "@/i18n";
 import { articlesContent } from "@/i18n/articles-content";
-import { articlesPath, listArticles } from "@/lib/articles";
+import { articlesForLocale, articlesPath, listArticles } from "@/lib/articles";
 import { ArticleCard } from "./article-card";
 import { SignInGlyph } from "./sign-in-glyph";
 import { MarketBackground } from "./market-background";
@@ -16,7 +16,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
   /* The three newest public pieces. While nothing is published the whole
      section stays out of the page rather than showing an empty shelf. */
   const teaserCopy = articlesContent[locale].teaser;
-  const newest = (await listArticles()).slice(0, 3);
+  const newest = articlesForLocale(await listArticles(), locale).slice(0, 3);
 
   return (
     <>

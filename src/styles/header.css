@@ -17,7 +17,7 @@
 .header.is-scrolled {
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   border-bottom-color: var(--rule);
-  box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.9);
+  box-shadow: var(--header-shadow);
 }
 
 .header__inner {
@@ -114,9 +114,19 @@
   color: var(--accent-2);
 }
 
-/* The row is wordmark + login + language toggle; on the narrowest phones it
-   still overflows. Spacing and label size give way — the 44px tap targets
-   do not. */
+/* The utility controls stay compact on phones; the login keeps its accessible
+   label while its visible text yields to the language and theme controls. */
+@media (max-width: 520px) {
+  .header__cta {
+    width: 44px;
+    padding-inline: 0;
+  }
+
+  .header__cta-label {
+    display: none;
+  }
+}
+
 @media (max-width: 420px) {
   .header__inner {
     padding-inline: 14px;
@@ -125,8 +135,6 @@
 
   .header__cta {
     margin-left: 0;
-    padding-inline: 12px;
-    font-size: var(--fs-label);
   }
 
   .header__lang {
@@ -182,6 +190,100 @@
   background: var(--surface-3);
   box-shadow: var(--shadow-1);
   cursor: default;
+}
+
+/* System / light / dark — compact trigger with an explicit labelled menu. */
+.header__theme {
+  position: relative;
+  flex: none;
+}
+
+.header__theme-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 36px;
+  padding: 0;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink-subtle);
+  cursor: pointer;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.header__theme-trigger::after {
+  content: "";
+  position: absolute;
+  inset: -4px -3px;
+}
+
+.header__theme-trigger:hover,
+.header__theme-trigger[aria-expanded="true"] {
+  color: var(--ink);
+  background: var(--surface-3);
+  border-color: var(--rule-strong);
+}
+
+.header__theme-trigger svg,
+.header__theme-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.header__theme-menu {
+  position: absolute;
+  top: calc(100% + var(--space-3));
+  right: 0;
+  z-index: 60;
+  width: 164px;
+  padding: var(--space-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-3);
+}
+
+.header__theme-option {
+  display: grid;
+  grid-template-columns: 22px 1fr 16px;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+  text-align: left;
+  cursor: pointer;
+}
+
+.header__theme-option:hover,
+.header__theme-option[aria-checked="true"] {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.header__theme-icon {
+  display: inline-flex;
+}
+
+.header__theme-check {
+  color: var(--accent);
+  text-align: right;
 }
 
 /* §6.1/§8: below 768px, only the wordmark + CTA (+ language toggle). The two

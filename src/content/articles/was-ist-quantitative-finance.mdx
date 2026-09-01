@@ -1,0 +1,163 @@
+export const meta = {
+  title: "Was ist eigentlich Quantitative Finance?",
+  description:
+    "Vier Quant-Rollen, konkrete Denkaufgaben und die Fähigkeiten dahinter: ein Einstieg in Research, Trading, Engineering und Risikomodellierung.",
+  date: "2026-09-01",
+  lang: "de",
+  kind: "article",
+  topics: ["Einstieg", "Quant Research", "Trading", "Machine Learning"],
+};
+
+_This article is also available [in English](/en/article/what-is-quantitative-finance)._
+
+Quantitative Finance ist kein einzelner Beruf und auch keine Sammlung geheimer
+Formeln. Es ist eine Arbeitsweise: Eine Frage über Märkte wird so übersetzt,
+dass man sie mit Daten, Mathematik und Code untersuchen kann. Das Ergebnis kann
+eine Prognose sein, muss es aber nicht. Oft geht es darum, einen Preis zu
+berechnen, Risiken sichtbar zu machen oder eine Handelsentscheidung zuverlässig
+auszuführen.
+
+Kurz gesagt:
+
+> Quantitative Finance verbindet Finanzmärkte mit Statistik, Mathematik,
+> Informatik und wissenschaftlichem Testen, um Entscheidungen unter
+> Unsicherheit zu treffen.
+
+## Ein Feld, vier Arten von Problemen
+
+Die Titel unterscheiden sich von Firma zu Firma und die Grenzen sind fließend.
+Trotzdem zeigen vier Rollen, wie verschieden quantitative Arbeit aussehen kann.
+
+### Quant Researcher: Aus einer Beobachtung eine testbare Idee machen
+
+Angenommen, du willst Veränderungen im globalen Ölangebot früher erkennen als
+in einem Monatsbericht. Ein Researcher könnte auf Satellitenbildern von
+Schwimmdachtanks eine neue Messgröße entdecken: Das Dach liegt auf dem Öl und
+bewegt sich mit dem Füllstand. Zusammen mit Sonnenstand und Tankgeometrie lässt
+sich seine Höhe aus dem Schatten abschätzen. [Eine Remote-Sensing-Studie zeigt,
+wie diese Messung technisch funktioniert](https://www.mdpi.com/2072-4292/11/7/793).
+
+Der kreative Einfall ist aber nur der Anfang. Welche Tanktypen sind sichtbar?
+Wann wurde das Bild aufgenommen? Verändert Bewölkung die Stichprobe? Ist die
+Schätzung wirklich früher verfügbar und erklärt sie überhaupt etwas am Markt?
+[Citadels Alternative-Data-Team](https://www.citadel.com/careers/career-perspectives/real-people-real-impact-how-alternative-data-powers-investment-decisions-at-citadel/)
+beschreibt genau diese Übersetzungsarbeit: aus verrauschten Daten eine
+verständliche, rechtzeitige und entscheidungsrelevante Information machen.
+
+### Quant Trader: Entscheiden, bevor Gewissheit existiert
+
+Ein Market Maker stellt gleichzeitig Kauf- und Verkaufspreise. Dann erscheint
+eine große Order, andere Märkte bewegen sich und die eigene Position wächst.
+Der Trader muss entscheiden: Preise verschieben, Risiko abbauen oder bewusst
+halten? Es gibt keine vollständige Information und selten Zeit für eine lange
+Rechnung.
+
+Gefragt sind probabilistisches Denken, schnelle Überschlagsrechnungen,
+Marktintuition und die Fähigkeit, nach einem Fehler sofort weiterzuarbeiten.
+[Optiver beschreibt Trading](https://www.optiver.com/what-we-do/trading/)
+entsprechend als Entscheiden unter Unsicherheit in einer schnellen,
+gegnerischen Umgebung — eng gekoppelt an Research und Engineering.
+
+### Quant Developer: Dafür sorgen, dass eine gute Idee real funktioniert
+
+Ein Modell kann im Notebook korrekt sein und im Live-System trotzdem wertlos:
+Marktdaten kommen in falscher Reihenfolge, die Verbindung stockt oder eine
+Berechnung ist in hektischen Phasen zu langsam. Quant Developer bauen
+Datenpipelines, Simulationen und Handelssysteme so, dass sie schnell,
+beobachtbar und auch im Fehlerfall kontrollierbar bleiben.
+
+Hier zählen Algorithmen, Betriebssysteme, Netzwerke, Profiling und saubere
+Schnittstellen. Kreativität bedeutet oft, einen komplizierten Datenweg radikal
+zu vereinfachen. Bei [Hudson River Trading](https://www.hudsonrivertrading.com/work-at-hrt/)
+laufen statistische Modelle beispielsweise direkt auf einer
+High-Performance-Infrastruktur und werden dort fortlaufend analysiert.
+
+### Portfolio- oder Risk Quant: Das Scheitern vor dem Markt finden
+
+Fünf Positionen können auf dem Papier verschieden aussehen und trotzdem alle
+vom selben Risiko abhängen. Ein Risk Quant sucht deshalb nicht nur nach dem
+wahrscheinlichsten Verlauf, sondern nach unangenehmen Kombinationen: Was, wenn
+Liquidität verschwindet, Korrelationen sprunghaft steigen und eine Absicherung
+nicht handelbar ist?
+
+Das verlangt Modellierung und Finanzwissen, aber auch Fantasie und Widerspruch:
+Welche Annahme hält das Team für selbstverständlich? Wie könnte genau sie
+brechen? Gute Risikoarbeit verhindert nicht jede Überraschung. Sie macht klar,
+wo das System verwundbar ist und welche Entscheidung dann noch möglich bleibt.
+
+## Was diese Rollen verbindet
+
+- **Kreativität:** neue Datenquellen, Modelle oder Lösungswege überhaupt erst sehen.
+- **Probabilistisches Denken:** mit Unsicherheit arbeiten, statt Gewissheit zu behaupten.
+- **Skepsis:** Datenlecks, Scheinkorrelationen und die eigenen Lieblingsideen angreifen.
+- **Engineering:** aus einer Analyse einen reproduzierbaren, zuverlässigen Prozess machen.
+- **Kommunikation:** Annahmen und Risiken so erklären, dass andere entscheiden können.
+
+## Wo Machine Learning hineinpasst
+
+Machine Learning ist ein Werkzeugkasten innerhalb von Quantitative Finance,
+nicht dessen Definition. Je nach Problem kann ein lineares Modell sinnvoller
+sein als ein neuronales Netz. In anderen Fällen helfen Gradient Boosting,
+Deep Learning oder Sprachmodelle, weil die Datenmenge oder Datenform komplexer
+ist.
+
+Finanzdaten machen ML besonders schwierig:
+
+- Märkte verändern sich; ein altes Muster muss nicht stabil bleiben.
+- Ein winziges Datenleck kann einen Backtest überzeugend und nutzlos zugleich machen.
+- Gebühren, Spreads und Markteinfluss können einen statistischen Vorteil aufzehren.
+- Korrelation ist nicht automatisch eine belastbare wirtschaftliche Erklärung.
+
+Deshalb gehören Baselines, Out-of-sample-Tests und Stressszenarien genauso zum
+Job wie das Trainieren eines Modells. [Jane Street beschreibt Quant Research](https://www.janestreet.com/join-jane-street/position/8573726002/)
+entsprechend als Zusammenspiel aus Experimentdesign, Datensätzen, Zeitreihen,
+Feature Engineering und unterschiedlichen statistischen sowie ML-Methoden.
+
+## Wie ein Quant-Projekt typischerweise abläuft
+
+1. **Frage formulieren.** Was soll geschätzt, bepreist, optimiert oder abgesichert werden?
+2. **Daten verstehen.** Woher kommen sie, wann wären sie tatsächlich verfügbar gewesen und welche Verzerrungen enthalten sie?
+3. **Einfache Baseline bauen.** Erst zeigen, dass ein komplexerer Ansatz eine klare Referenz schlägt.
+4. **Modell testen.** Zeitlich getrennte Testdaten, realistische Kosten und alternative Annahmen verwenden.
+5. **Robustheit prüfen.** Funktioniert das Ergebnis in anderen Perioden und Marktregimen? Wo bricht es?
+6. **Entscheidung und Betrieb.** Positionsgrößen, Limits, Monitoring und die technische Umsetzung festlegen.
+
+Ein schöner Backtest ist also nur ein Zwischenergebnis. Entscheidend ist, ob die
+ganze Kette von der Information bis zur kontrollierten Entscheidung trägt.
+
+## Wo arbeiten Quants?
+
+Die folgende Auswahl ist keine Rangliste und nicht vollständig. Sie zeigt
+verschiedene Ecken der Branche und führt direkt zu den offiziellen Einblicken
+und Karriereseiten:
+
+- **Market Making und quantitatives Trading:** [Optiver](https://www.optiver.com/join-us/), [IMC](https://www.imc.com/us/careers/), [Jane Street](https://www.janestreet.com/join-jane-street/overview/) und [Hudson River Trading](https://www.hudsonrivertrading.com/work-at-hrt/)
+- **Systematisches Investment Management:** [Citadel](https://www.citadel.com/careers/quantitative-research/), [Two Sigma](https://www.twosigma.com/careers/) und [D. E. Shaw](https://www.deshaw.com/careers)
+- **Digital Assets und Krypto-Liquidität:** [Wintermute](https://www.wintermute.com/company/careers)
+
+Quant-Rollen gibt es außerdem bei Banken, Asset Managern, Börsen, Energiehändlern
+und Fintechs. Viele der verlinkten Firmen bieten Praktika und Graduate-Programme
+an. Die Vergütung ist häufig sehr wettbewerbsfähig, aber der Einstieg ist
+entsprechend selektiv. Aussagekräftiger als eine einzelne Gehaltszahl ist daher:
+Welche Probleme bearbeitet das Team, welche Fähigkeiten werden geprüft und
+möchtest du diese Arbeit jeden Tag machen?
+
+## Wie kann man anfangen?
+
+Du brauchst nicht zuerst ein Finance-Studium. Ein sinnvoller Einstieg besteht
+aus vier Bausteinen:
+
+- Wahrscheinlichkeit, Statistik und etwas lineare Algebra
+- Python und der saubere Umgang mit Daten
+- Grundlagen zu Märkten, Produkten und Risiko
+- kleine Projekte, bei denen Annahmen und Fehler sichtbar bleiben
+
+Ein erstes Projekt könnte ein Backtest **mit** Gebühren und einem wirklich
+späteren Testzeitraum sein. Genauso geeignet sind eine Monte-Carlo-Simulation
+für eine Option, eine kleine Orderbuchsimulation oder eine Analyse, warum ein
+scheinbar gutes Signal nach realistischen Kosten verschwindet.
+
+Quantitative Finance bedeutet nicht, den Markt sicher vorherzusagen. Es
+bedeutet, Unsicherheit messbar zu machen, Ideen hart zu testen und Systeme zu
+bauen, die auch außerhalb eines Notebooks funktionieren. Genau diese Mischung
+aus Theorie, Daten und praktischer Umsetzung macht das Feld so breit.

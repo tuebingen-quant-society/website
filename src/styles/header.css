@@ -95,55 +95,10 @@
   box-shadow: inset 0 0 0 1px var(--rule);
 }
 
-.header__cta {
-  margin-left: var(--space-2);
-  min-height: 44px;
-  padding-inline: 18px;
-}
-
-/* The header login is a utility, not the page's invitation: it stays a
-   secondary button and carries the accent in its glyph alone, so the hero keeps
-   the only filled CTA on screen. */
-.header__cta .glyph-signin {
-  color: var(--accent);
-  opacity: 1;
-  transition: color var(--dur) var(--ease);
-}
-
-.header__cta:hover .glyph-signin {
-  color: var(--accent-2);
-}
-
-/* The utility controls stay compact on phones; the login keeps its accessible
-   label while its visible text yields to the language and theme controls. */
-@media (max-width: 520px) {
-  .header__cta {
-    width: 38px;
-    height: 36px;
-    min-height: 36px;
-    padding-inline: 0;
-  }
-
-  /* Match the visible theme control while preserving a 44px touch target. */
-  .header__cta::after {
-    content: "";
-    position: absolute;
-    inset: -4px -3px;
-  }
-
-  .header__cta-label {
-    display: none;
-  }
-}
-
 @media (max-width: 420px) {
   .header__inner {
     padding-inline: 14px;
     gap: var(--space-2);
-  }
-
-  .header__cta {
-    margin-left: 0;
   }
 
   .header__lang {

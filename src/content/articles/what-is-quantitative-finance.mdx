@@ -1,0 +1,137 @@
+export const meta = {
+  title: "What Is Quantitative Finance, Really?",
+  description:
+    "From satellite imagery to market making: an introduction to quantitative methods, typical projects, and the different roles behind the word “quant.”",
+  date: "2026-09-01",
+  lang: "en",
+  kind: "article",
+  topics: ["Introduction", "Quant Research", "Trading", "Machine Learning"],
+};
+
+_Dieser Artikel ist auch [auf Deutsch verfügbar](/article/was-ist-quantitative-finance)._
+
+Quantitative finance is not one job, and it is not a collection of secret
+formulas. It is a way of working: turn a question about markets into something
+that can be investigated with data, mathematics, and code. The result may be a
+forecast, but it does not have to be. Quants also calculate prices, measure
+risk, and build systems that execute decisions reliably.
+
+In one sentence:
+
+> Quantitative finance combines financial markets with statistics,
+> mathematics, computer science, and scientific testing to make decisions
+> under uncertainty.
+
+## Four examples that look very different
+
+### 1. Modelling a price and its risk
+
+What is an option worth? What happens to a portfolio if interest rates,
+volatility, or exchange rates jump? Quants build models and simulations to
+answer questions like these. A model is not a perfect copy of reality. It is a
+deliberate simplification whose assumptions and errors need to be understood.
+
+### 2. Making markets and executing orders
+
+A market maker continuously quotes prices at which it is willing to buy and
+sell. It has to combine the spread, its current inventory, new information, and
+the risk of a sudden price move. Other teams study how to execute a large order
+without moving the market against themselves unnecessarily. Probability,
+optimisation, and highly reliable software meet directly in this work.
+
+### 3. Searching data for signals
+
+A research team might test whether certain information explains future
+returns, volatility, or trading volume. The inputs can range from prices and
+company accounts to text, supply chains, and satellite images. Machine learning
+can help find patterns in large or unstructured datasets, but it cannot replace
+a good question or a clean experiment.
+
+### 4. Estimating oil inventories from shadows
+
+The well-known satellite example is real, although it is more precise than
+simply “looking at the shadows of oil depots.” Many crude-oil tanks have a
+floating roof that rests directly on the liquid. When the fill level falls, the
+roof falls with it. The tank wall then casts a different shadow across the
+lowered roof. The roof height—and therefore the fill level—can be estimated
+from that geometry, the tank dimensions, and the sun angle. [Wang et al.
+describe one method using high-resolution satellite
+imagery](https://www.mdpi.com/2072-4292/11/7/793).
+
+This can produce an estimate before aggregated storage figures are published,
+and computer vision can process many sites at scale. It is not a magical view
+of the market, however. The method does not work equally well for every tank
+type, clouds and image quality limit observations, and a better inventory
+estimate is not automatically a reliable price forecast. An [empirical study
+of cloud cover and oil markets](https://www.nature.com/articles/s41599-023-02128-5)
+is a useful example of how the measurement method, data availability, and the
+market question interact.
+
+## Where machine learning fits
+
+Machine learning is a toolkit within quantitative finance, not its definition.
+A linear model may be a better fit for one problem than a neural network. In
+other cases, gradient boosting, deep learning, or language models help because
+the volume or form of the data is more complex.
+
+Financial data make ML unusually difficult:
+
+- Markets change, so an old pattern may not remain stable.
+- A tiny data leak can make a backtest look convincing and be useless.
+- Fees, spreads, and market impact can consume a statistical edge.
+- Correlation is not automatically a durable economic explanation.
+
+Baselines, out-of-sample tests, and stress scenarios therefore matter just as
+much as training the model. [Jane Street's description of quantitative
+research](https://www.janestreet.com/join-jane-street/position/8573726002/)
+similarly combines experiment design, dataset generation, time-series
+analysis, feature engineering, and different statistical and ML methods.
+
+## A typical quant workflow
+
+1. **Define the question.** What should be estimated, priced, optimised, or hedged?
+2. **Understand the data.** Where did they come from, when would they actually have been available, and what biases do they contain?
+3. **Build a simple baseline.** Show that a more complex approach beats a clear reference.
+4. **Test the model.** Use later test data, realistic costs, and alternative assumptions.
+5. **Check robustness.** Does the result hold in other periods and market regimes? Where does it break?
+6. **Make and operate the decision.** Set position sizes, limits, monitoring, and the technical implementation.
+
+A beautiful backtest is only an intermediate result. What matters is whether
+the whole chain from information to controlled decision holds together.
+
+## What roles are there?
+
+Titles differ between firms and the boundaries often overlap, but four broad
+areas appear repeatedly:
+
+- **Quant researcher:** develops hypotheses, analyses data, and builds and validates models or strategies.
+- **Quant trader:** makes and monitors trading decisions, understands market mechanics, and gives research direct feedback from live trading.
+- **Quant developer or research engineer:** builds data pipelines, simulations, and production systems so research is reproducible and can run under real conditions.
+- **Quant analyst, portfolio quant, or risk quant:** measures exposures, constructs portfolios, develops scenarios, and supports investment or risk decisions.
+
+In practice these roles work closely together. [IMC describes quant research
+as collaboration among researchers, traders, and
+engineers](https://www.imc.com/us/careers/experienced-roles/quant-research),
+while [Citadel places software engineering](https://www.citadel.com/careers/details/software-engineer/)
+across research, analysis, trading, risk management, and settlement. “Quant” is
+better understood as a spectrum than as one job description.
+
+## How can you get started?
+
+You do not need to begin with a finance degree. A practical foundation has four
+parts:
+
+- probability, statistics, and some linear algebra
+- Python and careful work with data
+- the basics of markets, financial products, and risk
+- small projects whose assumptions and failure modes remain visible
+
+A first project could be a backtest **with** transaction costs and a genuinely
+later test period. A Monte Carlo option simulation, a small order-book model,
+or an investigation of why an attractive signal disappears after realistic
+costs are equally useful.
+
+Quantitative finance does not mean predicting markets with certainty. It means
+making uncertainty measurable, testing ideas hard, and building systems that
+work outside a notebook. That combination of theory, data, and practical
+implementation is what makes the field so broad.

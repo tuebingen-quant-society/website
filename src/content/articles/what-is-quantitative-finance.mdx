@@ -1,7 +1,7 @@
 export const meta = {
   title: "What Is Quantitative Finance, Really?",
   description:
-    "From satellite imagery to market making: an introduction to quantitative methods, typical projects, and the different roles behind the word “quant.”",
+    "Four quant roles, concrete problems, and the skills behind them: an introduction to research, trading, engineering, and risk modelling.",
   date: "2026-09-01",
   lang: "en",
   kind: "article",
@@ -22,50 +22,74 @@ In one sentence:
 > mathematics, computer science, and scientific testing to make decisions
 > under uncertainty.
 
-## Four examples that look very different
+## One field, four kinds of problem
 
-### 1. Modelling a price and its risk
+Titles differ between firms and the boundaries overlap. Four roles still show
+how different quantitative work can look in practice.
 
-What is an option worth? What happens to a portfolio if interest rates,
-volatility, or exchange rates jump? Quants build models and simulations to
-answer questions like these. A model is not a perfect copy of reality. It is a
-deliberate simplification whose assumptions and errors need to be understood.
+### Quant researcher: Turn an observation into a testable idea
 
-### 2. Making markets and executing orders
+Suppose you want to detect changes in global oil supply before a monthly report
+appears. A researcher might discover a new measurement in satellite images of
+floating-roof tanks. The roof rests on the oil and moves with the fill level;
+combined with the sun angle and tank geometry, its shadow can reveal its height.
+[A remote-sensing study shows how that measurement can work in
+practice](https://www.mdpi.com/2072-4292/11/7/793).
 
-A market maker continuously quotes prices at which it is willing to buy and
-sell. It has to combine the spread, its current inventory, new information, and
-the risk of a sudden price move. Other teams study how to execute a large order
-without moving the market against themselves unnecessarily. Probability,
-optimisation, and highly reliable software meet directly in this work.
+The creative leap is only the beginning. Which tank types are visible? When was
+the image captured? Does cloud cover bias the sample? Is the estimate actually
+available earlier, and does it explain anything in the market? [Citadel's
+alternative-data team](https://www.citadel.com/careers/career-perspectives/real-people-real-impact-how-alternative-data-powers-investment-decisions-at-citadel/)
+describes this translation directly: turn noisy data into information that is
+intuitive, timely, and useful for a decision.
 
-### 3. Searching data for signals
+### Quant trader: Decide before certainty exists
 
-A research team might test whether certain information explains future
-returns, volatility, or trading volume. The inputs can range from prices and
-company accounts to text, supply chains, and satellite images. Machine learning
-can help find patterns in large or unstructured datasets, but it cannot replace
-a good question or a clean experiment.
+A market maker quotes buy and sell prices at the same time. Then a large order
+arrives, related markets move, and the firm's inventory grows. The trader has
+to decide: move the prices, reduce the risk, or deliberately hold it? The
+information is incomplete and there is rarely time for a long calculation.
 
-### 4. Estimating oil inventories from shadows
+The work rewards probabilistic thinking, fast estimation, market intuition,
+and the ability to recover immediately from a mistake. [Optiver describes
+trading](https://www.optiver.com/what-we-do/trading/) in similar terms:
+decision-making under uncertainty in a fast, adversarial environment, tightly
+connected to research and engineering.
 
-The well-known satellite example is real, although it is more precise than
-simply “looking at the shadows of oil depots.” Many crude-oil tanks have a
-floating roof that rests directly on the liquid. When the fill level falls, the
-roof falls with it. The tank wall then casts a different shadow across the
-lowered roof. The roof height—and therefore the fill level—can be estimated
-from that geometry, the tank dimensions, and the sun angle. [Wang et al.
-describe one method using high-resolution satellite
-imagery](https://www.mdpi.com/2072-4292/11/7/793).
+### Quant developer: Make a good idea work in reality
 
-This can produce an estimate before aggregated storage figures are published,
-and computer vision can process many sites at scale. It is not a magical view
-of the market, however. The method does not work equally well for every tank
-type, clouds and image quality limit observations, and a better inventory
-estimate is not automatically a reliable price forecast. An [empirical study
-of cloud cover and oil markets](https://www.nature.com/articles/s41599-023-02128-5)
-is a useful example of how the measurement method, data availability, and the
-market question interact.
+A model can be correct in a notebook and useless in a live system. Market data
+arrive out of order, a connection stalls, or a calculation becomes too slow
+exactly when the market gets busy. Quant developers build data pipelines,
+simulations, and trading systems that stay fast, observable, and controlled
+when something fails.
+
+This calls for algorithms, operating systems, networking, profiling, and clean
+interfaces. Creativity often means making a complicated data path radically
+simpler. At [Hudson River Trading](https://www.hudsonrivertrading.com/work-at-hrt/),
+for example, statistical models run directly on high-performance trading
+infrastructure and are continuously analysed there.
+
+### Portfolio or risk quant: Find the failure before the market does
+
+Five positions can look different on paper and still depend on the same hidden
+risk. A risk quant therefore looks beyond the most likely path and constructs
+uncomfortable combinations: what if liquidity disappears, correlations jump,
+and a hedge can no longer be traded?
+
+This requires modelling and financial knowledge, but also imagination and
+productive disagreement. Which assumption does the team treat as obvious? How
+could precisely that assumption fail? Good risk work cannot prevent every
+surprise. It makes clear where the system is vulnerable and which decisions
+would remain possible.
+
+## What these roles share
+
+- **Creativity:** notice new datasets, models, or solution paths in the first place.
+- **Probabilistic thinking:** work with uncertainty instead of pretending it is gone.
+- **Scepticism:** attack data leaks, spurious correlations, and your favourite ideas.
+- **Engineering:** turn an analysis into a reproducible and reliable process.
+- **Communication:** explain assumptions and risks clearly enough for others to decide.
 
 ## Where machine learning fits
 
@@ -99,22 +123,21 @@ analysis, feature engineering, and different statistical and ML methods.
 A beautiful backtest is only an intermediate result. What matters is whether
 the whole chain from information to controlled decision holds together.
 
-## What roles are there?
+## Where do quants work?
 
-Titles differ between firms and the boundaries often overlap, but four broad
-areas appear repeatedly:
+This selection is neither a ranking nor exhaustive. It maps a few corners of
+the industry and links directly to the firms' own career and role pages:
 
-- **Quant researcher:** develops hypotheses, analyses data, and builds and validates models or strategies.
-- **Quant trader:** makes and monitors trading decisions, understands market mechanics, and gives research direct feedback from live trading.
-- **Quant developer or research engineer:** builds data pipelines, simulations, and production systems so research is reproducible and can run under real conditions.
-- **Quant analyst, portfolio quant, or risk quant:** measures exposures, constructs portfolios, develops scenarios, and supports investment or risk decisions.
+- **Market making and quantitative trading:** [Optiver](https://www.optiver.com/join-us/), [IMC](https://www.imc.com/us/careers/), [Jane Street](https://www.janestreet.com/join-jane-street/overview/), and [Hudson River Trading](https://www.hudsonrivertrading.com/work-at-hrt/)
+- **Systematic investment management:** [Citadel](https://www.citadel.com/careers/quantitative-research/), [Two Sigma](https://www.twosigma.com/careers/), and [D. E. Shaw](https://www.deshaw.com/careers)
+- **Digital assets and crypto liquidity:** [Wintermute](https://www.wintermute.com/company/careers)
 
-In practice these roles work closely together. [IMC describes quant research
-as collaboration among researchers, traders, and
-engineers](https://www.imc.com/us/careers/experienced-roles/quant-research),
-while [Citadel places software engineering](https://www.citadel.com/careers/details/software-engineer/)
-across research, analysis, trading, risk management, and settlement. “Quant” is
-better understood as a spectrum than as one job description.
+Quant roles also exist at banks, asset managers, exchanges, energy traders,
+and fintech companies. Many of the firms above offer internships and graduate
+programmes. Compensation is often highly competitive, and entry is correspondingly
+selective. A single salary number is less informative than three questions:
+What problems does the team solve, which skills does it test, and would you
+want to do that work every day?
 
 ## How can you get started?
 

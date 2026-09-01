@@ -8,6 +8,7 @@ import {
   type HeaderAuthState,
 } from "@/lib/header-auth";
 import { SignInGlyph } from "./sign-in-glyph";
+import { ThemeControl } from "./theme-control";
 
 type SiteHeaderProps = {
   locale: Locale;
@@ -99,9 +100,11 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
             <a
               className="btn btn--secondary header__cta"
               href={localePath(locale, "members")}
+              aria-label={t.loginCta.label}
+              title={t.loginCta.label}
             >
               <SignInGlyph />
-              {t.loginCta.label}
+              <span className="header__cta-label">{t.loginCta.label}</span>
             </a>
           ) : null}
 
@@ -120,6 +123,7 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
               </a>
             ))}
           </div>
+          <ThemeControl locale={locale} />
         </nav>
       </div>
     </header>

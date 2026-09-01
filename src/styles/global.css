@@ -41,11 +41,23 @@
   /* Market */
   --up: #2fbf8f;
   --down: #f4506a;
+  --market-muted: #8fa0b4;
 
   /* Elevation */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
   --shadow-3: 0 28px 70px -20px rgba(0, 0, 0, 0.85);
+  --header-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.9);
+
+  /* Atmospheric layers adapt independently from readable surfaces. */
+  --hero-glow-a: rgba(224, 46, 80, 0.26);
+  --hero-glow-b: rgba(64, 106, 255, 0.16);
+  --hero-halo: rgba(224, 46, 80, 0.16);
+  --hero-scrim-strong: rgba(5, 7, 12, 0.86);
+  --hero-scrim-soft: rgba(5, 7, 12, 0.28);
+  --hero-scrim-edge: rgba(5, 7, 12, 0.6);
+  --hero-scrim-vertical: rgba(5, 7, 12, 0.55);
+  --section-wash: rgba(224, 46, 80, 0.09);
 
   /* Typography */
   --font-display: "Newsreader Variable", Georgia, "Times New Roman", serif;
@@ -89,6 +101,46 @@
   --header-h: 64px;
 }
 
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --paper: #f7f8fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --surface-3: #e2e7ef;
+
+  --ink: #111827;
+  --ink-muted: #4b5565;
+  --ink-subtle: #5f6b7a;
+
+  --rule: #d9dfe8;
+  --rule-strong: #b9c3d1;
+
+  --carmine: #b91f42;
+  --accent: #b91f42;
+  --accent-2: #98501e;
+  --accent-wash: rgba(185, 31, 66, 0.08);
+  --glow: rgba(185, 31, 66, 0.24);
+
+  --up: #087f5b;
+  --down: #c72c4d;
+  --market-muted: #59697e;
+
+  --shadow-1: 0 1px 2px rgba(24, 33, 48, 0.12);
+  --shadow-2: 0 10px 30px -12px rgba(24, 33, 48, 0.24);
+  --shadow-3: 0 28px 70px -20px rgba(24, 33, 48, 0.3);
+  --header-shadow: 0 12px 32px -16px rgba(24, 33, 48, 0.28);
+
+  --hero-glow-a: rgba(185, 31, 66, 0.12);
+  --hero-glow-b: rgba(64, 106, 255, 0.08);
+  --hero-halo: rgba(185, 31, 66, 0.09);
+  --hero-scrim-strong: rgba(247, 248, 251, 0.9);
+  --hero-scrim-soft: rgba(247, 248, 251, 0.42);
+  --hero-scrim-edge: rgba(247, 248, 251, 0.72);
+  --hero-scrim-vertical: rgba(247, 248, 251, 0.62);
+  --section-wash: rgba(185, 31, 66, 0.05);
+}
+
 @media (min-width: 768px) {
   :root {
     --gutter: 32px;
@@ -126,6 +178,9 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
 }
 
 h1,
@@ -528,7 +583,7 @@ input {
   inset: 0;
   background: radial-gradient(
     60% 120% at 50% -20%,
-    rgba(224, 46, 80, 0.09),
+    var(--section-wash),
     transparent 70%
   );
   pointer-events: none;

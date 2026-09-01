@@ -9,6 +9,7 @@
  */
 import type { ReactNode } from "react";
 import { content } from "@/i18n";
+import { themeBootstrapScript } from "@/lib/theme";
 import "../global-styles";
 import { siteMetadata, siteViewport } from "../site-metadata";
 
@@ -17,7 +18,10 @@ export const viewport = siteViewport;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={content.de.meta.sprache}>
+    <html lang={content.de.meta.sprache} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

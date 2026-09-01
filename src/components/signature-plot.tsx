@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { plotParams } from "@/config";
 import { content, type Locale } from "@/i18n";
+import { useThemeChange } from "@/hooks/use-theme-change";
 
 type Candle = { open: number; high: number; low: number; close: number };
 
@@ -25,6 +26,7 @@ export function SignaturePlot({ locale }: { locale: Locale }) {
   const [readout, setReadout] = useState<Readout>({ text: "—", dir: "up" });
   const [reduced, setReduced] = useState(false);
   const translated = content[locale].plot;
+  const themeVersion = useThemeChange();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -192,7 +194,7 @@ export function SignaturePlot({ locale }: { locale: Locale }) {
       observer.disconnect();
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [themeVersion]);
 
   return (
     <figure className="panel plot" role="img" aria-label={translated.ariaLabel}>

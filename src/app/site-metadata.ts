@@ -15,7 +15,12 @@ import type { Metadata, Viewport } from "next";
 import { site, wortmarke } from "@/config";
 import { content, localePath, type Locale } from "@/i18n";
 
-export const siteViewport: Viewport = { themeColor: "#05070c" };
+export const siteViewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f8fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#05070c" },
+  ],
+};
 
 export function siteMetadata(locale: Locale): Metadata {
   const copy = content[locale].meta;

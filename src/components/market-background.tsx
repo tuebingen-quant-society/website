@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useThemeChange } from "@/hooks/use-theme-change";
 
 type Series = {
   points: number[];
@@ -27,6 +28,7 @@ function gaussian() {
 
 export function MarketBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const themeVersion = useThemeChange();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -41,8 +43,8 @@ export function MarketBackground() {
     const palette = [
       [color("--accent", "#ff5c72"), 0.5, 1.6, true],
       [color("--up", "#2fbf8f"), 0.32, 1.2, false],
-      ["#8fa0b4", 0.16, 1, false],
-      ["#8fa0b4", 0.12, 1, false],
+      [color("--market-muted", "#8fa0b4"), 0.16, 1, false],
+      [color("--market-muted", "#8fa0b4"), 0.12, 1, false],
       [color("--accent", "#ff5c72"), 0.14, 1, false],
     ] as const;
 
@@ -160,7 +162,7 @@ export function MarketBackground() {
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", visibility);
     };
-  }, []);
+  }, [themeVersion]);
 
   return <canvas className="market-bg" ref={canvasRef} aria-hidden="true" />;
 }

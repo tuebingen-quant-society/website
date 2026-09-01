@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { wortmarke } from "@/config";
 import { content, localePath, type Locale } from "@/i18n";
+import {
+  getHeaderAuthState,
+  type HeaderAuthState,
+} from "@/lib/header-auth";
 import { SignInGlyph } from "./sign-in-glyph";
 
 type SiteHeaderProps = {
@@ -15,6 +19,7 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
   const localeHome = localePath(locale);
   const onHome = logicalPath === "";
   const anchorBase = onHome ? "" : localeHome;
+  const [authState, setAuthState] = useState<HeaderAuthState>("indeterminate");
 
   useEffect(() => {
     const header = document.getElementById("site-header");
@@ -23,6 +28,16 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
     sync();
     window.addEventListener("scroll", sync, { passive: true });
     return () => window.removeEventListener("scroll", sync);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    void getHeaderAuthState().then((state) => {
+      if (active) setAuthState(state);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
@@ -80,16 +95,15 @@ export function SiteHeader({ locale, logicalPath = "" }: SiteHeaderProps) {
               </a>
             );
           })}
-          {/* The shortcut for people who already have an account: it names the
-              login instead of dressing it up as an invitation, and stays a quiet
-              secondary button so the hero keeps the page's only loud CTA. */}
-          <a
-            className="btn btn--secondary header__cta"
-            href={localePath(locale, "members")}
-          >
-            <SignInGlyph />
-            {t.loginCta.label}
-          </a>
+          {authState === "unauthenticated" ? (
+            <a
+              className="btn btn--secondary header__cta"
+              href={localePath(locale, "members")}
+            >
+              <SignInGlyph />
+              {t.loginCta.label}
+            </a>
+          ) : null}
 
           <div className="header__lang" role="group" aria-label={t.langToggle.aria}>
             {(["de", "en"] as const).map((target) => (

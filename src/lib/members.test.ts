@@ -67,6 +67,11 @@ test("the WhatsApp section appears with a QR code once the invite link is config
   const html = await renderWithWhatsapp(link);
 
   assert.match(html, /WhatsApp-Gruppe/);
+  assert.match(
+    html,
+    /Termine und der Aufbau laufen erstmal über unsere WhatsApp-Gruppe\./,
+  );
+  assert.doesNotMatch(html, /Mitgliederbereich vorbehalten/);
   assert.match(html, new RegExp(`href="${link}"`));
   assert.match(html, /<svg[^>]*aria-label="QR-Code zum Beitritt der WhatsApp-Gruppe"/);
   assert.match(html, /<path d="M\d+ \d+h/); // the generated modules

@@ -57,7 +57,7 @@ export const membersContent: Record<Locale, MembersCopy> = {
     whatsapp: {
       eyebrow: "Kurzer Draht",
       title: "WhatsApp-Gruppe",
-      body: "Termine und der Aufbau laufen erstmal über unsere WhatsApp Gruppe. Der Beitritt ist dem Mitgliederbereich vorbehalten.",
+      body: "Termine und der Aufbau laufen erstmal über unsere WhatsApp-Gruppe.",
       cta: "Gruppe beitreten",
       scan: "Oder mit dem Handy scannen",
       qrLabel: "QR-Code zum Beitritt der WhatsApp-Gruppe",
@@ -113,7 +113,7 @@ export const membersContent: Record<Locale, MembersCopy> = {
     whatsapp: {
       eyebrow: "Direct line",
       title: "WhatsApp group",
-      body: "Dates and everything around getting started run through our WhatsApp group for now. Joining stays reserved for the members area.",
+      body: "Dates and everything around getting started run through our WhatsApp group for now.",
       cta: "Join the group",
       scan: "Or scan it with your phone",
       qrLabel: "QR code to join the WhatsApp group",

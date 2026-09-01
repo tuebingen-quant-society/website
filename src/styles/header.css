@@ -118,8 +118,17 @@
    label while its visible text yields to the language and theme controls. */
 @media (max-width: 520px) {
   .header__cta {
-    width: 44px;
+    width: 38px;
+    height: 36px;
+    min-height: 36px;
     padding-inline: 0;
+  }
+
+  /* Match the visible theme control while preserving a 44px touch target. */
+  .header__cta::after {
+    content: "";
+    position: absolute;
+    inset: -4px -3px;
   }
 
   .header__cta-label {

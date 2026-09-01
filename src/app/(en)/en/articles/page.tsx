@@ -14,7 +14,7 @@ export const metadata = pageMetadata(
 );
 
 export default async function Page() {
-  const page = await getArticlePage(1);
+  const page = await getArticlePage("en", 1);
   if (!page) notFound();
 
   return (

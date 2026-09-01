@@ -11,7 +11,7 @@ type Props = { params: Promise<{ page: string }> };
 
 /** Page 1 lives at /articles, so only the archive pages are generated here. */
 export async function generateStaticParams() {
-  const pageCount = await articlePageCount();
+  const pageCount = await articlePageCount("de");
   return Array.from({ length: pageCount - 1 }, (_, index) => ({ page: String(index + 2) }));
 }
 
@@ -20,7 +20,7 @@ export const dynamicParams = false;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { page } = await params;
   const copy = articlesContent.de;
-  const total = await articlePageCount();
+  const total = await articlePageCount("de");
   const status = fill(copy.pagination.status, { page, total });
 
   return pageMetadata(
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { page } = await params;
-  const archive = await getArticlePage(Number(page));
+  const archive = await getArticlePage("de", Number(page));
   if (!archive) notFound();
 
   const path = articlesPath(archive.page);

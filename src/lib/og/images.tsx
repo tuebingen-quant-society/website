@@ -76,7 +76,11 @@ export function articleOgImage(locale: Locale) {
           eyebrow={eyebrow}
           title={article.title}
           byline={byline}
-          figure={svgDataUri(articleFigureSvg(article.slug, article.kind))}
+          figure={
+            article.preview === false
+              ? undefined
+              : svgDataUri(articleFigureSvg(article.slug, article.kind))
+          }
           wordmark={wortmarke.lang}
           domain={domain}
         />

@@ -20,8 +20,8 @@ type OgCardProps = {
   title: string;
   /** Authors, dates, or the site's own one-liner. Optional — drafts have none. */
   byline?: string;
-  /** The figure, as a data URI (see ./figures.ts). */
-  figure: string;
+  /** The optional figure, as a data URI (see ./figures.ts). */
+  figure?: string;
   wordmark: string;
   /** Bottom right — the bare domain, so the card is attributable on its own. */
   domain: string;
@@ -130,7 +130,7 @@ export function OgCard({ eyebrow, title, byline, figure, wordmark, domain }: OgC
 
       {/* A raw <img>, not next/image: this tree is rasterised by satori, which
           has no Next runtime to optimise anything. */}
-      <img src={figure} width={1200} height={FIGURE_BAND} alt="" />
+      {figure ? <img src={figure} width={1200} height={FIGURE_BAND} alt="" /> : null}
 
       <div
         style={{

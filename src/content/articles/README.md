@@ -1,8 +1,9 @@
 # Artikel schreiben
 
 Öffentliche Materialien (Research-Notes, Workshop-Unterlagen, Artikel). Alles in
-diesem Ordner erscheint automatisch unter `/articles` und `/en/articles` — es
-gibt keine Liste, die zusätzlich gepflegt werden muss.
+diesem Ordner erscheint automatisch in der Übersicht seiner Sprache — deutsche
+Texte unter `/articles`, englische unter `/en/articles`. Es gibt keine Liste,
+die zusätzlich gepflegt werden muss.
 
 ## Neuen Beitrag anlegen
 
@@ -28,6 +29,7 @@ landen automatisch auf `/articles/2`, `/articles/3` und so weiter.
 | `topics`      | nein    | Schlagworte unter dem Titel                                 |
 | `resources`   | nein    | Downloads: `{ label, href }`, Dateien in `public/articles/` |
 | `updated`     | nein    | `YYYY-MM-DD`, wenn ein Beitrag überarbeitet wurde           |
+| `preview`     | nein    | `false` entfernt die generierte Grafik überall              |
 | `draft`       | nein    | `true` versteckt den Beitrag (nicht in der Liste, 404)      |
 
 Falsche oder fehlende Pflichtfelder brechen den Build mit einer Meldung ab, in
@@ -35,17 +37,17 @@ der der Dateiname steht — kaputte Karten kommen so gar nicht erst live.
 
 ## Sprachen
 
-Beiträge werden nicht übersetzt. Ein englischer Text taucht auch in der
-deutschen Liste auf und bekommt dort das Label „Englisch"; umgekehrt genauso.
-Die Seite drumherum (Navigation, Datum, Fußzeile) ist immer in der Sprache der
-Route.
+Beiträge werden nicht automatisch übersetzt. Die Übersicht zeigt nur Texte in
+der ausgewählten Sprache. Direkte Links auf einen Beitrag bleiben erreichbar;
+Navigation, Datum und Fußzeile folgen dabei weiterhin der Sprache der Route.
 
 ## Vorschaubild
 
 Es gibt keins zum Hochladen. Die Grafik auf der Karte wird aus dem Dateinamen
 erzeugt und bleibt damit stabil, solange der Slug gleich bleibt. Die Form richtet
 sich nach `kind`: simulierter Kurs (Research-Note), Verteilung (Workshop), zwei
-Reihen im Vergleich (Artikel).
+Reihen im Vergleich (Artikel). Mit `preview: false` bleibt ein Beitrag auf der
+Karte, der Leseseite und im Social Preview bewusst ohne diese Grafik.
 
 ## Dateien
 

@@ -55,8 +55,8 @@ export const membersContent: Record<Locale, MembersCopy> = {
       logout: "Abmelden",
     },
     whatsapp: {
-      eyebrow: "Kurzer Draht",
-      title: "WhatsApp-Gruppe",
+      eyebrow: "WhatsApp-Gruppe",
+      title: "Komm in die Gruppe",
       body: "Termine und der Aufbau laufen erstmal über unsere WhatsApp Gruppe. Der Beitritt ist dem Mitgliederbereich vorbehalten.",
       cta: "Gruppe beitreten",
       scan: "Oder mit dem Handy scannen",
@@ -111,8 +111,8 @@ export const membersContent: Record<Locale, MembersCopy> = {
       logout: "Sign out",
     },
     whatsapp: {
-      eyebrow: "Direct line",
-      title: "WhatsApp group",
+      eyebrow: "WhatsApp group",
+      title: "Join our WhatsApp group",
       body: "Dates and everything around getting started run through our WhatsApp group for now. Joining stays reserved for the members area.",
       cta: "Join the group",
       scan: "Or scan it with your phone",

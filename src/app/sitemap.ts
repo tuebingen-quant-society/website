@@ -9,7 +9,20 @@ import {
   listArticles,
 } from "@/lib/articles";
 
-const paths = ["", "/en", "/impressum", "/en/impressum", "/datenschutz", "/en/datenschutz"];
+const paths = [
+  "",
+  "/en",
+  "/impressum",
+  "/en/impressum",
+  "/datenschutz",
+  "/en/datenschutz",
+  "/quant-careers",
+  "/en/quant-careers",
+  "/quant-fields",
+  "/en/quant-fields",
+  "/opportunities",
+  "/en/opportunities",
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -19,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${site}${path}`,
     lastModified: now,
     changeFrequency: "monthly",
-    priority: path === "" || path === "/en" ? 1 : 0.3,
+    priority: path === "" || path === "/en" ? 1 : 0.7,
   }));
 
   for (const locale of locales) {

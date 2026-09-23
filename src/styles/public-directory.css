@@ -1,0 +1,170 @@
+.directory-hero {
+  position: relative;
+  padding-block: clamp(72px, 10vw, 136px) var(--space-8);
+  background:
+    radial-gradient(55% 90% at 82% 10%, var(--hero-glow-a), transparent 70%),
+    linear-gradient(180deg, var(--paper), var(--surface));
+  border-bottom: var(--border);
+}
+
+.directory-hero__inner,
+.directory-content {
+  max-width: 900px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.directory-eyebrow,
+.directory-card__meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.directory-hero .hero-headline {
+  max-width: 18ch;
+  margin-top: var(--space-4);
+  font-size: clamp(2.5rem, 1.7rem + 4vw, 4.4rem);
+}
+
+.directory-intro {
+  max-width: 62ch;
+  margin-top: var(--space-5);
+  text-wrap: pretty;
+}
+
+.directory-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.directory-note {
+  max-width: 72ch;
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.directory-group {
+  margin-top: var(--space-7);
+}
+
+.directory-group__title {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--rule-strong);
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 400;
+}
+
+.directory-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 680px) {
+  .directory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1060px) {
+  .directory-grid--fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.directory-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.directory-card__title {
+  color: var(--ink);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  text-underline-offset: 4px;
+  text-wrap: pretty;
+}
+
+.directory-card__title:hover {
+  color: var(--accent);
+}
+
+.directory-card__date {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.directory-card__text {
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+  text-wrap: pretty;
+}
+
+.directory-card__meta {
+  letter-spacing: 0.08em;
+}
+
+.directory-facts {
+  display: grid;
+  gap: var(--space-3);
+  margin: auto 0 0;
+  padding-top: var(--space-3);
+  border-top: var(--border);
+  font-size: var(--fs-small);
+}
+
+.directory-facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.directory-facts dd {
+  margin: 2px 0 0;
+  color: var(--ink-muted);
+}
+
+.directory-bottom {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.directory-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.directory-tags li {
+  padding: 6px 12px;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: var(--fs-small);
+}
+
+.section--surface .directory-card {
+  background-color: var(--paper);
+}

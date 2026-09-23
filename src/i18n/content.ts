@@ -146,6 +146,7 @@ export const content: Record<Locale, SiteContent> = {
       { label: "Über uns", href: "#about" },
       { label: "Aktivitäten", href: "#activities" },
       { label: "Artikel", href: "articles", activeFor: "article" },
+      { label: "Chancen", href: "opportunities" },
     ],
     langToggle: {
       aria: "Sprache wählen",
@@ -272,6 +273,7 @@ export const content: Record<Locale, SiteContent> = {
       { label: "About", href: "#about" },
       { label: "Activities", href: "#activities" },
       { label: "Articles", href: "articles", activeFor: "article" },
+      { label: "Explore", href: "opportunities" },
     ],
     langToggle: {
       aria: "Choose language",

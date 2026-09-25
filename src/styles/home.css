@@ -229,6 +229,22 @@
   text-wrap: pretty;
 }
 
+/* ------------------------------------------------ Partnerships */
+.partner__body {
+  max-width: 68ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.partner__absatz {
+  margin-top: var(--space-5);
+  text-wrap: pretty;
+}
+
+.partner__cta {
+  margin-top: var(--space-6);
+}
+
 /* ------------------------------------------------ Join */
 /* Glowing terminal panel around the login CTA — the page's closing focus. */
 .join-panel {

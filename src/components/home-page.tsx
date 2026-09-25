@@ -9,7 +9,7 @@ import { SignaturePlot } from "./signature-plot";
 import { Ticker } from "./ticker";
 
 export async function HomePage({ locale }: { locale: Locale }) {
-  const { hero, about, activities, open, join } = content[locale];
+  const { hero, about, activities, open, partner, join } = content[locale];
   /* The only login on the page: "Mitmachen" scrolls down to the section that
      explains what the account is for, and the button below it does the rest. */
   const membersHref = localePath(locale, "members");
@@ -90,6 +90,20 @@ export async function HomePage({ locale }: { locale: Locale }) {
           <div className="open__body reveal">
             <h2 className="section-headline" id="open-headline">{open.headline}</h2>
             <p className="open__absatz lead">{open.absatz}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="partner" aria-labelledby="partner-headline">
+        <div className="section__inner">
+          <div className="partner__body reveal">
+            <h2 className="section-headline" id="partner-headline">{partner.headline}</h2>
+            <p className="partner__absatz lead">{partner.absatz}</p>
+            <p className="partner__cta">
+              <a className="btn btn--secondary" href={`mailto:${kontakt.mail}`}>
+                {partner.cta}
+              </a>
+            </p>
           </div>
         </div>
       </section>

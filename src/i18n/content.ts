@@ -92,6 +92,11 @@ export type SiteContent = {
     headline: string;
     absatz: string;
   };
+  partner: {
+    headline: string;
+    absatz: string;
+    cta: string;
+  };
   join: {
     headline: string;
     absatz: string;
@@ -214,6 +219,12 @@ export const content: Record<Locale, SiteContent> = {
       headline: "Du musst nichts mitbringen außer Interesse.",
       absatz:
         "Weder Finance- noch Programmierkenntnisse sind Voraussetzung. Egal ob du aus Mathe, Informatik, Physik, ML, BWL oder etwas ganz anderem kommst, und egal in welchem Semester: Wenn dich das Thema interessiert, komm einfach vorbei. Viel Material ist auf Englisch, und die Treffen machen wir auf Englisch, wenn es für die Runde besser passt.",
+    },
+    partner: {
+      headline: "Zusammenarbeit, die Studierende weiterbringt.",
+      absatz:
+        "Sie arbeiten in Quantitative Finance, Data Science oder an den Finanzmärkten? Wir bauen eine studentische Quant-Community in Tübingen auf und freuen uns auf Gespräche mit Unternehmen, die ihre Arbeit in einem Vortrag, Workshop oder gemeinsamen Projekt vorstellen möchten.",
+      cta: "Partnerschaft besprechen",
     },
     join: {
       headline: "Lust, dabei zu sein?",
@@ -341,6 +352,12 @@ export const content: Record<Locale, SiteContent> = {
       headline: "All you need to bring is interest.",
       absatz:
         "No finance background required, no coding required. Maths, computer science, physics, ML, economics or something completely unrelated, any semester: if the topic sounds interesting, just come along. A lot of the material is in English, and we'll run the meetings in English whenever that suits the group better.",
+    },
+    partner: {
+      headline: "A partnership that brings quant to students.",
+      absatz:
+        "Work in quantitative finance, data science or financial markets? We're building a student quant community in Tübingen and welcome conversations with organisations interested in sharing their work through a talk, workshop or joint project.",
+      cta: "Discuss a partnership",
     },
     join: {
       headline: "Want to be part of it?",

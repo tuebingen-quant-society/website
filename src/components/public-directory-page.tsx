@@ -2,6 +2,7 @@ import { careerFields, employers } from "@/i18n/career-directory";
 import {
   beginnerResources,
   studentSocieties,
+  womenProgramsToWatch,
 } from "@/i18n/opportunity-directory";
 import {
   directoryCopy,
@@ -11,6 +12,7 @@ import {
 } from "@/i18n/public-directory-copy";
 import type { Locale } from "@/i18n";
 import { PageFrame } from "@/components/page-frame";
+import { OpportunityEventsFilter } from "@/components/opportunity-events-filter";
 import { currentEvents } from "@/lib/opportunity-status";
 import { DirectoryStructuredData } from "./public-directory-structured-data";
 
@@ -132,19 +134,7 @@ function OpportunitiesContent({ locale }: { locale: Locale }) {
             ? "Die Liste wird regelmäßig aktualisiert und datierte Einträge laufen nach Frist oder Veranstaltung aus. Prüfe Details und Teilnahmebedingungen immer beim Veranstalter."
             : "This list is refreshed regularly and dated entries expire after their deadline or event. Always confirm details and eligibility with the organizer."}</p>
           {activeEvents.length ? (
-            <ul className="directory-grid">
-              {activeEvents.map((event) => (
-                <li className="directory-card card" key={event.name}>
-                  <p className="directory-card__meta">{event.kind[locale]} · {event.status === "open"
-                    ? (locale === "de" ? "Anmeldung offen" : "Registration open")
-                    : (locale === "de" ? "Demnächst" : "Upcoming")}</p>
-                  <a href={event.href} target="_blank" rel="noopener noreferrer" className="directory-card__title">{event.name}<span aria-hidden="true"> ↗</span></a>
-                  <p className="directory-card__date">{event.dateLabel[locale]}</p>
-                  <p className="directory-card__text">{event.audience[locale]}</p>
-                  <p className="directory-card__text">{event.details[locale]}</p>
-                </li>
-              ))}
-            </ul>
+            <OpportunityEventsFilter events={activeEvents} womenProgramsToWatch={womenProgramsToWatch} locale={locale} />
           ) : (
             <p className="directory-note">{locale === "de" ? "Gerade sind keine datierten Einträge offen. Schau später wieder vorbei." : "There are no dated listings open right now. Check back later."}</p>
           )}

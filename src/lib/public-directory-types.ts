@@ -26,6 +26,14 @@ export type EventListing = {
   /** ISO timestamp in UTC after the application deadline or event end. */
   activeThrough: string;
   status: "open" | "upcoming";
+  focus?: "women-focused";
+};
+
+export type ProgramToWatch = {
+  name: string;
+  href: string;
+  audience: LocalizedText;
+  details: LocalizedText;
 };
 
 export type BeginnerResource = {

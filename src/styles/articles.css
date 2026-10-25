@@ -524,11 +524,14 @@
 
 /* ------------------------------------------------ Wide reading layout */
 
-/* Articles with sections get a contents rail on desktop. The reading column
-   stays centred on the page, exactly as wide as everything in it (text,
-   widgets, tables), and the rail sits in the left margin beside it. The
-   outer tracks are equal so the centre stays centred; their minimum is what
-   the rail needs. Below 1200px nothing changes. */
+/* Articles with sections, on a desktop: three columns on the site's content
+   width, so the edges line up with the logo and the nav above. The text sits
+   alone in the centre column, and everything it has to be as wide as —
+   widgets, code, tables — is exactly that wide. The left column is one quiet
+   sidebar from the top down: the way back, the facts the small-screen header
+   carries, then the section list, which stays in view while reading. The
+   small-screen header furniture and the decorative figure step aside, so the
+   first screen is title, lead and the start of the text. */
 
 .article__rail {
   display: none;
@@ -536,59 +539,92 @@
 
 @media (min-width: 1200px) {
   .article--wide .article__inner {
-    --rail: 220px;
     display: grid;
-    grid-template-columns:
-      minmax(var(--rail), 1fr)
-      minmax(0, 720px)
-      minmax(var(--rail), 1fr);
-    column-gap: var(--space-8);
-    width: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 640px) minmax(0, 1fr);
+    column-gap: 40px;
+    width: min(100%, var(--content-max));
+    padding-top: var(--space-8);
   }
 
-  .article--wide .article__inner > * {
+  .article--wide .article__column {
     grid-column: 2;
   }
 
-  .article--wide .article__layout {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: subgrid;
+  .article--wide .article__back,
+  .article--wide .article__kicker,
+  .article--wide .article__byline,
+  .article--wide .article__topics,
+  .article--wide .article__figure {
+    display: none;
+  }
+
+  .article--wide .article__title {
+    margin-top: 0;
+    font-size: 3.5rem;
+    line-height: 1.04;
+  }
+
+  .article--wide .article__body {
+    margin-top: var(--space-7);
   }
 
   .article__rail {
     display: block;
     grid-column: 1;
-    justify-self: end;
-    width: var(--rail);
-    /* Level with the first line of text, which starts below the body's top
-       margin. */
-    padding-top: var(--space-8);
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    color: var(--ink-muted);
   }
+}
 
-  .article--wide .article__main {
-    grid-column: 2;
-  }
+.article__rail-back {
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.article__rail-back:hover {
+  color: var(--accent);
+}
+
+.article__rail-back:hover .arrow--back {
+  transform: translateX(-4px);
+}
+
+.article__rail-back .arrow--back {
+  display: inline-block;
+}
+
+.article__facts {
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article__facts li + li {
+  margin-top: 2px;
+}
+
+.article__facts-kind {
+  color: var(--accent);
 }
 
 .article-outline {
   position: sticky;
   top: calc(var(--header-h) + var(--space-6));
   max-height: calc(100vh - var(--header-h) - 2 * var(--space-6));
+  margin-top: var(--space-7);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
 .article-outline__title {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--ink-subtle);
+  font-weight: 600;
+  color: var(--ink);
 }
 
 .article-outline__list {
-  margin: var(--space-4) 0 0;
+  margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
   border-left: 1px solid var(--rule);
@@ -596,11 +632,10 @@
 
 .article-outline__link {
   display: block;
+  font-size: 0.84375rem;
   margin-left: -1px;
-  padding: 6px 0 6px var(--space-4);
+  padding: 5px 0 5px var(--space-4);
   border-left: 2px solid transparent;
-  font-size: var(--fs-small);
-  line-height: 1.4;
   color: var(--ink-muted);
   text-decoration: none;
   text-wrap: pretty;

@@ -524,57 +524,50 @@
 
 /* ------------------------------------------------ Wide reading layout */
 
-/* On a desktop the 780px column left most of the screen empty. Articles with
-   sections get the full content width instead: header and figure share the
-   first row, the section list sits in a sticky rail on the left, and the text
-   keeps a readable measure while widgets, tables and code use the whole
-   column. Below 1100px nothing changes. */
+/* Articles with sections get a contents rail on desktop. The reading column
+   stays centred on the page, exactly as wide as everything in it (text,
+   widgets, tables), and the rail sits in the left margin beside it. The
+   outer tracks are equal so the centre stays centred; their minimum is what
+   the rail needs. Below 1200px nothing changes. */
 
 .article__rail {
   display: none;
 }
 
-@media (min-width: 1100px) {
-  /* Header and figure side by side, so the first screen is not all title. */
+@media (min-width: 1200px) {
   .article--wide .article__inner {
+    --rail: 220px;
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-columns:
+      minmax(var(--rail), 1fr)
+      minmax(0, 720px)
+      minmax(var(--rail), 1fr);
     column-gap: var(--space-8);
-    width: min(100%, calc(var(--content-max) + 2 * var(--gutter)));
-    padding-top: var(--space-8);
+    width: 100%;
   }
 
-  .article--wide .article__back,
-  .article--wide .article__layout,
-  .article--wide .article__inner:not(:has(.article__figure)) .article__head {
-    grid-column: 1 / -1;
-  }
-
-  .article--wide .article__figure {
-    align-self: end;
-    height: 220px;
-    margin: 0;
+  .article--wide .article__inner > * {
+    grid-column: 2;
   }
 
   .article--wide .article__layout {
+    grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr);
-    column-gap: var(--space-8);
-    margin-top: var(--space-7);
-    padding-top: var(--space-7);
-    border-top: 1px solid var(--rule);
-  }
-
-  .article--wide .article__body {
-    margin-top: 0;
-  }
-
-  .article--wide .article__body > :is(p, ul, ol, h2, h3, h4, blockquote) {
-    max-width: 70ch;
+    grid-template-columns: subgrid;
   }
 
   .article__rail {
     display: block;
+    grid-column: 1;
+    justify-self: end;
+    width: var(--rail);
+    /* Level with the first line of text, which starts below the body's top
+       margin. */
+    padding-top: var(--space-8);
+  }
+
+  .article--wide .article__main {
+    grid-column: 2;
   }
 }
 

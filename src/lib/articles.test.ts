@@ -7,6 +7,7 @@ import { ArticleView } from "../components/article-view";
 import { OgCard } from "./og/card";
 import { ArticlesIndex } from "../components/articles-index";
 import {
+  articleOutline,
   articlePath,
   articlesForLocale,
   articlesPath,
@@ -21,10 +22,15 @@ const note: Article = {
   lang: "de",
   kind: "research-note",
   readingMinutes: 6,
+  outline: [],
 };
 
 const englishNote: Article = { ...note, slug: "order-books", lang: "en" };
-const textOnlyNote = { ...note, slug: "quant-intro", preview: false } as Article;
+const textOnlyNote = {
+  ...note,
+  slug: "quant-intro",
+  preview: false,
+} as Article;
 
 test("article collections only expose the selected language", () => {
   assert.deepEqual(articlesForLocale([note, englishNote], "de"), [note]);
@@ -124,4 +130,50 @@ test("an empty archive explains itself instead of showing a blank grid", () => {
 
   assert.match(html, /Ganz schön leer hier./);
   assert.doesNotMatch(html, /articles__pagination/);
+});
+
+test("the outline lists level-two sections with the ids rehype-slug assigns", () => {
+  const source = [
+    "## Was ein Derivat ist",
+    "### Basis",
+    "```md",
+    "## not a heading",
+    "```",
+    "## Futures: heute **ausmachen**, [später](/x) liefern",
+    "## Basis",
+  ].join("\n");
+  assert.deepEqual(articleOutline(source), [
+    { id: "was-ein-derivat-ist", text: "Was ein Derivat ist" },
+    {
+      id: "futures-heute-ausmachen-später-liefern",
+      text: "Futures: heute ausmachen, später liefern",
+    },
+    { id: "basis-1", text: "Basis" },
+  ]);
+});
+
+test("articles with sections get the wide layout and a section list", () => {
+  const outline = [
+    { id: "eins", text: "Eins" },
+    { id: "zwei", text: "Zwei" },
+  ];
+  const html = renderToStaticMarkup(
+    createElement(ArticleView, {
+      article: { ...note, outline },
+      locale: "de",
+      Body: () => null,
+    }),
+  );
+  assert.match(html, /class="article article--wide"/);
+  assert.match(html, /href="#zwei"/);
+  assert.doesNotMatch(
+    renderToStaticMarkup(
+      createElement(ArticleView, {
+        article: note,
+        locale: "de",
+        Body: () => null,
+      }),
+    ),
+    /article--wide|article-outline/,
+  );
 });

@@ -522,6 +522,109 @@
   color: var(--accent);
 }
 
+/* ------------------------------------------------ Wide reading layout */
+
+/* On a desktop the 780px column left most of the screen empty. Articles with
+   sections get the full content width instead: header and figure share the
+   first row, the section list sits in a sticky rail on the left, and the text
+   keeps a readable measure while widgets, tables and code use the whole
+   column. Below 1100px nothing changes. */
+
+.article__rail {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  /* Header and figure side by side, so the first screen is not all title. */
+  .article--wide .article__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--space-8);
+    width: min(100%, calc(var(--content-max) + 2 * var(--gutter)));
+    padding-top: var(--space-8);
+  }
+
+  .article--wide .article__back,
+  .article--wide .article__layout,
+  .article--wide .article__inner:not(:has(.article__figure)) .article__head {
+    grid-column: 1 / -1;
+  }
+
+  .article--wide .article__figure {
+    align-self: end;
+    height: 220px;
+    margin: 0;
+  }
+
+  .article--wide .article__layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    column-gap: var(--space-8);
+    margin-top: var(--space-7);
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--rule);
+  }
+
+  .article--wide .article__body {
+    margin-top: 0;
+  }
+
+  .article--wide .article__body > :is(p, ul, ol, h2, h3, h4, blockquote) {
+    max-width: 70ch;
+  }
+
+  .article__rail {
+    display: block;
+  }
+}
+
+.article-outline {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-6));
+  max-height: calc(100vh - var(--header-h) - 2 * var(--space-6));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.article-outline__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+
+.article-outline__list {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--rule);
+}
+
+.article-outline__link {
+  display: block;
+  margin-left: -1px;
+  padding: 6px 0 6px var(--space-4);
+  border-left: 2px solid transparent;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--ink-muted);
+  text-decoration: none;
+  text-wrap: pretty;
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.article-outline__link:hover {
+  color: var(--ink);
+}
+
+.article-outline__link[aria-current] {
+  border-left-color: var(--accent);
+  color: var(--ink);
+}
+
 /* ------------------------------------------------ Home-page teaser */
 
 .teaser__head {

@@ -12,6 +12,7 @@
  */
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import GithubSlugger from "github-slugger";
 import { cache } from "react";
 import type { ComponentType } from "react";
 import { locales, type Locale } from "@/i18n";
@@ -50,10 +51,15 @@ export type ArticleMeta = {
   draft?: boolean;
 };
 
+/** A section of the article — one `##` heading and the id rehype-slug gives it. */
+export type ArticleHeading = { id: string; text: string };
+
 /** An article's metadata plus everything derived from the file itself. */
 export type Article = ArticleMeta & {
   slug: string;
   readingMinutes: number;
+  /** The `##` sections in order; the reading view lists them beside the text. */
+  outline: ArticleHeading[];
 };
 
 type ArticleModule = {
@@ -105,6 +111,26 @@ function readingMinutes(source: string): number {
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 }
 
+/**
+ * The `##` headings with the ids rehype-slug will put on them. Every heading
+ * level goes through the slugger, in document order, so repeated titles get
+ * the same `-1`, `-2` suffixes the rendered page has.
+ */
+export function articleOutline(source: string): ArticleHeading[] {
+  const slugger = new GithubSlugger();
+  const outline: ArticleHeading[] = [];
+  const prose = source.replace(/```[\s\S]*?```/g, "");
+  for (const [, hashes, raw] of prose.matchAll(/^(#{1,6})\s+(.+?)\s*#*\s*$/gm)) {
+    const text = raw
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/[*_`]/g, "")
+      .trim();
+    const id = slugger.slug(text);
+    if (hashes.length === 2) outline.push({ id, text });
+  }
+  return outline;
+}
+
 /** Newest first; same-day pieces fall back to a stable alphabetical order. */
 function byDateDesc(a: Article, b: Article): number {
   return b.date.localeCompare(a.date) || a.title.localeCompare(b.title);
@@ -131,7 +157,12 @@ export const listArticles = cache(async (): Promise<Article[]> => {
     slugs.map(async (slug): Promise<Article> => {
       const { meta } = await importArticle(slug);
       const source = await readFile(path.join(ARTICLES_DIR, `${slug}.mdx`), "utf8");
-      return { ...validate(slug, meta), slug, readingMinutes: readingMinutes(source) };
+      return {
+        ...validate(slug, meta),
+        slug,
+        readingMinutes: readingMinutes(source),
+        outline: articleOutline(source),
+      };
     }),
   );
 

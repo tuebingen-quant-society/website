@@ -8,6 +8,7 @@ import type { ComponentType } from "react";
 import { localePath, type Locale } from "@/i18n";
 import { articlesContent, fill, formatArticleDate } from "@/i18n/articles-content";
 import { articlesPath, type Article } from "@/lib/articles";
+import { ArticleOutline } from "./article-outline";
 import { ArticlePreview } from "./article-preview";
 
 type ArticleViewProps = {
@@ -20,9 +21,11 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
   const copy = articlesContent[locale];
   const indexHref = localePath(locale, articlesPath());
   const foreign = article.lang !== locale;
+  // A section list only earns its column once there is more than one section.
+  const wide = article.outline.length > 1;
 
   return (
-    <article className="article">
+    <article className={wide ? "article article--wide" : "article"}>
       <div className="article__inner">
         {/* The header hides its nav below 768px, so the way back to the
             archive has to be on the page itself — at both ends of it. */}
@@ -68,7 +71,9 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
                 </span>
               ) : null}
               {article.updated
-                ? fill(copy.updated, { date: formatArticleDate(article.updated, locale) })
+                ? fill(copy.updated, {
+                    date: formatArticleDate(article.updated, locale),
+                  })
                 : null}
             </p>
           )}
@@ -87,7 +92,9 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
               one line that has to make sense before the prose switches over. */}
           {foreign && (
             <p className="article__lang-note">
-              {fill(copy.languageNote, { language: copy.languages[article.lang] })}
+              {fill(copy.languageNote, {
+                language: copy.languages[article.lang],
+              })}
             </p>
           )}
         </header>
@@ -98,38 +105,48 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
           </figure>
         )}
 
-        <div className="article__body" lang={foreign ? article.lang : undefined}>
-          <Body />
+        <div className="article__layout">
+          {wide && (
+            <aside className="article__rail">
+              <ArticleOutline outline={article.outline} label={copy.contents} />
+            </aside>
+          )}
+
+          <div className="article__main">
+            <div className="article__body" lang={foreign ? article.lang : undefined}>
+              <Body />
+            </div>
+
+            {article.resources?.length ? (
+              <aside className="article__resources" aria-labelledby="article-resources">
+                <h2 className="article__resources-title" id="article-resources">
+                  {copy.resources}
+                </h2>
+                <ul className="article__resource-list" role="list">
+                  {article.resources.map((resource) => (
+                    <li key={resource.href}>
+                      <a className="link link--arrow" href={resource.href}>
+                        <span className="link__label">{resource.label}</span>
+                        <span className="arrow" aria-hidden="true">
+                          ↓
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+            ) : null}
+
+            <footer className="article__foot">
+              <a className="link link--arrow" href={indexHref}>
+                <span className="arrow arrow--back" aria-hidden="true">
+                  ←
+                </span>
+                <span className="link__label">{copy.backToIndex}</span>
+              </a>
+            </footer>
+          </div>
         </div>
-
-        {article.resources?.length ? (
-          <aside className="article__resources" aria-labelledby="article-resources">
-            <h2 className="article__resources-title" id="article-resources">
-              {copy.resources}
-            </h2>
-            <ul className="article__resource-list" role="list">
-              {article.resources.map((resource) => (
-                <li key={resource.href}>
-                  <a className="link link--arrow" href={resource.href}>
-                    <span className="link__label">{resource.label}</span>
-                    <span className="arrow" aria-hidden="true">
-                      ↓
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        ) : null}
-
-        <footer className="article__foot">
-          <a className="link link--arrow" href={indexHref}>
-            <span className="arrow arrow--back" aria-hidden="true">
-              ←
-            </span>
-            <span className="link__label">{copy.backToIndex}</span>
-          </a>
-        </footer>
       </div>
     </article>
   );

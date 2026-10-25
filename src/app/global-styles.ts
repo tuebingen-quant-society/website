@@ -24,4 +24,5 @@ import "@/styles/legal.css";
 import "@/styles/members.css";
 import "@/styles/credit-points.css";
 import "@/styles/articles.css";
+import "@/styles/lab.css";
 import "@/styles/public-directory.css";

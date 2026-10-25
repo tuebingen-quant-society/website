@@ -40,6 +40,8 @@ type ArticlesCopy = {
   };
   backToIndex: string;
   resources: string;
+  /** Heading of the section list beside the text on wide screens. */
+  contents: string;
   /** Teaser block on the home page, shown once something is published. */
   teaser: { headline: string; link: string };
 };
@@ -98,6 +100,7 @@ export const articlesContent: Record<Locale, ArticlesCopy> = {
     },
     backToIndex: "Alle Veröffentlichungen",
     resources: "Material zum Mitnehmen",
+    contents: "Inhalt",
     teaser: {
       headline: "Zum Nachlesen.",
       link: "Alle Veröffentlichungen",
@@ -136,6 +139,7 @@ export const articlesContent: Record<Locale, ArticlesCopy> = {
     },
     backToIndex: "All publications",
     resources: "Material to take away",
+    contents: "Contents",
     teaser: {
       headline: "Something to read.",
       link: "All publications",

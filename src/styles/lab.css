@@ -1,0 +1,459 @@
+/* Interactive article widgets (src/components/lab). The frame is .panel from
+   global.css and the title bar reuses the signature plot's chrome; this file
+   adds controls, stat tiles and the SVG plot. Everything reads the theme
+   tokens, so dark and light work without extra rules. */
+
+.article__body > .lab {
+  margin-block: var(--space-7);
+}
+
+.lab {
+  line-height: 1.5;
+}
+
+.lab__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 11px 14px;
+  border-bottom: var(--border);
+  background: color-mix(in srgb, var(--surface-3) 55%, transparent);
+}
+
+.lab__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+}
+
+.lab__caption {
+  padding: var(--space-3) var(--space-5) var(--space-4);
+  border-top: var(--border);
+  font-size: var(--fs-label);
+  line-height: 1.6;
+  color: var(--ink-subtle);
+}
+
+.lab__note {
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------ Segmented buttons */
+
+.lab__segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.lab__segment {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.lab__segment:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.lab__segment[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+/* ------------------------------------------------ Sliders */
+
+.lab__controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4) var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .lab__controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.lab__control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.lab__control-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+}
+
+.lab__control-head output {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.lab input[type="range"] {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+  background: transparent;
+}
+
+/* ------------------------------------------------ Stats */
+
+.lab__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  border: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+/* Hairlines on the right and bottom of every tile; the outer ones fall under
+   the container's clip, so partial rows never show an empty grey cell. */
+.lab__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  box-shadow: 1px 1px 0 0 var(--rule);
+}
+
+.lab__stat-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+
+.lab__stat-label--raw {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.lab__stat-value {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.lab__stat--emphasis .lab__stat-label--raw {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.lab__stat-value {
+  font-size: 1.25rem;
+}
+
+.lab__stat-value.is-up,
+.lab__verdict.is-up {
+  color: var(--up);
+}
+
+.lab__stat-value.is-down {
+  color: var(--down);
+}
+
+.lab__verdict {
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--rule-strong);
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.lab__verdict.is-up {
+  border-left-color: var(--up);
+}
+
+/* ------------------------------------------------ Plot */
+
+.lab__plot {
+  margin: 0;
+  min-width: 0;
+}
+
+.lab__plot svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+  cursor: crosshair;
+}
+
+.lab__grid {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.lab__axis-zero {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+
+.lab__tick {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--ink-subtle);
+}
+
+.lab__marker {
+  stroke: var(--rule-strong);
+  stroke-dasharray: 3 4;
+}
+
+.lab__marker-label {
+  fill: var(--ink-muted);
+}
+
+.lab__line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.lab__line--accent {
+  stroke: var(--accent);
+}
+
+.lab__line--muted {
+  stroke: var(--market-muted);
+  stroke-width: 1.5;
+}
+
+.lab__line--dashed {
+  stroke-dasharray: 5 5;
+}
+
+.lab__dot,
+.lab__hover-dot--accent {
+  fill: var(--accent);
+}
+
+.lab__hover-dot--muted {
+  fill: var(--market-muted);
+}
+
+.lab__guide {
+  stroke: var(--ink-subtle);
+  stroke-width: 1;
+}
+
+.lab__readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  min-height: 24px;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-muted);
+}
+
+.lab__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lab__key::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.lab__key--muted::before {
+  background: var(--market-muted);
+}
+
+.lab__key--dashed::before {
+  background: repeating-linear-gradient(90deg, var(--market-muted) 0 4px, transparent 4px 7px);
+}
+
+.lab__hint {
+  margin-left: auto;
+  color: var(--ink-subtle);
+}
+
+/* ------------------------------------------------ Tables & buttons */
+
+.lab__table-wrap {
+  overflow-x: auto;
+}
+
+/* Headers wrap and numbers do not, so the table fits its panel instead of
+   growing a scrollbar; the wrapper only scrolls if even that is too wide. */
+.article__body .lab__table {
+  display: table;
+  white-space: normal;
+}
+
+.article__body .lab__table th {
+  vertical-align: bottom;
+}
+
+.article__body .lab__table td {
+  white-space: nowrap;
+}
+
+.article__body .lab__table :is(th, td) {
+  padding-inline: var(--space-3);
+}
+
+.article__body .lab__table :is(th, td):first-child {
+  padding-left: 0;
+}
+
+@media (max-width: 640px) {
+  .article__body .lab__table :is(th, td) {
+    padding-inline: var(--space-2);
+  }
+
+  .article__body .lab__table th {
+    letter-spacing: 0.02em;
+  }
+}
+
+.lab__table-caption {
+  caption-side: top;
+  padding-bottom: var(--space-2);
+  text-align: left;
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+}
+
+.lab__subsection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: var(--border);
+}
+
+.article__body .lab__subhead {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lab__button {
+  align-self: flex-start;
+}
+
+/* ------------------------------------------------ Quiz */
+
+.article__body .lab__quiz {
+  margin: 0;
+  padding: var(--space-5) var(--space-5) 0 calc(var(--space-5) + 1.2em);
+}
+
+.article__body .lab__question + .lab__question {
+  margin-top: var(--space-6);
+}
+
+.lab__prompt {
+  font-weight: 600;
+}
+
+.lab__options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+@media (min-width: 640px) {
+  .lab__options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.lab__option {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: left;
+  font-size: var(--fs-small);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.lab__option:hover:not([disabled]) {
+  background: var(--surface-2);
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--rule-strong));
+}
+
+.lab__option[disabled] {
+  cursor: default;
+}
+
+.lab__option.is-right {
+  border-color: var(--up);
+  background: color-mix(in srgb, var(--up) 10%, var(--surface));
+}
+
+.lab__option.is-right::before {
+  content: "▲ ";
+  color: var(--up);
+}
+
+.lab__option.is-wrong {
+  border-color: var(--down);
+  background: color-mix(in srgb, var(--down) 10%, var(--surface));
+}
+
+.lab__option.is-wrong::before {
+  content: "▼ ";
+  color: var(--down);
+}
+
+.lab__why {
+  margin-top: var(--space-3);
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+}
+
+.lab__score {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}

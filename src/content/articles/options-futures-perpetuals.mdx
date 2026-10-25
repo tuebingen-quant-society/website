@@ -1,0 +1,419 @@
+import {
+  AmmLab,
+  ArbitrageLab,
+  BasisLab,
+  FundingCarryLab,
+  LiquidationLab,
+  OptionPricer,
+  PayoffLab,
+  Quiz,
+} from "@/components/lab";
+
+export const meta = {
+  title: "Options, futures, perpetuals: derivatives and crypto, hands-on",
+  description:
+    "How futures, options and perpetuals work, how crypto markets are structured and which arbitrage and quant strategies exist there. With eight calculators to try out.",
+  date: "2026-10-24",
+  lang: "en",
+  kind: "workshop",
+  authors: ["Armin Burkhardt"],
+  topics: ["Options", "Futures", "Perpetuals", "Crypto", "Arbitrage"],
+};
+
+_Dieser Artikel ist auch [auf Deutsch](/article/optionen-futures-perpetuals) verfügbar._
+
+This text accompanies our workshop on derivatives and crypto. You need no prior
+knowledge beyond percentages; we build everything else step by step. The
+calculators are meant to be played with: move the sliders until you have a feel
+for what happens.
+
+All figures are example values, not market data.
+
+## What a derivative is
+
+A derivative is a contract whose value depends on another price. That other
+price is the underlying; it can be a stock, an index, oil, an interest rate or
+bitcoin. So you do not buy the thing itself, but an agreement about it.
+
+Derivatives exist for two reasons. First, hedging: an airline wants to know
+what jet fuel costs in six months. Second, speculation and arbitrage: anyone
+with a view on the price can trade it with little capital, and anyone who finds
+price differences between markets can collect them. For quants the second part
+is the interesting one; but first you need to understand what a derivative
+should cost.
+
+## Futures: agree today, deliver later
+
+A future is a standardised contract to buy or sell an underlying at a price
+fixed today, on a later date. The buyer is long; the seller is short. Payment
+happens at expiry.
+
+- **Margin**: Instead of the full price you post collateral, often 5 to 20% of
+  notional. That is where leverage comes from.
+- **Mark-to-market**: Gains and losses are settled with your account daily (in
+  crypto continuously). If margin drops below a threshold, you top up or the
+  position is closed.
+- **Settlement**: At expiry the underlying is either delivered (physical) or
+  only the difference is paid (cash settlement). Crypto futures on CME and
+  Deribit settle in cash.
+
+### What a future should cost
+
+Say bitcoin trades at 100 and you need it in one year. You can buy it today
+and hold it; that ties up 100 of capital that would otherwise earn 4% interest.
+Or you buy a future. For both routes to cost the same, the future has to trade
+at about 104. In general:
+
+<Formula>
+
+$$
+F = S \cdot e^{rT}
+$$
+
+- $$S$$: spot price
+- $$r$$: interest rate p.a. (funding cost)
+- $$T$$: time to expiry in years
+
+</Formula>
+
+This is not a model of the future but an arbitrage argument. If the future
+trades clearly above this value, you buy spot, sell the future and deliver at
+expiry. Your profit is fixed from day one, wherever the price ends up. This is
+called **cash and carry**.
+
+A future above spot is in **contango**; below spot it is in
+**backwardation**. In crypto, contango is the norm, because many participants
+want leveraged long exposure and pay a premium for it. The difference between
+future and spot is the **basis**; annualised, it is the return you lock in
+with cash and carry.
+
+<BasisLab lang="en" />
+
+Look at the table below the calculator: the total is the same in every row.
+The price at expiry does not show up in the result; that is exactly what makes
+the trade popular. It is still not risk free. The short side needs margin, and
+if the price rises sharply you have to top it up, even though your spot gains
+just as much.
+
+## Options: a right, not an obligation
+
+An option gives you the right to buy or sell an underlying at a fixed price
+(the **strike**). Unlike a future you do not have to; you only exercise when
+it pays. This right costs a **premium**, paid when you buy.
+
+- **Call**: right to buy. Pays when the price is above the strike.
+- **Put**: right to sell. Pays when the price is below the strike.
+- **European vs. American**: European options can only be exercised at expiry,
+  American ones at any time. Most crypto options (e.g. on Deribit) are
+  European.
+- **Moneyness**: A call with strike 90 at price 100 is _in the money_, with
+  strike 110 _out of the money_, with strike 100 _at the money_.
+
+The buyer can lose at most the premium. The seller (writer) collects the
+premium for sure but carries the risk of a large move. Things get interesting
+once you combine several options. In the lab below you can play through seven
+standard strategies.
+
+<PayoffLab lang="en" />
+
+The solid line is your profit or loss at expiry, the dashed line the value
+halfway through. The gap between them is the **time value**: before expiry an
+option is worth more than its intrinsic value, because the price can still
+move. Raise the volatility and watch the premium grow.
+
+### What an option costs
+
+In 1973 Fischer Black and Myron Scholes published a formula for the fair price
+of a European option. The idea: an option can be rebuilt (replicated)
+continuously from the underlying and cash. What the replication costs is the
+fair price. For a call:
+
+<Formula>
+
+$$
+\begin{aligned}
+C &= S \, N(d_1) - K e^{-rT} N(d_2) \\[0.5em]
+d_1 &= \frac{\ln(S/K) + \left(r + \frac{\sigma^2}{2}\right) T}{\sigma \sqrt{T}} \\[0.5em]
+d_2 &= d_1 - \sigma \sqrt{T}
+\end{aligned}
+$$
+
+- $$N$$: cumulative standard normal distribution
+- $$\sigma$$: volatility p.a.
+
+</Formula>
+
+All inputs but one are observable: price, strike, time and rate. Volatility σ
+is not. So in practice the formula is run backwards, and the market price gives
+you the **implied volatility**. That is why option traders often talk in vol
+instead of prices: "the 30-day call trades at 55 vol."
+
+How sensitive the price is to each input is measured by the **Greeks**:
+
+| Greek | Measures                               | Rule of thumb                                 |
+| ----- | -------------------------------------- | --------------------------------------------- |
+| Delta | price change per 1 in the underlying   | ATM call ≈ 0.5; how much underlying you "own" |
+| Gamma | change in delta per 1 in the underlying | largest ATM and close to expiry               |
+| Vega  | price change per vol point             | long maturities react more                    |
+| Theta | price change per day                   | buyers lose time value every day              |
+
+One key relation holds without any model, **put-call parity**:
+`C − P = S − K · e^(−rT)`. A long call plus a short put with the same strike is
+the same as a future. If the market deviates, there is an arbitrage. The
+calculator shows both sides of the equation; they always match.
+
+<OptionPricer lang="en" />
+
+The Monte Carlo part shows how to price options that have no closed formula:
+simulate prices, average the payoffs, discount. With 1,000 paths you are often
+still a few tenths off; with 100,000 paths the error is ten times smaller,
+because it shrinks with 1/√N.
+
+## Perpetuals: futures without expiry
+
+A perpetual future (perp) is a future that never expires. The idea goes back
+to a 1993 paper by Robert Shiller; it took off in 2016, when BitMEX launched the
+first bitcoin perp. Today perps are the most traded product in crypto, with
+clearly more volume than the spot market.
+
+Without expiry, though, the mechanism that forces a normal future to converge
+to spot is missing. The fix is **funding**: longs and shorts pay each other a
+small amount at fixed intervals.
+
+- If the perp trades **above** spot, funding is positive. Longs pay shorts.
+  That makes being long more expensive and pushes the price towards spot.
+- If the perp trades **below** spot, funding is negative. Shorts pay longs.
+
+Most exchanges use the same rule:
+
+<Formula>
+
+$$
+\text{funding} = P + \operatorname{clamp}_{\pm 0.05\%}\left(I - P\right)
+$$
+
+- $$P$$: premium index, perp versus spot, averaged
+- $$I$$: interest component, usually 0.01% per 8 hours
+- $$\operatorname{clamp}_{\pm a}$$: limited to the range −a to +a
+
+</Formula>
+
+As long as the premium index stays between −0.04% and +0.06%, funding is
+exactly 0.01% per 8 hours. That sounds small; three times a day it adds up to
+10.95% per year. For BTC, Binance and BitMEX pay every 8 hours, Hyperliquid
+every hour (one eighth of the 8-hour rate each time). According to the
+[BitMEX derivatives report for Q3 2025](https://blog.bitmex.com/2025q3-derivatives-report),
+BTC funding on BitMEX, Binance and Hyperliquid was positive more than 92% of
+the time. In the early years it sometimes exceeded 0.2% per 8 hours, which is
+over 200% annualised.
+
+### Leverage and liquidation
+
+Perps can be traded with high leverage, 50× and more depending on the venue.
+With leverage L you only post 1/L of notional. If the price moves roughly that
+fraction against you (minus the maintenance margin), the exchange closes your
+position. That is a **liquidation**.
+
+<Formula>
+
+$$
+\begin{aligned}
+\text{long:} \quad P_{\text{liq}} &\approx P_{\text{entry}} \left(1 - \tfrac{1}{L} + m\right) \\[0.5em]
+\text{short:} \quad P_{\text{liq}} &\approx P_{\text{entry}} \left(1 + \tfrac{1}{L} - m\right)
+\end{aligned}
+$$
+
+- $$L$$: leverage
+- $$m$$: maintenance margin, e.g. 0.5%
+
+</Formula>
+
+If your margin does not cover a liquidation, the exchange's insurance fund
+steps in. If that is empty too, profitable positions on the other side are
+reduced automatically (**auto-deleveraging**, ADL). This hits exactly the
+traders who are winning; for arbitrage strategies it is a real risk.
+
+<LiquidationLab lang="en" />
+
+The calculator converts the distance to liquidation into daily moves. At 60%
+volatility the price moves about 3% on a normal day. With 20× leverage you are
+less than two normal days away from liquidation.
+
+## Crypto markets in five minutes
+
+Crypto differs from traditional markets less in the maths than in the market
+structure:
+
+- **24/7**: No close, no holidays. Liquidity is thinner at night and on
+  weekends, moves are often larger.
+- **Fragmented**: The same coin trades at the same time on dozens of
+  exchanges, against different stablecoins, and as spot, future, perp and
+  option. Price differences are more common than for a stock with one home
+  exchange.
+- **CEX and DEX**: Centralised exchanges (Binance, Coinbase, Kraken, …) work
+  like traditional exchanges with an order book and custody. Decentralised
+  exchanges (Uniswap, Hyperliquid, …) run on a blockchain; you trade from your
+  own wallet.
+- **Stablecoins**: Tokens like USDT and USDC are meant to be worth $1 and are
+  the actual trading currency. They can lose the peg, though; USDC briefly fell
+  to about $0.88 in March 2023 after Silicon Valley Bank collapsed.
+- **Counterparty risk**: On a CEX your balance is often legally just a claim
+  against the exchange. At FTX, billions in customer funds were gone in
+  November 2022.
+- **Regulation**: In the EU the
+  [MiCA regulation](https://eur-lex.europa.eu/eli/reg/2023/1114/oj) has fully
+  applied since the end of 2024; it licenses crypto service providers and
+  stablecoin issuers.
+
+### How a DEX sets prices
+
+Many DEXs have no order book but an **automated market maker** (AMM). A pool
+holds two tokens, e.g. ETH and USDC, and allows any swap as long as the product
+of the reserves stays the same: `x · y = k`. The price follows from the ratio of
+the reserves. Sell ETH into the pool and x rises, y falls, and ETH gets cheaper
+in the pool. The larger your order relative to the pool, the worse your average
+price.
+
+<AmmLab lang="en" />
+
+After your trade the pool quotes below the price on the large exchanges.
+Arbitrageurs close this gap, often within the same block. The pool itself
+"knows" nothing about the market price; arbitrage is the mechanism that keeps
+it right. As the [Uniswap v2 whitepaper](https://uniswap.org/whitepaper.pdf)
+describes, this is by design: trader fees pay liquidity providers for exactly
+this risk.
+
+## Where quants make money in crypto
+
+The strategies split roughly into two groups. In **arbitrage-like trades** the
+profit is almost fixed at entry; the risk lies in execution and in the
+counterparty. In **statistical strategies** you have an edge on average but
+lose individual trades. Arbitrage is rarely free: usually you pay with capital,
+speed or a risk that does not show up in the model.
+
+### Cash and carry with futures
+
+You know this from the first calculator: buy spot, sell the quarterly future,
+hold to expiry. The return is the annualised basis minus fees. Compared to the
+funding carry it is fixed for the term; in return capital is tied up until
+expiry.
+
+### Funding carry with perps
+
+The same idea with a perp: spot long, perp short, equal notional. Price moves
+cancel out; what is left is the funding the short side receives. Because the
+rate changes every few hours, the yield is not fixed. In return you can exit at
+any time.
+
+<FundingCarryLab lang="en" />
+
+Try two things. First, set the holding period to a few days. The four fees
+then eat a large part of the funding. Second, raise the leverage. The return on
+your capital rises because you tie up less margin; at the same time the short
+side's liquidation moves closer. That is the classic trade-off of this trade.
+
+### Cross-exchange and triangular arbitrage
+
+If bitcoin costs $100,000 on exchange A and $100,250 on exchange B, you buy on
+A and sell on B. In practice nobody moves coins back and forth for this; it
+takes too long. Instead you hold inventory on both exchanges and rebalance
+occasionally.
+
+In a **triangle** you trade three pairs on one exchange: USD → BTC → ETH → USD.
+The ETH/BTC rate has to match the two dollar rates (ETH/USD divided by
+BTC/USD). If it deviates and the deviation covers three fees, a profit is left.
+
+<ArbitrageLab lang="en" />
+
+These gaps are real, but small and short-lived. Whoever collects them reliably
+has fast connections, low fee tiers and code that decides in milliseconds. For
+getting started they are mainly a good exercise in clean fee and slippage
+accounting.
+
+### CEX-DEX arbitrage and MEV
+
+The AMM calculator showed that every larger order pushes a pool away from the
+market price. Arbitrageurs then buy cheaply in the pool and sell on a CEX (or
+the other way round). On a blockchain there is an extra twist: the order of
+transactions within a block is negotiable. The profit that can be extracted
+from this ordering is called **MEV** (maximal extractable value). It ranges
+from harmless arbitrage to front-running other users.
+
+### Options arbitrage
+
+Put-call parity has to hold on every exchange. With crypto options there are
+also deviations between venues and between options and perps. A **box** (bull
+call spread plus bear put spread) always pays the difference of the strikes at
+expiry; its price reveals the implied interest rate. If that rate is clearly
+higher than your own funding rate, you can sell the box and lock in the
+difference.
+
+### Market making
+
+A market maker quotes buy and sell prices at the same time and earns the spread
+between them. Sounds like safe money; the risk sits in two places.
+**Inventory**: whoever just bought a lot loses if the price keeps falling.
+**Adverse selection**: the people trading against you are often the ones who
+know more than you. Good market making is therefore mostly good short-term
+prediction plus risk management; exchanges often pay fee rebates for it.
+
+### Trading volatility
+
+An option's implied volatility is the market's forecast. Realised volatility is
+what actually happens. If you sell an option and keep hedging its delta with
+the underlying, you earn when realised vol stays below implied. On average
+implied vol is higher (the **variance risk premium**); in return the strategy
+loses a lot at once in crashes. Conversely, a delta-hedged buyer earns from
+large moves (**gamma scalping**) and pays theta for it every day.
+
+### Statistical arbitrage
+
+Here there is no fixed relation, only a statistical one. One example is
+**pairs trading**: BTC and ETH usually move alike. If their ratio widens
+unusually far, you buy the cheaper coin, sell the more expensive one and wait
+for the ratio to return. That works until the ratio shifts permanently. This is
+why out-of-sample tests and clean backtests matter more here than the model
+itself.
+
+| Strategy             | You earn                        | Main risk                           |
+| -------------------- | ------------------------------- | ----------------------------------- |
+| Cash and carry       | basis until expiry              | margin, exchange failure            |
+| Funding carry        | funding on the short side       | negative funding, liquidation, ADL  |
+| Cross-exchange       | price difference                | latency, inventory on two venues    |
+| Triangle             | mispriced cross rate            | execution, three fees               |
+| CEX-DEX              | pool versus market gap          | gas, competition for the block      |
+| Options arbitrage    | parity breaks, box rate         | liquidity, margin                   |
+| Market making        | spread, fee rebates             | inventory, adverse selection        |
+| Vol trading          | implied minus realised          | crashes, jumps                      |
+| Statistical arb      | mean reversion                  | regime change, overfitting          |
+
+## What goes wrong in practice
+
+Almost all losses in "risk-free" trades come from things that are not in the
+formula:
+
+- **Counterparty**: An exchange halts withdrawals or goes bust. Both legs are
+  then out of reach.
+- **The hedge leg gets liquidated**: In a fast rally the short side loses
+  before you can add margin. After that you are simply long.
+- **Fees and slippage**: A few basis points decide. Always calculate with the
+  price you actually get filled at, not the mid price.
+- **Funding flips**: After a crash, funding is often negative for days.
+- **Stablecoins**: Your "dollar" is a token with its own risk.
+- **Overfitting**: A backtest with many parameters almost always finds
+  something. Whether it is an edge only shows on a period the model has never
+  seen.
+
+## Quick check
+
+<Quiz lang="en" />
+
+## Going further
+
+If you want to go deeper: the classic on derivatives is "Options, Futures, and
+Other Derivatives" by John Hull. For perps, the exchanges' documentation is
+worth reading, e.g.
+[Hyperliquid's explanation of funding](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding).
+And you learn the most by rebuilding one of the calculators above yourself;
+for example as a notebook with real data. That is what our meetings are for:
+bring your questions, open to all subjects and experience levels.

@@ -457,6 +457,59 @@
   border-radius: var(--radius);
 }
 
+/* Formulas: KaTeX output (remark-math + rehype-katex) in the same box as
+   code, with the symbol legend under a hairline. */
+.article__body .formula {
+  margin-inline: 0;
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-1);
+}
+
+.article__body .katex {
+  font-size: 1.12em;
+}
+
+.article__body .katex-display {
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: var(--space-2);
+}
+
+.article__body .formula ul {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  padding: var(--space-4) 0 0;
+  border-top: var(--border);
+  list-style: none;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.article__body .formula li + li {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .article__body .formula {
+    padding: var(--space-4);
+  }
+
+  .article__body .katex {
+    font-size: 1em;
+  }
+}
+
+.article__body .formula li .katex {
+  font-size: 1.05em;
+  color: var(--ink);
+}
+
 /* Footnotes come from remark-gfm and land at the end of the body. */
 .article__body .footnotes {
   margin-top: var(--space-8);
@@ -520,6 +573,142 @@
 
 .article__foot .link--arrow {
   color: var(--accent);
+}
+
+/* ------------------------------------------------ Wide reading layout */
+
+/* Articles with sections, on a desktop: the column of text — and everything
+   in it, widgets, code, tables — is centred on the page and as wide as the
+   screen allows up to 840px. The left column is one quiet sidebar, set
+   against the text: the way back, the facts the small-screen header carries,
+   then the section list, which stays in view while reading. The small-screen
+   header furniture and the decorative figure step aside, so the first screen
+   is title, lead and the start of the text. */
+
+.article__rail {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .article--wide .article__inner {
+    --rail: 200px;
+    display: grid;
+    grid-template-columns:
+      minmax(var(--rail), 1fr)
+      minmax(0, 840px)
+      minmax(var(--rail), 1fr);
+    column-gap: var(--space-7);
+    width: 100%;
+    padding-top: var(--space-8);
+  }
+
+  .article--wide .article__column {
+    grid-column: 2;
+  }
+
+  .article--wide .article__back,
+  .article--wide .article__kicker,
+  .article--wide .article__byline,
+  .article--wide .article__topics,
+  .article--wide .article__figure {
+    display: none;
+  }
+
+  .article--wide .article__title {
+    margin-top: 0;
+    font-size: 3.5rem;
+    line-height: 1.04;
+  }
+
+  .article--wide .article__body {
+    margin-top: var(--space-7);
+  }
+
+  .article__rail {
+    display: block;
+    grid-column: 1;
+    justify-self: end;
+    width: var(--rail);
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+}
+
+.article__rail-back {
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.article__rail-back:hover {
+  color: var(--accent);
+}
+
+.article__rail-back:hover .arrow--back {
+  transform: translateX(-4px);
+}
+
+.article__rail-back .arrow--back {
+  display: inline-block;
+}
+
+.article__facts {
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article__facts li + li {
+  margin-top: 2px;
+}
+
+.article__facts-kind {
+  color: var(--accent);
+}
+
+.article-outline {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-6));
+  max-height: calc(100vh - var(--header-h) - 2 * var(--space-6));
+  margin-top: var(--space-7);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.article-outline__title {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.article-outline__list {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--rule);
+}
+
+.article-outline__link {
+  display: block;
+  font-size: 0.84375rem;
+  margin-left: -1px;
+  padding: 5px 0 5px var(--space-4);
+  border-left: 2px solid transparent;
+  color: var(--ink-muted);
+  text-decoration: none;
+  text-wrap: pretty;
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.article-outline__link:hover {
+  color: var(--ink);
+}
+
+.article-outline__link[aria-current] {
+  border-left-color: var(--accent);
+  color: var(--ink);
 }
 
 /* ------------------------------------------------ Home-page teaser */

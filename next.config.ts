@@ -16,8 +16,11 @@ const nextConfig: NextConfig = {
  */
 const withMDX = createMDX({
   options: {
-    remarkPlugins: ["remark-gfm"],
-    rehypePlugins: ["rehype-slug"],
+    /* Math is `$$…$$` only, inline too: single dollars are prices in the
+       prose ("100.000 $"), not formulas. KaTeX renders at build time, so the
+       page ships HTML and a stylesheet, no math script. */
+    remarkPlugins: ["remark-gfm", ["remark-math", { singleDollarTextMath: false }]],
+    rehypePlugins: ["rehype-slug", "rehype-katex"],
   },
 });
 

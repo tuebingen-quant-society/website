@@ -55,6 +55,26 @@ Bilder, Folien und Notebooks nach `public/articles/` legen und mit absolutem
 Pfad verlinken (`/articles/dateiname.pdf`). `_`-Dateien in diesem Ordner sind
 Vorlagen und werden nie veröffentlicht.
 
+## Formeln
+
+Formeln sind LaTeX und werden beim Build mit KaTeX gesetzt. Mathe steht
+immer zwischen doppelten Dollarzeichen, auch im Fließtext (`$$\sigma$$`):
+einzelne `$` bleiben Preise wie „100 $“. Eine abgesetzte Formel mit Legende
+kommt in einen `<Formula>`-Kasten; Leerzeilen um den Inhalt nicht vergessen:
+
+```mdx
+<Formula>
+
+$$
+F = S \cdot e^{rT}
+$$
+
+- $$S$$: Spotpreis
+- $$T$$: Restlaufzeit in Jahren
+
+</Formula>
+```
+
 ## Interaktive Elemente
 
 Rechner und Quiz aus `src/components/lab` lassen sich direkt im Text verwenden.

@@ -457,6 +457,59 @@
   border-radius: var(--radius);
 }
 
+/* Formulas: KaTeX output (remark-math + rehype-katex) in the same box as
+   code, with the symbol legend under a hairline. */
+.article__body .formula {
+  margin-inline: 0;
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-1);
+}
+
+.article__body .katex {
+  font-size: 1.12em;
+}
+
+.article__body .katex-display {
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: var(--space-2);
+}
+
+.article__body .formula ul {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  padding: var(--space-4) 0 0;
+  border-top: var(--border);
+  list-style: none;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.article__body .formula li + li {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .article__body .formula {
+    padding: var(--space-4);
+  }
+
+  .article__body .katex {
+    font-size: 1em;
+  }
+}
+
+.article__body .formula li .katex {
+  font-size: 1.05em;
+  color: var(--ink);
+}
+
 /* Footnotes come from remark-gfm and land at the end of the body. */
 .article__body .footnotes {
   margin-top: var(--space-8);

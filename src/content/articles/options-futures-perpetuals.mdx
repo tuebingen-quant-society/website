@@ -64,13 +64,17 @@ and hold it; that ties up 100 of capital that would otherwise earn 4% interest.
 Or you buy a future. For both routes to cost the same, the future has to trade
 at about 104. In general:
 
-```text
-F = S · e^(r · T)
+<Formula>
 
-S  spot price
-r  interest rate p.a. (funding cost)
-T  time to expiry in years
-```
+$$
+F = S \cdot e^{rT}
+$$
+
+- $$S$$: spot price
+- $$r$$: interest rate p.a. (funding cost)
+- $$T$$: time to expiry in years
+
+</Formula>
 
 This is not a model of the future but an arbitrage argument. If the future
 trades clearly above this value, you buy spot, sell the future and deliver at
@@ -124,14 +128,20 @@ of a European option. The idea: an option can be rebuilt (replicated)
 continuously from the underlying and cash. What the replication costs is the
 fair price. For a call:
 
-```text
-C  = S · N(d1) − K · e^(−rT) · N(d2)
-d1 = [ln(S/K) + (r + σ²/2) · T] / (σ · √T)
-d2 = d1 − σ · √T
+<Formula>
 
-N  cumulative standard normal distribution
-σ  volatility p.a.
-```
+$$
+\begin{aligned}
+C &= S \, N(d_1) - K e^{-rT} N(d_2) \\[0.5em]
+d_1 &= \frac{\ln(S/K) + \left(r + \frac{\sigma^2}{2}\right) T}{\sigma \sqrt{T}} \\[0.5em]
+d_2 &= d_1 - \sigma \sqrt{T}
+\end{aligned}
+$$
+
+- $$N$$: cumulative standard normal distribution
+- $$\sigma$$: volatility p.a.
+
+</Formula>
 
 All inputs but one are observable: price, strike, time and rate. Volatility σ
 is not. So in practice the formula is run backwards, and the market price gives
@@ -176,12 +186,17 @@ small amount at fixed intervals.
 
 Most exchanges use the same rule:
 
-```text
-funding = P + clamp(I − P, −0.05%, +0.05%)
+<Formula>
 
-P  premium index: perp versus spot, averaged
-I  interest component, usually 0.01% per 8 hours
-```
+$$
+\text{funding} = P + \operatorname{clamp}_{\pm 0.05\%}\left(I - P\right)
+$$
+
+- $$P$$: premium index, perp versus spot, averaged
+- $$I$$: interest component, usually 0.01% per 8 hours
+- $$\operatorname{clamp}_{\pm a}$$: limited to the range −a to +a
+
+</Formula>
 
 As long as the premium index stays between −0.04% and +0.06%, funding is
 exactly 0.01% per 8 hours. That sounds small; three times a day it adds up to
@@ -199,12 +214,19 @@ With leverage L you only post 1/L of notional. If the price moves roughly that
 fraction against you (minus the maintenance margin), the exchange closes your
 position. That is a **liquidation**.
 
-```text
-long:  P_liq ≈ P_entry · (1 − 1/L + m)
-short: P_liq ≈ P_entry · (1 + 1/L − m)
+<Formula>
 
-m  maintenance margin, e.g. 0.5%
-```
+$$
+\begin{aligned}
+\text{long:} \quad P_{\text{liq}} &\approx P_{\text{entry}} \left(1 - \tfrac{1}{L} + m\right) \\[0.5em]
+\text{short:} \quad P_{\text{liq}} &\approx P_{\text{entry}} \left(1 + \tfrac{1}{L} - m\right)
+\end{aligned}
+$$
+
+- $$L$$: leverage
+- $$m$$: maintenance margin, e.g. 0.5%
+
+</Formula>
 
 If your margin does not cover a liquidation, the exchange's insurance fund
 steps in. If that is empty too, profitable positions on the other side are

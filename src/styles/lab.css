@@ -312,9 +312,37 @@
   overflow-x: auto;
 }
 
+/* Headers wrap and numbers do not, so the table fits its panel instead of
+   growing a scrollbar; the wrapper only scrolls if even that is too wide. */
 .article__body .lab__table {
   display: table;
+  white-space: normal;
+}
+
+.article__body .lab__table th {
+  vertical-align: bottom;
+}
+
+.article__body .lab__table td {
   white-space: nowrap;
+}
+
+.article__body .lab__table :is(th, td) {
+  padding-inline: var(--space-3);
+}
+
+.article__body .lab__table :is(th, td):first-child {
+  padding-left: 0;
+}
+
+@media (max-width: 640px) {
+  .article__body .lab__table :is(th, td) {
+    padding-inline: var(--space-2);
+  }
+
+  .article__body .lab__table th {
+    letter-spacing: 0.02em;
+  }
 }
 
 .lab__table-caption {

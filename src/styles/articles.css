@@ -524,14 +524,13 @@
 
 /* ------------------------------------------------ Wide reading layout */
 
-/* Articles with sections, on a desktop: three columns on the site's content
-   width, so the edges line up with the logo and the nav above. The text sits
-   alone in the centre column, and everything it has to be as wide as —
-   widgets, code, tables — is exactly that wide. The left column is one quiet
-   sidebar from the top down: the way back, the facts the small-screen header
-   carries, then the section list, which stays in view while reading. The
-   small-screen header furniture and the decorative figure step aside, so the
-   first screen is title, lead and the start of the text. */
+/* Articles with sections, on a desktop: the column of text — and everything
+   in it, widgets, code, tables — is centred on the page and as wide as the
+   screen allows up to 840px. The left column is one quiet sidebar, set
+   against the text: the way back, the facts the small-screen header carries,
+   then the section list, which stays in view while reading. The small-screen
+   header furniture and the decorative figure step aside, so the first screen
+   is title, lead and the start of the text. */
 
 .article__rail {
   display: none;
@@ -539,10 +538,14 @@
 
 @media (min-width: 1200px) {
   .article--wide .article__inner {
+    --rail: 200px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 640px) minmax(0, 1fr);
-    column-gap: 40px;
-    width: min(100%, var(--content-max));
+    grid-template-columns:
+      minmax(var(--rail), 1fr)
+      minmax(0, 840px)
+      minmax(var(--rail), 1fr);
+    column-gap: var(--space-7);
+    width: 100%;
     padding-top: var(--space-8);
   }
 
@@ -571,6 +574,8 @@
   .article__rail {
     display: block;
     grid-column: 1;
+    justify-self: end;
+    width: var(--rail);
     font-size: var(--fs-small);
     line-height: 1.5;
     color: var(--ink-muted);

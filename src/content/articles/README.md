@@ -54,3 +54,19 @@ Karte, der Leseseite und im Social Preview bewusst ohne diese Grafik.
 Bilder, Folien und Notebooks nach `public/articles/` legen und mit absolutem
 Pfad verlinken (`/articles/dateiname.pdf`). `_`-Dateien in diesem Ordner sind
 Vorlagen und werden nie veröffentlicht.
+
+## Interaktive Elemente
+
+Rechner und Quiz aus `src/components/lab` lassen sich direkt im Text verwenden.
+Oben in der Datei importieren und an der gewünschten Stelle einsetzen; `lang`
+steuert Beschriftung und Zahlenformat:
+
+```mdx
+import { PayoffLab } from "@/components/lab";
+
+<PayoffLab lang="de" />
+```
+
+Verfügbar sind `BasisLab`, `PayoffLab`, `OptionPricer`, `LiquidationLab`,
+`FundingCarryLab`, `ArbitrageLab`, `AmmLab` und `Quiz`. Die Mathematik dahinter
+liegt in `src/lib/derivatives.ts` und ist getestet.

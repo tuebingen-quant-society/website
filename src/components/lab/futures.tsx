@@ -7,11 +7,9 @@ import {
   DAYS_PER_YEAR,
   fairFuture,
   fundingCarry,
-  liquidationPrice,
+  gaussian,
   mulberry32,
   simulateFunding,
-  touchProbability,
-  type Side,
 } from "@/lib/derivatives";
 import {
   Controls,
@@ -19,6 +17,7 @@ import {
   money,
   num,
   pct,
+  PlayButton,
   Plot,
   Segmented,
   signed,
@@ -26,17 +25,37 @@ import {
   Stat,
   Stats,
   toneOf,
+  usePlayback,
+  useTweened,
   Verdict,
   type Point,
 } from "./ui";
+import { useMissions } from "./workshop";
 
 const SPOT = 100;
+
+/** Daily closes of a driftless random walk in log space, seeded. */
+export function pricePath(seed: number, days: number, vol: number, steps = days): number[] {
+  const random = mulberry32(seed);
+  const dt = days / DAYS_PER_YEAR / steps;
+  const path = [SPOT];
+  let price = SPOT;
+  for (let i = 0; i < steps; i++) {
+    price *= Math.exp(-0.5 * vol * vol * dt + vol * Math.sqrt(dt) * gaussian(random));
+    path.push(price);
+  }
+  return path;
+}
 
 /* ------------------------------------------------------------ Basis */
 
 const basisCopy = {
   de: {
     title: "CASH AND CARRY · SPOT 100",
+    missions: "Aufgaben",
+    mFair: "Schieb den Future auf seinen fairen Preis.",
+    mReverse: "Mach den Future so billig, dass sich der umgekehrte Trade lohnt.",
+    mPlay: "Spiel zwei Kursverläufe ab und vergleich die Summe am Ende.",
     future: "Futurespreis",
     days: "Restlaufzeit",
     daysUnit: "Tage",
@@ -47,19 +66,28 @@ const basisCopy = {
     edge: "Gewinn über Finanzierung",
     perHundred: "pro 100",
     carry: (excess: string) =>
-      `Cash and Carry: Spot kaufen, Future verkaufen. Du lockst die Basis ein und verdienst ${excess} pro 100 mehr, als dich das Kapital kostet.`,
+      `Cash and Carry: Spot kaufen, Future verkaufen. Du verdienst ${excess} pro 100 mehr, als dich das Kapital kostet.`,
     reverse: (excess: string) =>
-      `Reverse Cash and Carry: Der Future ist zu billig. Spot leihen und verkaufen, Future kaufen; das bringt ${excess} pro 100, wenn du den Basiswert günstig leihen kannst.`,
+      `Reverse Cash and Carry: Spot leihen und verkaufen, Future kaufen. Bringt ${excess} pro 100, wenn du den Basiswert günstig leihen kannst.`,
     flat: "Kein Trade: Nach Zins und Gebühren bleibt nichts übrig.",
-    table: "Ergebnis bei Fälligkeit, egal wo der Kurs landet",
-    terminal: "Kurs bei Fälligkeit",
+    runTitle: "Probelauf: Kurs zufällig, Ergebnis fest",
+    play: "Kursverlauf abspielen",
+    again: "Neuer Kursverlauf",
+    day: "Tag",
+    hint: "Fahr über das Diagramm",
     spotLeg: "Spot long",
     futureLeg: "Future short",
-    total: "Summe nach Gebühren",
-    caption: "Beispielwerte, keine Marktdaten. Fairer Preis S · e^(rT); Basis einfach annualisiert: (F/S − 1) · 365 / Tage.",
+    total: "Summe",
+    at: (day: number, price: string) => `Tag ${day} · Kurs ${price}`,
+    caption:
+      "Beispielwerte, keine Marktdaten. Fairer Preis S · e^(rT); Basis einfach annualisiert. Der Probelauf nutzt 60 % Volatilität; der Future läuft bis zur Fälligkeit auf den Spotpreis zu.",
   },
   en: {
     title: "CASH AND CARRY · SPOT 100",
+    missions: "Try this",
+    mFair: "Slide the future to its fair value.",
+    mReverse: "Make the future cheap enough that the reverse trade pays.",
+    mPlay: "Play two price paths and compare the total at expiry.",
     future: "Futures price",
     days: "Time to expiry",
     daysUnit: "days",
@@ -70,16 +98,21 @@ const basisCopy = {
     edge: "Profit above funding",
     perHundred: "per 100",
     carry: (excess: string) =>
-      `Cash and carry: buy spot, sell the future. You lock in the basis and earn ${excess} per 100 more than the capital costs you.`,
+      `Cash and carry: buy spot, sell the future. You earn ${excess} per 100 more than the capital costs you.`,
     reverse: (excess: string) =>
-      `Reverse cash and carry: the future is too cheap. Borrow and sell spot, buy the future; that earns ${excess} per 100 if you can borrow the underlying cheaply.`,
+      `Reverse cash and carry: borrow and sell spot, buy the future. Earns ${excess} per 100 if you can borrow the underlying cheaply.`,
     flat: "No trade: nothing is left after interest and fees.",
-    table: "Result at expiry, wherever the price ends up",
-    terminal: "Price at expiry",
+    runTitle: "Dry run: random price, fixed result",
+    play: "Play a price path",
+    again: "New price path",
+    day: "Day",
+    hint: "Hover over the chart",
     spotLeg: "Spot long",
     futureLeg: "Future short",
-    total: "Total after fees",
-    caption: "Example values, not market data. Fair value S · e^(rT); simple annualised basis: (F/S − 1) · 365 / days.",
+    total: "Total",
+    at: (day: number, price: string) => `Day ${day} · price ${price}`,
+    caption:
+      "Example values, not market data. Fair value S · e^(rT); simple annualised basis. The dry run uses 60% volatility; the future converges to spot by expiry.",
   },
 } as const;
 
@@ -89,16 +122,48 @@ export function BasisLab({ lang = "de" }: { lang?: Locale }) {
   const [days, setDays] = useState(90);
   const [rate, setRate] = useState(0.04);
   const [feeBps, setFeeBps] = useState(10);
+  const [seed, setSeed] = useState(7);
+  const [runs, setRuns] = useState(0);
+  const clock = usePlayback(2600);
 
   const fair = fairFuture(SPOT, rate, days);
   const basis = annualisedBasis(SPOT, future, days);
   const fees = (SPOT * feeBps) / 10_000;
   const edge = future - fair - fees;
   const reverseEdge = fair - future - fees;
-  const outcomes = [70, 100, 130];
+
+  const run = useMemo(() => {
+    const path = pricePath(seed, days, 0.6);
+    const spot: Point[] = [];
+    const fut: Point[] = [];
+    const sum: Point[] = [];
+    path.forEach((price, day) => {
+      const futurePrice = price * (future / SPOT) ** ((days - day) / days);
+      spot.push([day, price - SPOT]);
+      fut.push([day, future - futurePrice]);
+      sum.push([day, price - SPOT + future - futurePrice - fees]);
+    });
+    const ys = [...spot, ...fut, ...sum].map(([, y]) => y);
+    const reach = Math.max(8, ...ys.map(Math.abs)) * 1.08;
+    return { path, spot, fut, sum, domain: [-reach, reach] as [number, number] };
+  }, [seed, days, future, fees]);
+
+  const shownDay = Math.round(clock.t * days);
+  const cut = (points: Point[]) => points.slice(0, shownDay + 1);
+
+  const missions = useMissions("basis", [
+    { id: "fair", label: t.mFair, done: Math.abs(future - fair) < 0.06 },
+    { id: "reverse", label: t.mReverse, done: reverseEdge > 0 },
+    { id: "play", label: t.mPlay, done: runs >= 2 },
+  ]);
+
+  function play() {
+    if (runs > 0) setSeed((s) => s + 1);
+    clock.play(() => setRuns((r) => r + 1));
+  }
 
   return (
-    <Lab title={t.title} caption={t.caption}>
+    <Lab title={t.title} caption={t.caption} missions={{ title: t.missions, items: missions }}>
       <Controls>
         <Slider label={t.future} value={future} min={98} max={106} step={0.05} onChange={setFuture} format={(v) => num(lang, v, 2)} />
         <Slider label={t.days} value={days} min={7} max={365} step={1} onChange={setDays} format={(v) => `${v} ${t.daysUnit}`} />
@@ -122,28 +187,36 @@ export function BasisLab({ lang = "de" }: { lang?: Locale }) {
             ? t.reverse(num(lang, reverseEdge, 2))
             : t.flat}
       </Verdict>
-      <div className="lab__table-wrap">
-        <table className="lab__table">
-          <caption className="lab__table-caption">{t.table}</caption>
-          <thead>
-            <tr>
-              <th>{t.terminal}</th>
-              <th>{t.spotLeg}</th>
-              <th>{t.futureLeg}</th>
-              <th>{t.total}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {outcomes.map((end) => (
-              <tr key={end}>
-                <td className="tnum">{num(lang, end, 0)}</td>
-                <td className="tnum">{signed(lang, end - SPOT, 2)}</td>
-                <td className="tnum">{signed(lang, future - end, 2)}</td>
-                <td className="tnum">{signed(lang, future - SPOT - fees, 2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="lab__subsection">
+        <div className="lab__subhead-row">
+          <h4 className="lab__subhead">{t.runTitle}</h4>
+          <PlayButton label={runs ? t.again : t.play} onClick={play} playing={clock.playing} />
+        </div>
+        <p className="lab__ticker tnum" aria-live="off">
+          {t.at(shownDay, num(lang, run.path[shownDay], 2))}
+        </p>
+        <Plot
+          title={t.runTitle}
+          series={[
+            { label: t.total, points: cut(run.sum) },
+            { label: t.spotLeg, points: cut(run.spot), tone: "warm" },
+            { label: t.futureLeg, points: cut(run.fut), tone: "muted", dashed: true },
+          ]}
+          xLabel={t.day}
+          xDomain={[0, days]}
+          yDomain={run.domain}
+          formatX={(v) => num(lang, v, 0)}
+          formatY={(v) => signed(lang, v, 0)}
+          hint={t.hint}
+          endDot
+          height={220}
+        />
+        <Stats>
+          <Stat label={t.spotLeg} value={signed(lang, run.spot[shownDay][1], 2)} tone={toneOf(run.spot[shownDay][1])} />
+          <Stat label={t.futureLeg} value={signed(lang, run.fut[shownDay][1], 2)} tone={toneOf(run.fut[shownDay][1])} />
+          <Stat label={t.total} value={signed(lang, run.sum[shownDay][1], 2)} tone={toneOf(run.sum[shownDay][1])} emphasis />
+        </Stats>
       </div>
     </Lab>
   );
@@ -154,6 +227,10 @@ export function BasisLab({ lang = "de" }: { lang?: Locale }) {
 const carryCopy = {
   de: {
     title: "FUNDING CARRY · SPOT LONG + PERP SHORT",
+    missions: "Aufgaben",
+    mFees: "Finde eine Haltedauer, bei der die Gebühren das Funding auffressen.",
+    mReturn: "Bring die Rendite über 15 % p. a.",
+    mSim: "Schalte auf simuliertes Funding und würfle einen neuen Pfad.",
     notional: "Positionsgröße",
     rate: "Funding pro 8 h (Mittel)",
     days: "Haltedauer",
@@ -173,12 +250,16 @@ const carryCopy = {
     capital: "Gebundenes Kapital",
     annual: "Rendite p. a.",
     liquidation: (move: string) =>
-      `Das Short-Bein wird bei einem Anstieg von etwa ${move} liquidiert. Die Spot-Seite gewinnt dann zwar genauso viel, liegt aber auf einem anderen Konto; ohne Nachschuss ist die Absicherung weg.`,
+      `Das Short-Bein wird bei einem Anstieg von etwa ${move} liquidiert. Die Spot-Seite gewinnt dann genauso viel, liegt aber auf einem anderen Konto; ohne Nachschuss ist die Absicherung weg.`,
     caption:
       "Vereinfachtes Modell: Funding auf den Nominalwert, keine Preisbewegung, Liquidation bei 0,5 % Maintenance Margin. Der simulierte Pfad ist erfunden und keine Prognose.",
   },
   en: {
     title: "FUNDING CARRY · SPOT LONG + PERP SHORT",
+    missions: "Try this",
+    mFees: "Find a holding period where fees eat all the funding.",
+    mReturn: "Push the return above 15% p.a.",
+    mSim: "Switch to simulated funding and roll a new path.",
     notional: "Position size",
     rate: "Funding per 8 h (mean)",
     days: "Holding period",
@@ -219,22 +300,35 @@ export function FundingCarryLab({ lang = "de" }: { lang?: Locale }) {
     return fundingCarry({ notional, ratesPer8h: rates, days, feeBpsPerLeg: fee, leverage });
   }, [notional, rate, days, fee, leverage, mode, seed]);
 
+  const line = useTweened(result.daily, `${mode}${seed}`);
   const liqMove = 1 / leverage - 0.005;
 
+  const missions = useMissions("carry", [
+    { id: "fees", label: t.mFees, done: rate > 0 && result.net < 0 },
+    { id: "return", label: t.mReturn, done: result.annualisedReturn > 0.15 },
+    { id: "sim", label: t.mSim, done: mode === "simulated" && seed > 11 },
+  ]);
+
   return (
-    <Lab title={t.title} caption={t.caption}>
-      <Segmented
-        label={t.mode}
-        value={mode}
-        onChange={setMode}
-        options={[
-          { value: "constant", label: t.constant },
-          { value: "simulated", label: t.simulated },
-        ]}
-      />
+    <Lab title={t.title} caption={t.caption} missions={{ title: t.missions, items: missions }}>
+      <div className="lab__toolbar">
+        <Segmented
+          label={t.mode}
+          value={mode}
+          onChange={setMode}
+          size="small"
+          options={[
+            { value: "constant", label: t.constant },
+            { value: "simulated", label: t.simulated },
+          ]}
+        />
+        {mode === "simulated" ? (
+          <PlayButton label={t.newPath} onClick={() => setSeed(seed + 1)} />
+        ) : null}
+      </div>
       <Plot
         title={t.pnl}
-        series={[{ label: t.pnl, points: result.daily }]}
+        series={[{ label: t.pnl, points: line }]}
         xLabel={t.day}
         formatX={(v) => num(lang, v, 0)}
         formatY={(v) => money(lang, v, 0, true)}
@@ -242,11 +336,6 @@ export function FundingCarryLab({ lang = "de" }: { lang?: Locale }) {
         endDot
         height={220}
       />
-      {mode === "simulated" ? (
-        <button type="button" className="btn btn--secondary lab__button" onClick={() => setSeed(seed + 1)}>
-          {t.newPath}
-        </button>
-      ) : null}
       <Stats>
         <Stat label={t.funding} value={money(lang, result.funding, 2, true)} tone={toneOf(result.funding)} />
         <Stat label={t.fees} value={money(lang, -result.fees, 2)} tone="down" />
@@ -262,111 +351,6 @@ export function FundingCarryLab({ lang = "de" }: { lang?: Locale }) {
         <Slider label={t.leverage} value={leverage} min={1} max={10} step={1} onChange={setLeverage} format={(v) => `${v}×`} />
       </Controls>
       <p className="lab__note">{t.liquidation(pct(lang, liqMove, 1))}</p>
-    </Lab>
-  );
-}
-
-/* ------------------------------------------------------------ Liquidation */
-
-const liqCopy = {
-  de: {
-    title: "HEBEL · LIQUIDATIONSPREIS",
-    side: "Richtung",
-    long: "Long",
-    short: "Short",
-    leverage: "Hebel",
-    maintenance: "Maintenance Margin",
-    vol: "Volatilität p. a.",
-    entry: "Einstieg",
-    liq: "Liquidation bei",
-    distance: "Abstand",
-    sigmas: "Tagesbewegungen",
-    touch: (d: number) => `P(Liquidation in ${d} ${d === 1 ? "Tag" : "Tagen"})`,
-    curve: "P(Liquidation in 30 Tagen) nach Hebel",
-    hint: "Fahr über das Diagramm",
-    lev: "Hebel",
-    caption:
-      "Faustregel für eine isolierte Position ohne Gebühren. Die Wahrscheinlichkeit nimmt normalverteilte Renditen an; echte Krypto-Renditen haben dickere Ränder, die Zahl ist also eher zu niedrig.",
-  },
-  en: {
-    title: "LEVERAGE · LIQUIDATION PRICE",
-    side: "Side",
-    long: "Long",
-    short: "Short",
-    leverage: "Leverage",
-    maintenance: "Maintenance margin",
-    vol: "Volatility p.a.",
-    entry: "Entry",
-    liq: "Liquidated at",
-    distance: "Distance",
-    sigmas: "Daily moves",
-    touch: (d: number) => `P(liquidation within ${d} ${d === 1 ? "day" : "days"})`,
-    curve: "P(liquidation within 30 days) by leverage",
-    hint: "Hover over the chart",
-    lev: "Leverage",
-    caption:
-      "Rule of thumb for an isolated position without fees. The probability assumes normally distributed returns; real crypto returns have fatter tails, so the number is more likely too low.",
-  },
-} as const;
-
-export function LiquidationLab({ lang = "de" }: { lang?: Locale }) {
-  const t = liqCopy[lang];
-  const [side, setSide] = useState<Side>("long");
-  const [leverage, setLeverage] = useState(10);
-  const [maintenance, setMaintenance] = useState(0.005);
-  const [vol, setVol] = useState(0.6);
-
-  const liq = liquidationPrice(SPOT, leverage, maintenance, side);
-  const distance = Math.abs(Math.log(liq / SPOT));
-  const dailySigma = vol / Math.sqrt(DAYS_PER_YEAR);
-
-  const curve = useMemo(
-    () =>
-      Array.from({ length: 100 }, (_, i): Point => {
-        const lev = i + 1;
-        const price = liquidationPrice(SPOT, lev, maintenance, side);
-        if (price <= 0) return [lev, 0];
-        return [lev, touchProbability(Math.abs(Math.log(price / SPOT)), vol, 30) * 100];
-      }),
-    [maintenance, side, vol],
-  );
-
-  return (
-    <Lab title={t.title} caption={t.caption}>
-      <Segmented
-        label={t.side}
-        value={side}
-        onChange={setSide}
-        options={[
-          { value: "long", label: t.long },
-          { value: "short", label: t.short },
-        ]}
-      />
-      <Stats>
-        <Stat label={t.entry} value={num(lang, SPOT, 2)} />
-        <Stat label={t.liq} value={num(lang, Math.max(liq, 0), 2)} emphasis />
-        <Stat label={t.distance} value={pct(lang, liq / SPOT - 1, 2, true)} tone={toneOf(side === "long" ? -1 : 1)} />
-        <Stat label={t.sigmas} value={`${num(lang, distance / dailySigma, 1)} σ`} />
-        {[1, 7, 30].map((d) => (
-          <Stat key={d} label={t.touch(d)} value={pct(lang, touchProbability(distance, vol, d), 1)} />
-        ))}
-      </Stats>
-      <Plot
-        title={t.curve}
-        series={[{ label: t.curve, points: curve }]}
-        xLabel={t.lev}
-        formatX={(v) => `${num(lang, v, 0)}×`}
-        formatY={(v) => (lang === "de" ? `${num(lang, v, 0)} %` : `${num(lang, v, 0)}%`)}
-        hint={t.hint}
-        markers={[{ x: leverage, label: `${leverage}×` }]}
-        yDomain={[0, 100]}
-        height={200}
-      />
-      <Controls>
-        <Slider label={t.leverage} value={leverage} min={1} max={100} step={1} onChange={setLeverage} format={(v) => `${v}×`} />
-        <Slider label={t.maintenance} value={maintenance} min={0.002} max={0.02} step={0.001} onChange={setMaintenance} format={(v) => pct(lang, v, 1)} />
-        <Slider label={t.vol} value={vol} min={0.2} max={1.2} step={0.05} onChange={setVol} format={(v) => pct(lang, v, 0)} />
-      </Controls>
     </Lab>
   );
 }

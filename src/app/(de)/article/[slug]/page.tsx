@@ -1,10 +1,11 @@
 // Formulas in the article body are KaTeX markup rendered at build time.
 import "katex/dist/katex.min.css";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ArticleView } from "@/components/article-view";
 import { PageFrame } from "@/components/page-frame";
-import { articlePath, getArticle, listArticles } from "@/lib/articles";
+import { localePath } from "@/i18n";
+import { articleIn, articlePath, getArticle, listArticles } from "@/lib/articles";
 import { pageMetadata } from "@/lib/page-metadata";
 import { articleBreadcrumb, articleNode } from "@/lib/structured-data";
 
@@ -24,6 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!found) return {};
 
   const { article } = found;
+  const articles = await listArticles();
+  const pathIn = (locale: "de" | "en") =>
+    articlePath((articleIn(articles, article, locale) ?? article).slug);
   return pageMetadata("de", articlePath(slug), article.title, article.description, {
     article: {
       publishedTime: article.date,
@@ -34,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
        language they are in, not the language of the chrome around them. */
     contentLocale: article.lang,
     keywords: article.topics,
+    languagePaths: { de: pathIn("de"), en: pathIn("en") },
   });
 }
 
@@ -43,6 +48,11 @@ export default async function Page({ params }: Props) {
   if (!found) notFound();
 
   const { article } = found;
+
+  // A piece written in the other language that has a translation into this
+  // one: send readers to the translation (also what the language toggle hits).
+  const own = articleIn(await listArticles(), article, "de");
+  if (own && own !== article) permanentRedirect(localePath("de", articlePath(own.slug)));
 
   return (
     <PageFrame

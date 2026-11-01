@@ -12,7 +12,7 @@
 import { ImageResponse } from "next/og";
 import { site, wortmarke } from "@/config";
 import { content, type Locale } from "@/i18n";
-import { articlesContent, fill, formatArticleDate } from "@/i18n/articles-content";
+import { articlesContent, articleTime, formatArticleDate } from "@/i18n/articles-content";
 import { getArticle } from "@/lib/articles";
 import { OgCard } from "./card";
 import { articleFigureSvg, marketFigureSvg } from "./figures";
@@ -64,7 +64,7 @@ export function articleOgImage(locale: Locale) {
     const eyebrow = [
       copy.kinds[article.kind],
       formatArticleDate(article.date, locale),
-      fill(copy.readingTime, { n: article.readingMinutes }),
+      articleTime(copy, article),
     ];
     const byline = article.authors?.length
       ? `${copy.authorsPrefix} ${article.authors.join(", ")}`

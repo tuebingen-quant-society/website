@@ -1,0 +1,632 @@
+/* Workshop mode for articles (src/components/lab/workshop.tsx): the chapter
+   bar, one module at a time, the pager between modules, and the quiet
+   furniture inside a module — glossary terms, takeaways and fold-outs for
+   background. The labs themselves live in lab.css. */
+
+/* ------------------------------------------------ Chapter bar */
+
+/* One segment per module, each filled by its missions. It sticks under the
+   site header while the module scrolls by, so "where am I, how far am I"
+   is always one glance away. */
+.workshop-nav--bar {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 5;
+  margin: 0 calc(-1 * var(--gutter)) var(--space-6);
+  padding: var(--space-3) var(--gutter) var(--space-2);
+  border-bottom: var(--border);
+  background: var(--paper);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+
+.workshop-nav__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The article body spaces consecutive list items; the bar must not. */
+.article__body .workshop-nav__list li + li {
+  margin-top: 0;
+}
+
+.workshop-nav--bar .workshop-nav__list {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 6px;
+}
+
+.workshop-nav__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 6px;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--ink-subtle);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.workshop-nav__item:hover,
+.workshop-nav__item[aria-current="step"] {
+  color: var(--ink);
+}
+
+.workshop-nav__num {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.workshop-nav__num svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: var(--up);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.workshop-nav__label {
+  overflow: hidden;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.workshop-nav__meter {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--rule-strong);
+  overflow: hidden;
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.workshop-nav__meter > span {
+  position: absolute;
+  inset: 0;
+  background: var(--grad-accent);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.workshop-nav__item[aria-current="step"] .workshop-nav__meter {
+  box-shadow: 0 0 0 1px var(--ink-muted);
+}
+
+/* A finished module: the bar fills and catches the light once. */
+.workshop-nav__item.is-complete .workshop-nav__meter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: workshop-shine 1100ms var(--ease-out) 1;
+}
+
+@keyframes workshop-shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.workshop-nav__now {
+  margin-top: 2px;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.workshop-nav__now .tnum {
+  margin-right: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* Small screens: numbers and bars only, the current module named below. */
+@media (max-width: 719px) {
+  .workshop-nav--bar .workshop-nav__label {
+    display: none;
+  }
+
+  .workshop-nav--bar .workshop-nav__item {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .workshop-nav--bar .workshop-nav__meter {
+    justify-self: stretch;
+  }
+}
+
+@media (min-width: 720px) {
+  .workshop-nav__now {
+    display: none;
+  }
+}
+
+/* Wide screens: the section list beside the text becomes the module list,
+   and the bar above the text steps aside. */
+.article__rail:has(.workshop-nav) .article-outline {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .article--wide .workshop-nav--bar {
+    display: none;
+  }
+}
+
+.workshop-nav--rail {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-6));
+  margin-top: var(--space-7);
+}
+
+.workshop-nav__title {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.workshop-nav--rail .workshop-nav__list {
+  display: grid;
+  gap: 2px;
+  margin-top: var(--space-3);
+}
+
+.workshop-nav--rail .workshop-nav__item {
+  grid-template-columns: 22px minmax(0, 1fr);
+  min-height: 0;
+  padding: 7px 10px 8px 6px;
+  border-radius: var(--radius-sm);
+  gap: 5px 10px;
+}
+
+.workshop-nav--rail .workshop-nav__item:hover {
+  background: var(--surface);
+}
+
+.workshop-nav--rail .workshop-nav__item[aria-current="step"] {
+  background: var(--surface-2);
+}
+
+.workshop-nav--rail .workshop-nav__num {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+}
+
+.workshop-nav--rail .workshop-nav__item[aria-current="step"] .workshop-nav__num {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.workshop-nav--rail .workshop-nav__item.is-complete .workshop-nav__num {
+  border-color: var(--up);
+}
+
+.workshop-nav--rail .workshop-nav__label {
+  font-size: 0.84375rem;
+  font-weight: 400;
+}
+
+.workshop-nav--rail .workshop-nav__item[aria-current="step"] .workshop-nav__label {
+  font-weight: 600;
+}
+
+.workshop-nav--rail .workshop-nav__meter {
+  grid-column: 2;
+  height: 2px;
+}
+
+.workshop-nav--rail .workshop-nav__item[aria-current="step"] .workshop-nav__meter {
+  box-shadow: none;
+}
+
+.workshop-nav .sr-only,
+.workshop .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------ Module */
+
+.workshop {
+  scroll-margin-top: var(--header-h);
+}
+
+@media (min-width: 1200px) {
+  .article--wide .workshop {
+    scroll-margin-top: calc(var(--header-h) + var(--space-6));
+  }
+}
+
+.workshop-module {
+  animation: workshop-enter 380ms var(--ease-out);
+}
+
+@keyframes workshop-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.workshop-module > * + * {
+  margin-top: var(--space-5);
+}
+
+.workshop-module__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-subtle);
+}
+
+.workshop-module__kicker > :first-child {
+  color: var(--accent);
+}
+
+.article__body .workshop-module > h2 {
+  margin-top: var(--space-2);
+  font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.6rem);
+  letter-spacing: -0.02em;
+}
+
+.article__body .workshop-module > h2 + p {
+  font-size: var(--fs-lead);
+  color: var(--ink-muted);
+}
+
+.workshop-module__complete {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--up) 40%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--up) 8%, transparent);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+  animation: workshop-enter 380ms var(--ease-out);
+}
+
+.workshop-module__complete svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  fill: var(--up);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.workshop-module__complete circle {
+  stroke: var(--up);
+}
+
+.workshop-module__complete path {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 1.8;
+}
+
+/* ------------------------------------------------ Pager */
+
+.workshop-module__pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.article__body .workshop-module > .workshop-module__pager {
+  margin-top: var(--space-8);
+}
+
+.workshop-pager {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 72px;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.workshop-pager:hover {
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+
+.workshop-pager--next {
+  grid-column: 2;
+  align-items: flex-end;
+  text-align: right;
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--rule-strong));
+  background: linear-gradient(135deg, var(--accent-wash), var(--surface) 70%);
+}
+
+.workshop-pager__dir {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-subtle);
+}
+
+.workshop-pager--next .workshop-pager__dir {
+  color: var(--accent);
+}
+
+.workshop-pager--back .workshop-pager__dir::before {
+  content: "← ";
+}
+
+.workshop-pager--next .workshop-pager__dir::after {
+  content: " →";
+}
+
+.workshop-pager__label {
+  font-family: var(--font-display);
+  font-size: var(--fs-lead);
+  line-height: 1.25;
+}
+
+/* ------------------------------------------------ Summary */
+
+.workshop-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.workshop-summary__total {
+  font-family: var(--font-display);
+  font-size: var(--fs-lead);
+}
+
+.article__body .workshop-summary__list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article__body .workshop-summary__list li + li {
+  margin-top: 0;
+}
+
+.workshop-summary__row {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) 2fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: 8px var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  font: inherit;
+  font-size: var(--fs-small);
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.workshop-summary__row:hover {
+  background: var(--surface-2);
+}
+
+.workshop-summary__bar {
+  position: relative;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--rule-strong);
+  overflow: hidden;
+}
+
+.workshop-summary__bar > span {
+  position: absolute;
+  inset: 0;
+  background: var(--grad-accent);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.workshop-summary__count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-subtle);
+}
+
+/* ------------------------------------------------ Glossary terms */
+
+/* "**Term** definition" list items, set as a grid of small cards: the four
+   words a module needs, without a paragraph around them. */
+.article__body .terms ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.article__body .terms li {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.article__body .terms li strong {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lead);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------ Takeaways */
+
+.article__body .takeaways {
+  padding: var(--space-4) var(--space-5);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+}
+
+.takeaways__title {
+  font-weight: 600;
+}
+
+.article__body .takeaways ul {
+  margin-top: var(--space-2);
+}
+
+.article__body .takeaways li + li {
+  margin-top: var(--space-1);
+}
+
+/* ------------------------------------------------ Fold-outs */
+
+/* Background, formulas and history: closed by default, so the module reads
+   as "do this" first and "here is why" on request. */
+.article__body .more {
+  border-top: var(--border);
+  border-bottom: var(--border);
+  interpolate-size: allow-keywords;
+}
+
+.article__body .more + .more {
+  margin-top: 0;
+  border-top: 0;
+}
+
+.more__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 52px;
+  padding: var(--space-3) 0;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.more__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Plus when closed, minus when open: the vertical bar folds away. Drawn,
+   not typed, so it stays centred whatever the font's metrics do, and
+   nothing rotates, so the bars stay crisp. */
+.more__icon {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.more__icon::before,
+.more__icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  margin: -1px 0 0 -5px;
+  border-radius: 1px;
+  background: var(--accent);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.more__icon::after {
+  transform: rotate(90deg);
+}
+
+.more[open] > .more__summary .more__icon::after {
+  transform: rotate(90deg) scaleX(0);
+}
+
+.more__summary:hover .more__icon {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--rule-strong));
+}
+
+.more__summary:hover {
+  color: var(--accent);
+}
+
+.more::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size var(--dur-slow) var(--ease-out),
+    content-visibility var(--dur-slow) allow-discrete;
+}
+
+.more[open]::details-content {
+  block-size: auto;
+}
+
+.more__body {
+  padding-bottom: var(--space-5);
+}
+
+.article__body .more__body > * + * {
+  margin-top: var(--space-4);
+}

@@ -3,67 +3,88 @@ import {
   ArbitrageLab,
   BasisLab,
   FundingCarryLab,
+  FundingLab,
   LiquidationLab,
+  MarketMap,
+  Module,
+  MonteCarloLab,
   OptionPricer,
   PayoffLab,
   Quiz,
+  StrategyExplorer,
+  Workshop,
+  WorkshopSummary,
 } from "@/components/lab";
 
 export const meta = {
   title: "Optionen, Futures, Perpetuals: Derivate und Krypto zum Ausprobieren",
   description:
-    "Wie Futures, Optionen und Perpetuals funktionieren, wie Kryptomärkte aufgebaut sind und welche Arbitrage- und Quant-Strategien es dort gibt. Mit acht Rechnern zum Ausprobieren.",
+    "Ein Workshop in acht Modulen: Futures, Optionen, Perpetuals, Kryptomärkte und die Arbitrage- und Quant-Strategien dort.",
   date: "2026-10-24",
+  updated: "2026-11-01",
+  duration: [15, 45],
   lang: "de",
+  translation: "options-futures-perpetuals",
   kind: "workshop",
   authors: ["Armin Burkhardt"],
   topics: ["Optionen", "Futures", "Perpetuals", "Krypto", "Arbitrage"],
 };
 
-_This article is also available [in English](/en/article/options-futures-perpetuals)._
+_This workshop is also available [in English](/en/article/options-futures-perpetuals)._
 
-Dieser Text begleitet unseren Workshop zu Derivaten und Krypto. Du brauchst
-kein Vorwissen außer Prozentrechnung; alles Weitere bauen wir Schritt für
-Schritt auf. Die Rechner im Text sind zum Anfassen gedacht: Schieb die Regler,
-bis du ein Gefühl dafür hast, was passiert.
+Acht Module, jedes mit einem Labor. Oben in jedem Labor stehen Aufgaben; sie
+haken sich selbst ab, sobald du sie gelöst hast. Vorwissen brauchst du keins
+außer Prozentrechnung.
 
-Alle Zahlen sind Beispielwerte und keine Marktdaten.
+<Workshop
+  id="derivate-krypto"
+  lang="de"
+  modules={[
+    { id: "futures", label: "Futures" },
+    { id: "options", label: "Optionen" },
+    { id: "pricing", label: "Bewertung" },
+    { id: "perpetuals", label: "Perpetuals" },
+    { id: "markets", label: "Kryptomärkte" },
+    { id: "arbitrage", label: "Arbitrage" },
+    { id: "strategies", label: "Strategien" },
+    { id: "check", label: "Check" },
+  ]}
+>
 
-## Was ein Derivat ist
+<Module id="futures">
 
-Ein Derivat ist ein Vertrag, dessen Wert von einem anderen Preis abhängt. Dieser
-andere Preis heißt Basiswert (Underlying); das kann eine Aktie sein, ein
-Index, Öl, ein Zinssatz oder Bitcoin. Du kaufst also nicht das Ding selbst,
-sondern eine Abmachung darüber.
+## Futures
 
-Derivate gibt es aus zwei Gründen. Erstens zum Absichern: Eine Airline will
-wissen, was Kerosin in sechs Monaten kostet. Zweitens zum Spekulieren und
-Arbitrieren: Wer eine Meinung zum Preis hat, kann sie mit wenig Kapital
-handeln, und wer Preisunterschiede zwischen Märkten findet, kann sie
-einsammeln. Für Quants ist vor allem der zweite Teil interessant; dafür muss
-man aber zuerst verstehen, was ein Derivat fair kosten sollte.
+Ein Derivat ist ein Vertrag, dessen Wert an einem anderen Preis hängt. Der
+einfachste ist der Future: Preis heute festlegen, kaufen oder verkaufen später.
 
-## Futures: heute ausmachen, später liefern
+<Terms>
 
-Ein Future ist ein standardisierter Vertrag, einen Basiswert zu einem heute
-festgelegten Preis an einem späteren Termin zu kaufen oder zu verkaufen. Wer
-kauft, ist long; wer verkauft, ist short. Bezahlt wird erst bei Fälligkeit.
+- **Long und Short** Wer kauft, ist long; wer verkauft, ist short. Bezahlt wird erst bei Fälligkeit.
+- **Margin** Statt des vollen Preises hinterlegst du eine Sicherheit, oft 5 bis 20 %. Daher kommt der Hebel.
+- **Mark-to-Market** Gewinne und Verluste werden laufend mit deinem Konto verrechnet.
+- **Basis** Abstand zwischen Future und Spot. Annualisiert ist sie deine Rendite im Cash and Carry.
 
-- **Margin**: Statt des vollen Preises hinterlegst du nur eine Sicherheit, oft
-  5 bis 20 % des Nominalwerts. Daher kommt der Hebel.
-- **Mark-to-Market**: Gewinne und Verluste werden täglich (bei Krypto
-  laufend) mit deinem Konto verrechnet. Fällt die Margin unter eine Grenze,
-  musst du nachschießen oder die Position wird geschlossen.
-- **Settlement**: Bei Fälligkeit wird entweder geliefert (physisch) oder nur
-  die Differenz bezahlt (Cash Settlement). Krypto-Futures an der CME und bei
-  Deribit werden in bar abgerechnet.
+</Terms>
 
-### Was ein Future kosten sollte
+<BasisLab lang="de" />
 
-Angenommen, Bitcoin steht bei 100 und du brauchst ihn in einem Jahr. Du kannst
-ihn heute kaufen und halten; dafür bindest du 100 an Kapital, das sonst 4 %
-Zinsen bringen würde. Oder du kaufst einen Future. Damit beide Wege gleich viel
-kosten, muss der Future ungefähr bei 104 liegen. Allgemein:
+<Takeaways title="Kurz gesagt">
+
+- Der faire Preis ist Spot plus Finanzierungskosten: $$F = S \cdot e^{rT}$$.
+- Liegt der Future darüber, kaufst du Spot und verkaufst den Future. Der Gewinn
+  steht ab Tag eins fest, egal wo der Kurs landet.
+- Risikolos ist das nicht: Steigt der Kurs stark, braucht die Short-Seite mehr
+  Margin, obwohl dein Spot genauso viel gewinnt.
+
+</Takeaways>
+
+<Details summary="Warum F = S · e^(rT)?">
+
+Du brauchst Bitcoin in einem Jahr. Weg eins: heute für 100 kaufen und halten;
+das bindet Kapital, das sonst 4 % Zinsen brächte. Weg zwei: einen Future kaufen.
+Beide Wege müssen gleich viel kosten, sonst gibt es Arbitrage. Also liegt der
+Future bei etwa 104.
 
 <Formula>
 
@@ -77,60 +98,84 @@ $$
 
 </Formula>
 
-Das ist kein Modell über die Zukunft, sondern ein Arbitrageargument. Notiert
-der Future deutlich über diesem Wert, kaufst du Spot, verkaufst den Future und
-lieferst bei Fälligkeit. Dein Gewinn steht ab dem ersten Tag fest, egal wo der
-Kurs landet. Das heißt **Cash and Carry**.
+Das ist kein Modell über die Zukunft, sondern ein Arbitrageargument.
 
-Liegt der Future über Spot, nennt man das **Contango**; liegt er darunter,
-**Backwardation**. In Krypto ist Contango der Normalfall, weil viele
-Marktteilnehmer gehebelt long sein wollen und dafür eine Prämie bezahlen. Die
-Differenz zwischen Future und Spot heißt **Basis**; annualisiert ist sie die
-Rendite, die du mit Cash and Carry einlockst.
+</Details>
 
-<BasisLab lang="de" />
+<Details summary="Contango, Backwardation und Settlement">
 
-Schau dir die Tabelle unter dem Rechner an: Die Summe ist in jeder Zeile
-gleich. Der Kurs bei Fälligkeit taucht im Ergebnis nicht auf; genau das macht
-den Trade so beliebt. Er ist trotzdem nicht risikolos. Die Short-Seite braucht
-Margin, und steigt der Kurs stark, musst du sie aufstocken, obwohl dein Spot
-genauso viel gewinnt.
+Liegt der Future über Spot, heißt das **Contango**; darunter **Backwardation**.
+In Krypto ist Contango der Normalfall: Viele wollen gehebelt long sein und
+zahlen dafür eine Prämie.
 
-## Optionen: ein Recht, keine Pflicht
+Bei Fälligkeit wird entweder geliefert (physisch) oder nur die Differenz
+bezahlt (Cash Settlement). Krypto-Futures an der CME und bei Deribit werden in
+bar abgerechnet.
 
-Eine Option gibt dir das Recht, einen Basiswert zu einem festgelegten Preis
-(dem **Strike**) zu kaufen oder zu verkaufen. Anders als beim Future musst du
-nicht; du übst nur aus, wenn es sich lohnt. Dieses Recht kostet eine
-**Prämie**, die du beim Kauf bezahlst.
+</Details>
 
-- **Call**: Recht zu kaufen. Lohnt sich, wenn der Kurs über dem Strike liegt.
-- **Put**: Recht zu verkaufen. Lohnt sich, wenn der Kurs unter dem Strike
-  liegt.
-- **Europäisch vs. amerikanisch**: Europäische Optionen kannst du nur bei
-  Fälligkeit ausüben, amerikanische jederzeit. Die meisten Krypto-Optionen
-  (z. B. auf Deribit) sind europäisch.
-- **Moneyness**: Ein Call mit Strike 90 bei Kurs 100 ist _in the money_, mit
-  Strike 110 _out of the money_, mit Strike 100 _at the money_.
+</Module>
 
-Der Käufer kann höchstens die Prämie verlieren. Der Verkäufer (Stillhalter)
-bekommt die Prämie sicher, trägt dafür aber das Risiko einer großen Bewegung.
-Interessant wird es, wenn du mehrere Optionen kombinierst. Im Labor unten
-kannst du sieben Standardstrategien durchspielen.
+<Module id="options">
+
+## Optionen
+
+Eine Option ist ein Recht, keine Pflicht: Du kaufst oder verkaufst nur, wenn es
+sich lohnt. Dieses Recht kostet eine Prämie.
+
+<Terms>
+
+- **Call** Recht zu kaufen. Lohnt sich, wenn der Kurs über dem Strike liegt.
+- **Put** Recht zu verkaufen. Lohnt sich, wenn der Kurs unter dem Strike liegt.
+- **Strike** Der Preis, zu dem du kaufen oder verkaufen darfst.
+- **Prämie** Was das Recht kostet. Der Käufer verliert höchstens sie.
+
+</Terms>
 
 <PayoffLab lang="de" />
 
-Die durchgezogene Linie ist dein Gewinn oder Verlust bei Fälligkeit, die
-gestrichelte der Wert nach halber Laufzeit. Der Abstand zwischen beiden ist der
-**Zeitwert**: Vor Fälligkeit ist eine Option mehr wert als ihr innerer Wert,
-weil der Kurs sich noch bewegen kann. Erhöh die Volatilität und beobachte, wie
-die Prämie steigt.
+<Takeaways title="Kurz gesagt">
 
-### Was eine Option kostet
+- Durchgezogen: Gewinn oder Verlust bei Fälligkeit. Gestrichelt: der Wert
+  heute. Der Abstand ist der **Zeitwert**; er schmilzt bis zur Fälligkeit.
+- Wer Optionen verkauft, kassiert die Prämie sicher und trägt dafür das Risiko
+  großer Bewegungen.
+- Kombinationen aus Calls, Puts und Basiswert bauen fast jedes Profil.
 
-1973 haben Fischer Black und Myron Scholes eine Formel für den fairen Preis
-einer europäischen Option veröffentlicht. Die Idee: Eine Option lässt sich mit
-dem Basiswert und Cash laufend nachbauen (replizieren). Was das Nachbauen
-kostet, ist der faire Preis. Für einen Call:
+</Takeaways>
+
+<Details summary="Europäisch, amerikanisch und Moneyness">
+
+Europäische Optionen kannst du nur bei Fälligkeit ausüben, amerikanische
+jederzeit. Die meisten Krypto-Optionen, etwa auf Deribit, sind europäisch.
+
+Ein Call mit Strike 90 bei Kurs 100 ist _in the money_, mit Strike 110 _out of
+the money_, mit Strike 100 _at the money_.
+
+</Details>
+
+</Module>
+
+<Module id="pricing">
+
+## Bewertung
+
+1973 haben Fischer Black und Myron Scholes gezeigt, wie man eine Option aus
+Basiswert und Cash nachbaut. Was das Nachbauen kostet, ist der faire Preis.
+
+<OptionPricer lang="de" />
+
+<Takeaways title="Kurz gesagt">
+
+- Alle Eingaben sind beobachtbar bis auf die Volatilität. Man rechnet sie aus
+  dem Marktpreis zurück: die **implizite Volatilität**.
+- Die **Greeks** messen, wie empfindlich der Preis reagiert. Delta ist, wie
+  viel Basiswert du effektiv hältst; Theta, was dich jeder Tag kostet.
+- Put-Call-Parität gilt ohne Modell: Call minus Put ergibt einen Future.
+
+</Takeaways>
+
+<Details summary="Die Formel">
 
 <Formula>
 
@@ -147,51 +192,63 @@ $$
 
 </Formula>
 
-Bis auf eine Größe sind alle Eingaben beobachtbar: Kurs, Strike, Laufzeit und
-Zins. Die Volatilität σ ist es nicht. Deshalb dreht man die Formel in der
-Praxis um und rechnet aus dem Marktpreis die **implizite Volatilität** zurück.
 Optionshändler sprechen deshalb oft gar nicht über Preise, sondern über Vol:
 „Der 30-Tage-Call handelt bei 55 Vol.“
 
-Wie empfindlich der Preis auf jede Eingabe reagiert, messen die **Greeks**:
+</Details>
 
-| Greek | Misst                                 | Faustregel                                   |
-| ----- | ------------------------------------- | -------------------------------------------- |
-| Delta | Preisänderung pro 1 im Basiswert      | ATM-Call ≈ 0,5; wie viel Basiswert du „hast“ |
-| Gamma | Änderung des Deltas pro 1 im Basiswert | am größten ATM und kurz vor Fälligkeit       |
-| Vega  | Preisänderung pro Vol-Punkt           | lange Laufzeiten reagieren stärker           |
-| Theta | Preisänderung pro Tag                 | Käufer verlieren täglich Zeitwert            |
+<Details summary="Die Greeks im Überblick">
 
-Ein wichtiger Zusammenhang gilt sogar ganz ohne Modell, die
-**Put-Call-Parität**: `C − P = S − K · e^(−rT)`. Ein gekaufter Call plus ein
-verkaufter Put mit gleichem Strike ergibt dasselbe wie ein Future. Weicht der
-Markt davon ab, gibt es Arbitrage. Im Rechner siehst du beide Seiten der
-Gleichung; sie stimmen immer überein.
+| Greek | Misst                                  | Faustregel                              |
+| ----- | -------------------------------------- | --------------------------------------- |
+| Delta | Preisänderung pro 1 im Basiswert       | ATM-Call ≈ 0,5                          |
+| Gamma | Änderung des Deltas pro 1 im Basiswert | am größten ATM und kurz vor Fälligkeit  |
+| Vega  | Preisänderung pro Vol-Punkt            | lange Laufzeiten reagieren stärker      |
+| Theta | Preisänderung pro Tag                  | Käufer verlieren täglich Zeitwert       |
 
-<OptionPricer lang="de" />
+</Details>
 
-Der Monte-Carlo-Teil zeigt, wie man Optionen bewertet, für die es keine
-geschlossene Formel gibt: Kurse simulieren, Auszahlungen mitteln, abzinsen. Bei
-1.000 Pfaden liegst du oft noch einige Zehntel daneben; bei 100.000 Pfaden ist der Fehler
-zehnmal kleiner, weil er mit 1/√N schrumpft.
+Nicht jede Option hat eine Formel. Dann simuliert man: viele Kursverläufe
+würfeln, Auszahlungen mitteln, abzinsen.
 
-## Perpetuals: Futures ohne Ablaufdatum
+<MonteCarloLab lang="de" />
 
-Ein Perpetual Future (kurz Perp) ist ein Future, der nie fällig wird. Die Idee
-stammt aus einem Paper von Robert Shiller von 1993; populär wurde sie 2016, als
-BitMEX den ersten Bitcoin-Perp gestartet hat. Heute sind Perps das meistgehandelte
-Produkt in Krypto, mit deutlich mehr Volumen als der Spotmarkt.
+</Module>
 
-Ohne Fälligkeit fehlt aber der Mechanismus, der einen normalen Future am Ende
-zum Spotpreis zwingt. Die Lösung heißt **Funding**: Long und Short zahlen sich
-in festen Abständen gegenseitig einen kleinen Betrag.
+<Module id="perpetuals">
 
-- Notiert der Perp **über** Spot, ist das Funding positiv. Longs zahlen an
-  Shorts. Das macht Long-Sein teurer und drückt den Preis Richtung Spot.
-- Notiert der Perp **unter** Spot, ist das Funding negativ. Shorts zahlen an
-  Longs.
+## Perpetuals
 
-Die meisten Börsen nutzen dafür dieselbe Regel:
+Ein Perp ist ein Future ohne Ablaufdatum und heute das meistgehandelte Produkt
+in Krypto. Weil keine Fälligkeit ihn zum Spotpreis zwingt, übernimmt das ein
+anderer Mechanismus: das Funding.
+
+<Terms>
+
+- **Funding** Long und Short zahlen sich alle paar Stunden einen kleinen Betrag. Die Richtung zieht den Perp zum Spot.
+- **Premium** Wie weit der Perp über oder unter Spot notiert.
+- **Hebel** Mit Hebel L hinterlegst du nur 1/L des Nominalwerts.
+- **Liquidation** Läuft der Kurs um ungefähr 1/L gegen dich, schließt die Börse deine Position.
+
+</Terms>
+
+<FundingLab lang="de" />
+
+Hohe Hebel sind bei Perps normal, 50× und mehr. Was das bedeutet, zeigt der
+Stresstest.
+
+<LiquidationLab lang="de" />
+
+<Takeaways title="Kurz gesagt">
+
+- Positives Funding: Longs zahlen Shorts. In der flachen Zone liegt es bei
+  0,01 % pro 8 Stunden, das sind 10,95 % pro Jahr.
+- Bei 20× Hebel liegt die Liquidation knapp 5 % entfernt; bei 60 %
+  Volatilität sind das weniger als zwei normale Tage.
+
+</Takeaways>
+
+<Details summary="Die Funding-Formel">
 
 <Formula>
 
@@ -205,21 +262,14 @@ $$
 
 </Formula>
 
-Solange der Premium Index zwischen −0,04 % und +0,06 % liegt, ist das Funding
-also genau 0,01 % pro 8 Stunden. Das klingt nach wenig; dreimal täglich ergibt
-es aber 10,95 % pro Jahr. Für BTC wird bei Binance und BitMEX alle 8 Stunden bezahlt,
-bei Hyperliquid stündlich (jeweils ein Achtel des 8-Stunden-Satzes). Laut dem
+Binance und BitMEX zahlen für BTC alle 8 Stunden, Hyperliquid stündlich
+(jeweils ein Achtel des 8-Stunden-Satzes). Laut dem
 [BitMEX-Derivatebericht für Q3 2025](https://blog.bitmex.com/2025q3-derivatives-report)
-war das BTC-Funding auf BitMEX, Binance und Hyperliquid in über 92 % der Zeit positiv. In
-den frühen Jahren lag es zeitweise über 0,2 % pro 8 Stunden, also über 200 %
-annualisiert.
+war das BTC-Funding dort in über 92 % der Zeit positiv.
 
-### Hebel und Liquidation
+</Details>
 
-Perps lassen sich mit hohem Hebel handeln, je nach Börse 50× und mehr. Mit Hebel L
-hinterlegst du nur 1/L des Nominalwerts. Läuft der Kurs um ungefähr diesen
-Anteil gegen dich (abzüglich der Maintenance Margin), schließt die Börse deine
-Position zwangsweise. Das ist die **Liquidation**.
+<Details summary="Liquidationspreis und Auto-Deleveraging">
 
 <Formula>
 
@@ -235,199 +285,141 @@ $$
 
 </Formula>
 
-Reicht deine Margin bei einer Liquidation nicht, springt ein
-Versicherungsfonds der Börse ein. Ist auch der leer, werden profitable
-Positionen auf der Gegenseite automatisch verkleinert (**Auto-Deleveraging**,
-ADL). Das trifft genau die Trader, die eigentlich gewinnen; für
-Arbitrage-Strategien ist das ein echtes Risiko.
+Reicht die Margin bei einer Liquidation nicht, springt der Versicherungsfonds
+der Börse ein. Ist der leer, werden profitable Positionen auf der Gegenseite
+automatisch verkleinert (**Auto-Deleveraging**). Das trifft genau die, die
+eigentlich gewinnen.
 
-<LiquidationLab lang="de" />
+</Details>
 
-Der Rechner übersetzt den Abstand zur Liquidation in Tagesbewegungen. Bei 60 %
-Volatilität bewegt sich der Kurs an einem normalen Tag um etwa 3 %. Mit 20×
-Hebel liegst du also weniger als zwei normale Tage von der Liquidation
-entfernt.
+<Details summary="Woher Perps kommen">
 
-## Krypto-Märkte in fünf Minuten
+Die Idee stammt aus einem Paper von Robert Shiller von 1993. Populär wurde sie
+2016, als BitMEX den ersten Bitcoin-Perp startete. Heute handeln Perps mehr
+Volumen als der Spotmarkt.
 
-Krypto unterscheidet sich von klassischen Märkten weniger in der Mathematik als
-in der Marktstruktur:
+</Details>
 
-- **Rund um die Uhr**: Kein Börsenschluss, keine Feiertage. Liquidität ist
-  nachts und am Wochenende dünner, Bewegungen dafür oft größer.
-- **Fragmentiert**: Derselbe Coin handelt gleichzeitig auf dutzenden
-  Börsen, gegen verschiedene Stablecoins und als Spot, Future, Perp und Option.
-  Preisunterschiede sind deshalb häufiger als bei einer Aktie mit einer
-  Heimatbörse.
-- **CEX und DEX**: Zentrale Börsen (Binance, Coinbase, Kraken, …) funktionieren
-  wie klassische Börsen mit Orderbuch und Verwahrung. Dezentrale Börsen
-  (Uniswap, Hyperliquid, …) laufen auf einer Blockchain; du handelst aus
-  deiner eigenen Wallet.
-- **Stablecoins**: Token wie USDT und USDC sollen 1 $ wert sein und sind die
-  eigentliche Handelswährung. Sie können sich aber vom Dollar lösen; USDC fiel
-  im März 2023 nach dem Zusammenbruch der Silicon Valley Bank kurz auf etwa
-  0,88 $.
-- **Gegenparteirisiko**: Auf einer CEX gehört dein Guthaben rechtlich oft nur
-  einer Forderung gegen die Börse. Bei FTX waren im November 2022 Milliarden an
-  Kundengeldern weg.
-- **Regulierung**: In der EU gilt seit Ende 2024 vollständig die
-  [MiCA-Verordnung](https://eur-lex.europa.eu/eli/reg/2023/1114/oj), die
-  Krypto-Dienstleister und Stablecoin-Emittenten lizenziert.
+</Module>
 
-### Wie eine DEX Preise stellt
+<Module id="markets">
 
-Viele DEXs haben kein Orderbuch, sondern einen **Automated Market Maker**
-(AMM). Ein Pool hält zwei Token, z. B. ETH und USDC, und erlaubt jeden Tausch,
-solange das Produkt der Bestände gleich bleibt: `x · y = k`. Der Preis ergibt
-sich aus dem Verhältnis der Bestände. Verkaufst du ETH in den Pool, steigt x,
-y sinkt, und ETH wird im Pool billiger. Je größer deine Order im Verhältnis zum
-Pool, desto schlechter dein Durchschnittspreis.
+## Kryptomärkte
+
+Die Mathematik ist dieselbe wie an klassischen Märkten. Anders ist die
+Marktstruktur, und genau dort entstehen die Gelegenheiten.
+
+<MarketMap lang="de" />
+
+Viele dezentrale Börsen haben kein Orderbuch, sondern einen Pool mit einer
+Regel: Das Produkt der Bestände bleibt gleich, $$x \cdot y = k$$. Der Preis
+ergibt sich aus dem Verhältnis.
 
 <AmmLab lang="de" />
 
-Nach deinem Trade notiert der Pool unter dem Preis an den großen Börsen. Diese
-Lücke schließen Arbitrageure, oft noch im selben Block. Der Pool selbst
-„weiß“ nichts vom Marktpreis; Arbitrage ist der Mechanismus, der ihn
-korrekt hält. Wie das [Uniswap-v2-Whitepaper](https://uniswap.org/whitepaper.pdf)
-beschreibt, ist das gewollt: Die Gebühren der Trader bezahlen die
-Liquiditätsanbieter für genau dieses Risiko.
+<Takeaways title="Kurz gesagt">
 
-## Wo Quants in Krypto Geld verdienen
+- Je größer deine Order im Verhältnis zum Pool, desto schlechter dein
+  Durchschnittspreis.
+- Der Pool kennt den Marktpreis nicht. Arbitrageure halten ihn korrekt und
+  werden dafür bezahlt.
 
-Die Strategien lassen sich grob in zwei Gruppen teilen. Bei
-**arbitrageartigen Trades** steht der Gewinn beim Einstieg fast fest; das
-Risiko liegt in der Ausführung und bei der Gegenpartei. Bei **statistischen
-Strategien** hast du einen Vorteil im Mittel, verlierst aber einzelne Trades.
-Arbitrage ist selten gratis: Meist bezahlst du mit Kapital, Geschwindigkeit
-oder einem Risiko, das im Modell nicht auftaucht.
+</Takeaways>
 
-### Cash and Carry mit Futures
+<Details summary="Mehr zu AMMs">
 
-Das kennst du schon aus dem ersten Rechner: Spot kaufen, Quartals-Future
-verkaufen, bis zur Fälligkeit halten. Die Rendite ist die annualisierte Basis
-abzüglich Gebühren. Im Vergleich zum Funding-Carry ist sie für die Laufzeit
-fest; dafür ist Kapital bis zum Verfall gebunden.
+Wie das [Uniswap-v2-Whitepaper](https://uniswap.org/whitepaper.pdf) beschreibt,
+ist die Lücke nach jedem Trade gewollt: Die Gebühren der Trader bezahlen die
+Liquiditätsanbieter für das Risiko, dass Arbitrageure an ihnen verdienen.
+Geschlossen wird die Lücke oft noch im selben Block.
 
-### Funding-Carry mit Perps
+</Details>
 
-Dieselbe Idee mit einem Perp: Spot long, Perp short, gleicher Nominalwert. Die
-Kursbewegungen heben sich auf; übrig bleibt das Funding, das die Short-Seite
-bekommt. Weil die Rate sich alle paar Stunden ändert, ist der Ertrag nicht fest.
-Dafür kannst du jederzeit aussteigen.
+</Module>
+
+<Module id="arbitrage">
+
+## Arbitrage
+
+Bei Arbitrage steht der Gewinn beim Einstieg fast fest. Gratis ist sie selten:
+Du bezahlst mit Kapital, Geschwindigkeit oder einem Risiko, das im Modell nicht
+auftaucht.
+
+Der Klassiker in Krypto ist der Funding-Carry: Spot long, Perp short, gleicher
+Nominalwert. Die Kursbewegungen heben sich auf, übrig bleibt das Funding.
 
 <FundingCarryLab lang="de" />
 
-Probier zwei Dinge aus. Erstens: Setz die Haltedauer auf wenige Tage. Die vier
-Gebühren fressen dann einen großen Teil des Fundings. Zweitens: Erhöh den
-Hebel. Die Rendite auf dein Kapital steigt, weil du weniger Margin bindest;
-gleichzeitig rückt die Liquidation der Short-Seite näher. Das ist die
-klassische Abwägung dieses Trades.
-
-### Cross-Exchange- und Dreiecks-Arbitrage
-
-Kostet Bitcoin auf Börse A 100.000 $ und auf Börse B 100.250 $, kaufst du auf
-A und verkaufst auf B. In der Praxis überweist niemand dabei Coins hin und her;
-das dauert zu lange. Stattdessen hält man auf beiden Börsen Bestände und
-gleicht sie gelegentlich aus.
-
-Beim **Dreieck** handelst du drei Paare auf einer Börse: USD → BTC → ETH → USD.
-Der ETH/BTC-Kurs muss zu den beiden Dollarkursen passen (ETH/USD geteilt durch
-BTC/USD). Weicht er ab und deckt die Abweichung drei Gebühren, bleibt ein
-Gewinn.
+Schneller und kleiner sind Preisunterschiede zwischen Börsen oder zwischen drei
+Paaren auf einer Börse.
 
 <ArbitrageLab lang="de" />
 
-Solche Lücken sind real, aber klein und kurz. Wer sie zuverlässig einsammelt,
-hat schnelle Verbindungen, niedrige Gebührenstufen und Code, der in
-Millisekunden entscheidet. Für den Einstieg sind sie vor allem ein gutes
-Übungsfeld für saubere Gebühren- und Slippage-Rechnung.
+<Takeaways title="Kurz gesagt">
 
-### CEX-DEX-Arbitrage und MEV
+- Funding-Carry bringt laufend Ertrag und lässt sich jederzeit beenden;
+  Cash and Carry mit Futures lockt die Rendite bis zur Fälligkeit ein.
+- Gebühren und Slippage entscheiden. Rechne mit dem Preis, zu dem du wirklich
+  gefüllt wirst.
 
-Der AMM-Rechner hat gezeigt, dass jede größere Order einen Pool vom Marktpreis
-wegschiebt. Arbitrageure kaufen dann im Pool billig und verkaufen auf einer CEX
-(oder umgekehrt). Auf der Blockchain kommt eine Besonderheit dazu: Die
-Reihenfolge der Transaktionen in einem Block ist verhandelbar. Den Gewinn, der
-sich aus dieser Reihenfolge ziehen lässt, nennt man **MEV** (Maximal Extractable
-Value). Das reicht von harmloser Arbitrage bis zu Front-Running anderer Nutzer.
+</Takeaways>
 
-### Optionsarbitrage
+<Details summary="Wie Cross-Exchange-Arbitrage praktisch läuft">
 
-Die Put-Call-Parität muss auf jeder Börse gelten. Bei Krypto-Optionen gibt es
-zusätzlich Abweichungen zwischen Börsen und zwischen Optionen und Perps. Eine
-**Box** (Bull Call Spread plus Bear Put Spread) zahlt bei Fälligkeit immer die
-Differenz der Strikes; ihr Preis verrät den impliziten Zins. Ist er deutlich
-höher als dein eigener Finanzierungszins, kannst du die Box verkaufen und den
-Unterschied einlocken.
+Niemand überweist dabei Coins hin und her; das dauert zu lange. Man hält auf
+beiden Börsen Bestände und gleicht sie gelegentlich aus. Wer solche Lücken
+zuverlässig einsammelt, hat schnelle Verbindungen, niedrige Gebührenstufen und
+Code, der in Millisekunden entscheidet.
 
-### Market Making
+</Details>
 
-Ein Market Maker stellt gleichzeitig Kauf- und Verkaufspreise und verdient den
-Spread dazwischen. Klingt nach sicherem Geld; das Risiko steckt aber in zwei
-Stellen. **Inventar**: Wer gerade viel gekauft hat, verliert, wenn der Kurs
-weiter fällt. **Adverse Selection**: Gegen dich handeln oft genau die, die mehr
-wissen als du. Gutes Market Making ist deshalb vor allem gute Kurzfristprognose
-plus Risikomanagement; die Börsen zahlen dafür oft Rabatte auf die Gebühren.
+</Module>
 
-### Volatilität handeln
+<Module id="strategies">
 
-Die implizite Volatilität einer Option ist eine Prognose des Marktes. Die
-realisierte Volatilität ist, was dann wirklich passiert. Verkaufst du eine
-Option und sicherst das Delta laufend mit dem Basiswert ab, verdienst du, wenn
-die realisierte Vol unter der impliziten bleibt. Im Mittel ist die implizite
-Vol höher (die **Varianzrisikoprämie**); dafür verliert die Strategie in
-Crashs viel auf einmal. Umgekehrt verdient ein Käufer mit Delta-Hedging an
-großen Bewegungen (**Gamma Scalping**) und bezahlt dafür täglich Theta.
+## Strategien
 
-### Statistische Arbitrage
+Neun Strategien auf einer Karte: rechts steht der Gewinn beim Einstieg fest,
+links gibt es nur einen statistischen Vorteil. Oben zählt Tempo, unten Geduld
+und Kapital.
 
-Hier gibt es keine feste Beziehung, nur eine statistische. Ein Beispiel sind
-**Pairs Trades**: BTC und ETH bewegen sich meist ähnlich. Öffnet sich das
-Verhältnis ungewöhnlich weit, kaufst du den billigeren und verkaufst den
-teureren Coin und wartest auf die Rückkehr. Das funktioniert, bis sich das
-Verhältnis dauerhaft verschiebt. Genau deshalb sind Out-of-sample-Tests und
-saubere Backtests hier wichtiger als das Modell selbst.
+<StrategyExplorer lang="de" />
 
-| Strategie            | Du verdienst                    | Hauptrisiko                         |
-| -------------------- | ------------------------------- | ----------------------------------- |
-| Cash and Carry       | Basis bis zur Fälligkeit        | Margin, Börsenausfall               |
-| Funding-Carry        | Funding auf der Short-Seite     | Negatives Funding, Liquidation, ADL |
-| Cross-Exchange       | Preisunterschied                | Latenz, Bestände auf zwei Börsen    |
-| Dreieck              | Fehlbewertung des Kreuzkurses   | Ausführung, drei Gebühren           |
-| CEX-DEX              | Abweichung Pool zu Markt        | Gas, Konkurrenz um den Block        |
-| Optionsarbitrage     | Paritätsverletzung, Box-Zins    | Liquidität, Margin                  |
-| Market Making        | Spread, Gebührenrabatte         | Inventar, Adverse Selection         |
-| Vol-Trading          | Implizit minus realisiert       | Crashs, Sprünge                     |
-| Statistische Arb.    | Rückkehr zum Mittelwert         | Regimewechsel, Overfitting          |
+<Takeaways title="Was in der Praxis schiefgeht">
 
-## Was in der Praxis schiefgeht
-
-Fast alle Verluste bei „risikolosen“ Trades kommen aus Dingen, die in der
-Formel nicht vorkommen:
-
-- **Gegenpartei**: Eine Börse stoppt Auszahlungen oder geht pleite. Beide
-  Beine sind dann nicht mehr erreichbar.
-- **Das Hedge-Bein wird liquidiert**: Bei einem schnellen Anstieg verliert die
-  Short-Seite, bevor du Margin nachschießen kannst. Danach bist du nur noch
-  long.
-- **Gebühren und Slippage**: Wenige Basispunkte entscheiden. Rechne immer mit
-  dem Preis, zu dem du wirklich gefüllt wirst, nicht mit dem Mittelkurs.
-- **Funding dreht**: Nach einem Crash ist das Funding oft tagelang negativ.
+- **Gegenpartei**: Eine Börse stoppt Auszahlungen. Beide Beine sind weg.
+- **Hedge liquidiert**: Bei einem schnellen Anstieg fällt die Short-Seite,
+  danach bist du nur noch long.
+- **Funding dreht**: Nach einem Crash ist es oft tagelang negativ.
 - **Stablecoins**: Dein „Dollar“ ist ein Token mit eigenem Risiko.
-- **Overfitting**: Ein Backtest mit vielen Parametern findet fast immer
-  etwas. Ob es ein Vorteil ist, zeigt erst ein Zeitraum, den das Modell nie
-  gesehen hat.
+- **Overfitting**: Ein Backtest mit vielen Parametern findet fast immer etwas.
 
-## Kurz testen
+</Takeaways>
+
+</Module>
+
+<Module id="check">
+
+## Check
+
+Eine Frage pro Modul. Die Erklärung kommt direkt nach deiner Antwort.
 
 <Quiz lang="de" />
 
-## Weiter
+<WorkshopSummary />
 
-Wenn du tiefer einsteigen willst: Der Klassiker zu Derivaten ist „Options,
-Futures, and Other Derivatives“ von John Hull. Für Perps lohnen sich die
-Dokumentationen der Börsen, z. B. die
+<Details summary="Wie es weitergeht">
+
+Der Klassiker zu Derivaten ist „Options, Futures, and Other Derivatives“ von
+John Hull. Für Perps lohnen sich die Dokumentationen der Börsen, etwa die
 [Funding-Erklärung von Hyperliquid](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding).
-Und am meisten lernst du, wenn du einen der Rechner oben selbst nachbaust;
-z. B. als Notebook mit echten Daten. Genau dafür sind unsere Treffen da: Bring
-deine Fragen mit, offen für alle Fächer und Erfahrungsstufen.
+
+Am meisten lernst du, wenn du ein Labor selbst nachbaust, als Notebook mit
+echten Daten. Genau dafür sind unsere Treffen da: offen für alle Fächer und
+Erfahrungsstufen.
+
+</Details>
+
+</Module>
+
+</Workshop>

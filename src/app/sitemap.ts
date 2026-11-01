@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/config";
 import { locales, localePath } from "@/i18n";
 import {
+  articleIn,
   articlePageCount,
   articlePath,
   articlesForLocale,
@@ -48,6 +49,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     for (const article of articles) {
+      // Skip URLs that only redirect to the translation in this language.
+      if ((articleIn(articles, article, locale) ?? article) !== article) continue;
       entries.push({
         url: `${site}${localePath(locale, articlePath(article.slug))}`,
         lastModified: new Date(article.updated ?? article.date),

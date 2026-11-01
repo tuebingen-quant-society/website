@@ -6,7 +6,7 @@
  */
 import type { ComponentType } from "react";
 import { localePath, type Locale } from "@/i18n";
-import { articlesContent, fill, formatArticleDate } from "@/i18n/articles-content";
+import { articlesContent, articleTime, fill, formatArticleDate } from "@/i18n/articles-content";
 import { articlesPath, type Article } from "@/lib/articles";
 import { ArticleOutline } from "./article-outline";
 import { ArticlePreview } from "./article-preview";
@@ -45,7 +45,7 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
                   {formatArticleDate(article.date, locale)}
                 </time>
               </li>
-              <li>{fill(copy.readingTime, { n: article.readingMinutes })}</li>
+              <li>{articleTime(copy, article)}</li>
               {article.authors?.length ? (
                 <li>{`${copy.authorsPrefix} ${article.authors.join(", ")}`}</li>
               ) : null}
@@ -82,7 +82,7 @@ export function ArticleView({ article, locale, Body }: ArticleViewProps) {
               <span className="article__sep" aria-hidden="true">
                 ·
               </span>
-              <span>{fill(copy.readingTime, { n: article.readingMinutes })}</span>
+              <span>{articleTime(copy, article)}</span>
             </p>
 
             <h1 className="article__title" lang={foreign ? article.lang : undefined}>

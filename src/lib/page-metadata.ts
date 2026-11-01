@@ -34,6 +34,11 @@ type PageMetadataOptions = {
   keywords?: string[];
   /** Anything behind the login: indexed nowhere, followed nowhere. */
   noindex?: boolean;
+  /**
+   * The page's path in each language when it differs from `logicalPath`, e.g.
+   * an article whose translation lives under another slug.
+   */
+  languagePaths?: Partial<Record<Locale, string>>;
 };
 
 export function pageMetadata(
@@ -62,9 +67,9 @@ export function pageMetadata(
     alternates: {
       canonical,
       languages: {
-        de: localePath("de", logicalPath),
-        en: localePath("en", logicalPath),
-        "x-default": localePath("de", logicalPath),
+        de: localePath("de", options.languagePaths?.de ?? logicalPath),
+        en: localePath("en", options.languagePaths?.en ?? logicalPath),
+        "x-default": localePath("de", options.languagePaths?.de ?? logicalPath),
       },
     },
     ...(options.noindex ? { robots: { index: false, follow: false } } : {}),

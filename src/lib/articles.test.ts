@@ -7,6 +7,7 @@ import { ArticleView } from "../components/article-view";
 import { OgCard } from "./og/card";
 import { ArticlesIndex } from "../components/articles-index";
 import {
+  articleIn,
   articleOutline,
   articlePath,
   articlesForLocale,
@@ -188,4 +189,15 @@ test("a workshop with a duration shows it instead of the reading time", () => {
   const ranged = { ...workshop, duration: [15, 45] } as Article;
   const rangeCard = renderToStaticMarkup(createElement(ArticleCard, { article: ranged, locale: "en" }));
   assert.match(rangeCard, /15–45 min hands-on/);
+});
+
+test("a translated article resolves to its version in each language", () => {
+  const de = { ...note, slug: "optionen", translation: "options" } as Article;
+  const en = { ...note, slug: "options", lang: "en", translation: "optionen" } as Article;
+  const all = [de, en, englishNote];
+  assert.equal(articleIn(all, de, "en"), en);
+  assert.equal(articleIn(all, en, "de"), de);
+  assert.equal(articleIn(all, de, "de"), de);
+  // No translation declared: there is no version in the other language.
+  assert.equal(articleIn(all, englishNote, "de"), null);
 });

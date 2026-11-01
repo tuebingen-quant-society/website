@@ -51,6 +51,12 @@ export type ArticleMeta = {
    * only counts the prose.
    */
   duration?: number | [number, number];
+  /**
+   * Slug of the same piece in the other language. Opening this article under
+   * the other language's route (/en/article/<this slug>) then redirects to
+   * the translation instead of showing this text with a language note.
+   */
+  translation?: string;
   /** Set to false when the article should use a text-only card and header. */
   preview?: boolean;
   /** Drafts stay out of the listing, the sitemap and the routes (404). */
@@ -186,8 +192,27 @@ export const listArticles = cache(async (): Promise<Article[]> => {
     }),
   );
 
-  return articles.filter((article) => !article.draft).sort(byDateDesc);
+  const published = articles.filter((article) => !article.draft).sort(byDateDesc);
+  for (const article of published) {
+    if (!article.translation) continue;
+    const target = published.find((other) => other.slug === article.translation);
+    if (!target) fail(article.slug, `meta.translation "${article.translation}" is not a published article`);
+    if (target.lang === article.lang) {
+      fail(article.slug, `meta.translation "${article.translation}" is in the same language`);
+    }
+  }
+  return published;
 });
+
+/**
+ * The version of `article` written in `locale`: the article itself, its
+ * declared translation, or null when there is none in that language.
+ */
+export function articleIn(articles: Article[], article: Article, locale: Locale): Article | null {
+  if (article.lang === locale) return article;
+  const translated = articles.find((other) => other.slug === article.translation);
+  return translated?.lang === locale ? translated : null;
+}
 
 /** Keep an archive and its pagination scoped to the language being viewed. */
 export function articlesForLocale(articles: Article[], locale: Locale): Article[] {

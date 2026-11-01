@@ -29,6 +29,7 @@ landen automatisch auf `/articles/2`, `/articles/3` und so weiter.
 | `topics`      | nein    | Schlagworte unter dem Titel                                 |
 | `resources`   | nein    | Downloads: `{ label, href }`, Dateien in `public/articles/` |
 | `duration`    | nein    | Minuten zum Durcharbeiten (Workshops), Zahl oder `[15, 45]`; ersetzt die Lesezeit |
+| `translation` | nein    | Slug derselben Seite in der anderen Sprache; die fremde URL leitet dorthin um |
 | `updated`     | nein    | `YYYY-MM-DD`, wenn ein Beitrag überarbeitet wurde           |
 | `preview`     | nein    | `false` entfernt die generierte Grafik überall              |
 | `draft`       | nein    | `true` versteckt den Beitrag (nicht in der Liste, 404)      |

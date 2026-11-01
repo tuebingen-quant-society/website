@@ -177,3 +177,15 @@ test("articles with sections get the wide layout and a section list", () => {
     /article--wide|article-outline/,
   );
 });
+
+test("a workshop with a duration shows it instead of the reading time", () => {
+  const workshop = { ...note, slug: "hands-on", kind: "workshop", duration: 60 } as Article;
+  const card = renderToStaticMarkup(createElement(ArticleCard, { article: workshop, locale: "de" }));
+  assert.match(card, /ca\. 60 Min\. zum Mitmachen/);
+  assert.doesNotMatch(card, /Lesezeit/);
+  const plain = renderToStaticMarkup(createElement(ArticleCard, { article: note, locale: "de" }));
+  assert.match(plain, /6 Min\. Lesezeit/);
+  const ranged = { ...workshop, duration: [15, 45] } as Article;
+  const rangeCard = renderToStaticMarkup(createElement(ArticleCard, { article: ranged, locale: "en" }));
+  assert.match(rangeCard, /15–45 min hands-on/);
+});

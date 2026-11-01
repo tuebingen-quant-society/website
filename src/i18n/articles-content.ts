@@ -28,6 +28,10 @@ type ArticlesCopy = {
   languageNote: string;
   /** "{n}" is replaced with the estimated reading time in minutes. */
   readingTime: string;
+  /** "{n}" is replaced with `meta.duration`, the time to work through a workshop. */
+  duration: string;
+  /** The same as a range: "{from}" and "{to}" in minutes. */
+  durationRange: string;
   /** "{date}" is replaced with the formatted revision date. */
   updated: string;
   authorsPrefix: string;
@@ -51,6 +55,23 @@ export function fill(template: string, values: Record<string, string | number>):
   return template.replace(/\{(\w+)\}/g, (match, key: string) =>
     key in values ? String(values[key]) : match,
   );
+}
+
+/**
+ * How long a piece takes: the author's duration for hands-on pieces, the
+ * estimated reading time for everything else.
+ */
+export function articleTime(
+  copy: Pick<ArticlesCopy, "readingTime" | "duration" | "durationRange">,
+  article: { readingMinutes: number; duration?: number | [number, number] },
+): string {
+  const { duration } = article;
+  if (Array.isArray(duration)) {
+    return fill(copy.durationRange, { from: duration[0], to: duration[1] });
+  }
+  return duration
+    ? fill(copy.duration, { n: duration })
+    : fill(copy.readingTime, { n: article.readingMinutes });
 }
 
 const dateLocale: Record<Locale, string> = { de: "de-DE", en: "en-GB" };
@@ -90,6 +111,8 @@ export const articlesContent: Record<Locale, ArticlesCopy> = {
     languages: { de: "Deutsch", en: "Englisch" },
     languageNote: "Dieser Beitrag ist auf {language}.",
     readingTime: "{n} Min. Lesezeit",
+    duration: "ca. {n} Min. zum Mitmachen",
+    durationRange: "{from}–{to} Min. zum Mitmachen",
     updated: "Aktualisiert am {date}",
     authorsPrefix: "von",
     pagination: {
@@ -129,6 +152,8 @@ export const articlesContent: Record<Locale, ArticlesCopy> = {
     languages: { de: "German", en: "English" },
     languageNote: "This piece is written in {language}.",
     readingTime: "{n} min read",
+    duration: "about {n} min hands-on",
+    durationRange: "{from}–{to} min hands-on",
     updated: "Updated {date}",
     authorsPrefix: "by",
     pagination: {

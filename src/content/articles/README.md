@@ -28,6 +28,7 @@ landen automatisch auf `/articles/2`, `/articles/3` und so weiter.
 | `authors`     | nein    | Liste von Namen                                             |
 | `topics`      | nein    | Schlagworte unter dem Titel                                 |
 | `resources`   | nein    | Downloads: `{ label, href }`, Dateien in `public/articles/` |
+| `duration`    | nein    | Minuten zum Durcharbeiten (Workshops), Zahl oder `[15, 45]`; ersetzt die Lesezeit |
 | `updated`     | nein    | `YYYY-MM-DD`, wenn ein Beitrag überarbeitet wurde           |
 | `preview`     | nein    | `false` entfernt die generierte Grafik überall              |
 | `draft`       | nein    | `true` versteckt den Beitrag (nicht in der Liste, 404)      |
@@ -87,6 +88,41 @@ import { PayoffLab } from "@/components/lab";
 <PayoffLab lang="de" />
 ```
 
-Verfügbar sind `BasisLab`, `PayoffLab`, `OptionPricer`, `LiquidationLab`,
-`FundingCarryLab`, `ArbitrageLab`, `AmmLab` und `Quiz`. Die Mathematik dahinter
-liegt in `src/lib/derivatives.ts` und ist getestet.
+Verfügbar sind `BasisLab`, `PayoffLab`, `OptionPricer`, `MonteCarloLab`,
+`FundingLab`, `LiquidationLab`, `FundingCarryLab`, `ArbitrageLab`, `AmmLab`,
+`MarketMap`, `StrategyExplorer` und `Quiz`. Jedes Labor bringt Aufgaben mit,
+die sich selbst abhaken. Die Mathematik dahinter liegt in
+`src/lib/derivatives.ts` und ist getestet.
+
+## Workshops
+
+Ein Workshop zeigt ein Modul nach dem anderen, mit Kapitelleiste und
+Fortschritt pro Modul (gespeichert im Browser der Leser). Jedes Modul beginnt
+mit einer `##`-Überschrift; sie ist zugleich der Deep Link (`#futures`).
+
+```mdx
+import { Module, Workshop, WorkshopSummary } from "@/components/lab";
+
+<Workshop id="mein-workshop" lang="de" modules={[
+  { id: "eins", label: "Erstes Modul" },
+  { id: "zwei", label: "Zweites Modul" },
+]}>
+
+<Module id="eins">
+
+## Erstes Modul
+
+…
+
+</Module>
+
+</Workshop>
+```
+
+Innerhalb eines Moduls halten drei Bausteine den Text kurz:
+
+- `<Terms>` mit einer Liste `- **Begriff** Erklärung` setzt ein Glossar-Raster.
+- `<Takeaways title="Kurz gesagt">` fasst zwei, drei Punkte zusammen.
+- `<Details summary="…">` klappt Hintergrund, Formeln und Geschichte ein.
+
+`<WorkshopSummary />` zeigt den Fortschritt über alle Module, z. B. im letzten.

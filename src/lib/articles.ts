@@ -45,6 +45,12 @@ export type ArticleMeta = {
   topics?: string[];
   /** Slides, notebooks, datasets — anything that belongs to the piece. */
   resources?: { label: string; href: string }[];
+  /**
+   * Minutes to work through a hands-on piece (a workshop with labs), as one
+   * number or a [from, to] range. Shown instead of the reading time, which
+   * only counts the prose.
+   */
+  duration?: number | [number, number];
   /** Set to false when the article should use a text-only card and header. */
   preview?: boolean;
   /** Drafts stay out of the listing, the sitemap and the routes (404). */
@@ -94,6 +100,20 @@ function validate(slug: string, meta: ArticleMeta): ArticleMeta {
   }
   if (!(articleKinds as readonly string[]).includes(meta.kind)) {
     fail(slug, `meta.kind must be one of ${articleKinds.join(", ")}`);
+  }
+  if (meta.duration !== undefined) {
+    const minutes = (n: unknown) => Number.isInteger(n) && (n as number) > 0;
+    const ok = Array.isArray(meta.duration)
+      ? meta.duration.length === 2 &&
+        meta.duration.every(minutes) &&
+        meta.duration[0] < meta.duration[1]
+      : minutes(meta.duration);
+    if (!ok) {
+      fail(
+        slug,
+        `meta.duration must be whole minutes or a [from, to] range, got ${JSON.stringify(meta.duration)}`,
+      );
+    }
   }
   return meta;
 }

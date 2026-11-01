@@ -35,6 +35,25 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Formula: ({ children }: { children?: ReactNode }) => (
       <figure className="formula">{children}</figure>
     ),
+    /* Background that most readers can skip: closed until asked for. */
+    Details: ({ summary, children }: { summary: string; children?: ReactNode }) => (
+      <details className="more">
+        <summary className="more__summary">
+          {summary}
+          <span className="more__icon" aria-hidden="true" />
+        </summary>
+        <div className="more__body">{children}</div>
+      </details>
+    ),
+    /* The two or three things to keep from a section. */
+    Takeaways: ({ title, children }: { title: string; children?: ReactNode }) => (
+      <aside className="takeaways">
+        <p className="takeaways__title">{title}</p>
+        {children}
+      </aside>
+    ),
+    /* A Markdown list of "**Term**: definition" lines, set as a glossary grid. */
+    Terms: ({ children }: { children?: ReactNode }) => <div className="terms">{children}</div>,
     ...components,
   };
 }

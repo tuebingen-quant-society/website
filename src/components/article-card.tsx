@@ -5,7 +5,7 @@
  * shared `.card` treatment (hover keyline, coral wash) comes from global.css.
  */
 import { localePath, type Locale } from "@/i18n";
-import { articlesContent, fill, formatArticleDate } from "@/i18n/articles-content";
+import { articlesContent, articleTime, formatArticleDate } from "@/i18n/articles-content";
 import { articlePath, type Article } from "@/lib/articles";
 import { ArticlePreview } from "./article-preview";
 
@@ -34,7 +34,7 @@ export function ArticleCard({ article, locale }: { article: Article; locale: Loc
             <span className="article-card__sep" aria-hidden="true">
               ·
             </span>
-            <span>{fill(copy.readingTime, { n: article.readingMinutes })}</span>
+            <span>{articleTime(copy, article)}</span>
             {foreign && article.preview === false && (
               <span className="article-card__lang-inline">{copy.languages[article.lang]}</span>
             )}

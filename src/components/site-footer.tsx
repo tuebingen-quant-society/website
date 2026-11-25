@@ -46,6 +46,9 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             <a className="footer__link" href={localePath(locale, "articles")}>
               {t.footer.materialLink}
             </a>
+            <a className="footer__link" href={`${localePath(locale)}#alumni`}>
+              {locale === "de" ? "Tübinger Alumni" : "Tübingen alumni"}
+            </a>
             <a className="footer__link" href={localePath(locale, "quant-careers")}>
               {locale === "de" ? "Quant-Karrieren" : "Quant careers"}
             </a>

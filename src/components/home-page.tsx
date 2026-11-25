@@ -2,6 +2,7 @@ import { kontakt } from "@/config";
 import { content, localePath, type Locale } from "@/i18n";
 import { articlesContent } from "@/i18n/articles-content";
 import { articlesForLocale, articlesPath, listArticles } from "@/lib/articles";
+import { AlumniSection } from "./alumni-section";
 import { ArticleCard } from "./article-card";
 import { SignInGlyph } from "./sign-in-glyph";
 import { MarketBackground } from "./market-background";
@@ -93,6 +94,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
+
+      <AlumniSection locale={locale} />
 
       <section className="section" id="partner" aria-labelledby="partner-headline">
         <div className="section__inner">
